@@ -84,11 +84,19 @@ Site requirements/notes
 - You just need an API key for your site's domain name (use the "HTML key")
 
 
-#### Configuration/setup
+#### Configuration/setup instructions
 
+- Secure everything in the _WEBMASTER_ONLY folder such that only the webmaster can access them, if you even
+upload them at all. Those files are not part of the site, but are necessary helper tools or have important data.
+How you choose to restrict access to these files is up to you, but it's very important that you do. Those files
+have no security built-in, and only the webmaster should be able to use them.
 - Completely fill out the [lib/defines_template.php](https://github.com/mholt/ysaward/blob/master/lib/defines_template.php)
 file and rename it to `defines.php`.
-- MySQL database schema is coming soon. You'll need it!
+- Set up your MySQL database using [schema.sql](https://github.com/mholt/ysaward/blob/master/_WEBMASTER_ONLY/schema.sql).
+- Set up new wards using [createward.php](https://github.com/mholt/ysaward/blob/master/_WEBMASTER_ONLY/createward.php).
+Remember to turn off the "safety" line.
+- Set up stake leaders with [createstakeleader.php](https://github.com/mholt/ysaward/blob/master/_WEBMASTER_ONLY/createstakeleader.php).
+Remember to turn off the "safety" line.
 - For externally-provided services like email and texting, follow the vendor's instructions for
 obtaining API keys and/or configuring your domain/site to work with their service.
 
