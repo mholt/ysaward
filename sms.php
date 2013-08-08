@@ -209,7 +209,7 @@ table label:hover { background: #EEE; }
 			
 			<?php if (!$canSendAll && !$canSendFHE): ?>
 			<br>
-			You can send <b><?php echo MAX_PER_DAY; ?></b> texts every 24 hours. You have <b id="texts-remaining"><?php echo $textsRemaining; ?></b> texts remaining.
+			You can send <b><?php echo SMS_MAX_PER_DAY; ?></b> texts every 24 hours. You have <b id="texts-remaining"><?php echo $textsRemaining; ?></b> texts remaining.
 			<br><small>(If a text message has to be broken into different pieces, each piece to each recipient counts as a text message.)</small>
 			<?php endif; ?>
 			
@@ -422,16 +422,16 @@ $(function() {
 		{
 			$(this).prop('checked', false);
 			if (!$(notifyToast).is(':visible'))
-				notifyToast = toastr.info('You can send up to <?php echo MAX_PER_DAY; ?> texts every 24 hours, but you have only '+textsRemaining+' remaining.'+(segments > 1 ? ' With a message '+segments+' parts long, you cannot send to more recipients.' : ''));
+				notifyToast = toastr.info('You can send up to <?php echo SMS_MAX_PER_DAY; ?> texts every 24 hours, but you have only '+textsRemaining+' remaining.'+(segments > 1 ? ' With a message '+segments+' parts long, you cannot send to more recipients.' : ''));
 			recipCount --;
 		}
 		<?php elseif (!$canSendAll && $canSendFHE): ?>
 		// Can send to FHE group but not more than <?php echo MAX_PER_DAY ?>, otherwise
-		if (recipCount * segments > <?php echo MAX_PER_DAY; ?> && !$('#sel-fhe').is(':checked'))
+		if (recipCount * segments > <?php echo SMS_MAX_PER_DAY; ?> && !$('#sel-fhe').is(':checked'))
 		{
 			$(this).prop('checked', false);
 			if (!$(notifyToast).is(':visible'))
-				notifyToast = toastr.info('You can only send <?php echo MAX_PER_DAY; ?> text messages every 24 hours.');
+				notifyToast = toastr.info('You can only send <?php echo SMS_MAX_PER_DAY; ?> text messages every 24 hours.');
 			recipCount --;
 		}
 		<?php endif; ?>
