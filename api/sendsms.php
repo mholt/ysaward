@@ -58,7 +58,7 @@ for ($i = 0; $i < count($job->Recipients); $i++)
 		$mail = new Mailer();
 		$mail->FromAndReplyTo(ERR_HANDLE_FROM_NAME, EMAIL_BLACKHOLE);
 		$mail->Subject("Ward website alert: Possible runaway loop during SMS send");
-		$mail->Body("SMSJob with ID ".($job->ID())." might have had a runway, or infinite, loop while sending text messsages.\n\nThere could be a bug in the code or there were many errors while sending to most recipients. The job was terminated.");
+		$mail->Body("SMSJob with ID ".($job->ID())." might have had a runaway, or infinite, loop while sending text messsages.\n\nThere could be a bug in the code or there were many errors while sending to most recipients. The job was terminated.");
 		$mail->To(WEBMASTER_NAME, WEBMASTER_EMAIL);
 		$mail->Send();
 		break;
@@ -78,7 +78,7 @@ for ($i = 0; $i < count($job->Recipients); $i++)
 	// Make sure we only attempt to send to this member within a throttled number of times;
 	// it helps prevent infinite loops in case a failover... well... fails... like, hardcore.
 	// This happened once. Oops! One poor guy in the ward got over 3,000 text messages
-	// in about an hour. I've since re-written all the logic and added more failsafes in.
+	// in about an hour. I've since re-written all the logic and added in more failsafes.
 
 	$job->Recipients[$i]->attempts++;
 	
@@ -160,9 +160,10 @@ for ($i = 0; $i < count($job->Recipients); $i++)
 				/*
 					NOTE: At some point, something changed with Nexmo which doesn't allow multi-segment (concatenated)
 					messages to US carriers, and each one would get a "throttled" error. They used to automatically
-					split the message up and send them in segments for us.
+					split the message up and send them in segments for us. (I suspect this breaking change, which
+					many customers complained about, is what caused the infamous infinite loop described above.)
 
-					UPDATE: They've resolved this, at least for now, and so concatenated messages work okay again.
+					UPDATE: They've resolved this, at least for now, so concatenated messages work okay again.
 					If it ever stops working, you'll get those throttling errors for each segmented message,
 					and if it's not something Nexmo can/will fix, you'll have to split the messages into segments manually.
 				*/
@@ -173,7 +174,7 @@ for ($i = 0; $i < count($job->Recipients); $i++)
 				{
 					// "Throttled"
 					// "You have exceeded the submission capacity allowed on this account, please back-off and retry"
-					millisleep(SMS_BETWEEN_MESSAGES * 2);	// With extra time padding just in case
+					millisleep(SMS_BETWEEN_MESSAGES * 1.5);	// With extra time padding just in case
 					$i --;
 					break;
 				}

@@ -93,6 +93,7 @@ have no security built-in, and only the webmaster should be able to use them.
 - Completely fill out the [lib/defines_template.php](https://github.com/mholt/ysaward/blob/master/lib/defines_template.php)
 file and rename it to `defines.php`.
 - Set up your MySQL database using [schema.sql](https://github.com/mholt/ysaward/blob/master/_WEBMASTER_ONLY/schema.sql).
+- Create a folder in the root directory of the site called `uploads` and chmod it to 0777. It will store profile pictures.
 - Set up new wards using [createward.php](https://github.com/mholt/ysaward/blob/master/_WEBMASTER_ONLY/createward.php).
 Remember to turn off the "safety" line.
 - Set up stake leaders with [createstakeleader.php](https://github.com/mholt/ysaward/blob/master/_WEBMASTER_ONLY/createstakeleader.php).
