@@ -608,7 +608,9 @@ class Member
 	// date registered in that ward)
 	public function ChangeWard($wardid)
 	{
-		// TODO: Don't allow a change of ward if RegistrationDate was in the last 7 days?
+		if (dayDifference($this->RegistrationDate) < 7)
+			fail("Cannot change wards within 7 days of being in a new ward.");
+		
 		$new_ward = Ward::Load($wardid);
 		if (!$new_ward)
 			fail("Could not change ward: ward ID $wardid not valid.");
