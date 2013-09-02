@@ -253,6 +253,8 @@ else:
 	$user->WardID = $ward->ID();
 	$user->Birthday = "{$year}-{$month}-{$day}";
 	$user->HideBirthday = $hideBirthday;
+	$user->ReceiveEmails = true;
+	$user->ReceiveTexts = true;
 
 	if ($user->Save())
 		echo "Created user account...<br>";

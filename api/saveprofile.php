@@ -3,6 +3,8 @@ require_once("../lib/init.php");
 protectPage();
 
 
+@ $wardid = $_POST['ward_id'];
+@ $wardpwd = $_POST['wardpwd'];
 @ $email = trim($_POST['email']);
 @ $hideEmail = isset($_POST['hideEmail']) ? 1 : 0;
 @ $oldpwd = $_POST['oldpwd'];
@@ -28,12 +30,22 @@ protectPage();
 @ $address = trim($_POST['address']);
 @ $pic = $_FILES['profilepic'];
 
+$isChangingWards = $WARD->ID() != $wardid && $wardid > 0;
+
 // Required fields filled out?
 if (!$email || !$fname || !$lname || !$month
 	|| !$day || !$year || !$gender
-	|| !$resID)
+	|| !$resID || ($isChangingWards && !$wardpwd))
 {
 	Response::Send(400, "Please fill out all required fields.");
+}
+
+// If changing wards, make sure ward password is correct
+if ($isChangingWards)
+{
+	$newWard = Ward::Load($wardid);
+	if ($newWard != null && !$newWard->PasswordMatches($wardpwd))
+		Response::Send(401, "Your new ward's password is incorrect. Please make sure you typed the ward password correctly.");
 }
 
 $newResIsCustom = $resID == "-";
@@ -148,14 +160,23 @@ else 	// But if the previous Residence IS custom...
 	}
 }
 
-// Pull the trigger: save the account changes.
-// (Profile picture upload DOES come; look down)
+// Pull the trigger: save the account changes
+// (Profile picture upload DOES happen; look down)
 $MEMBER->Save(true);
 
-// Now upload and save the profile picture
+// Now upload and save the profile picture...
 if ($pic['tmp_name'])
 	$MEMBER->PictureFile(false, $pic);
 
-Response::Send(200, "Saved your profile!");
+if ($isChangingWards)
+{
+	// Change the user's ward now
+	$MEMBER->ChangeWard($wardid);
+}
+
+if ($isChangingWards)
+	Response::Send(200, "Saved your profile and switched wards!");
+else
+	Response::Send(200, "Saved your profile!");
 
 ?>

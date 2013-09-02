@@ -33,6 +33,11 @@ $isCustom = $currentResidence ? $currentResidence->Custom() : false;
 <head>
 	<title>Edit profile &mdash; <?php echo $WARD ? $WARD->Name." Ward" : SITE_NAME; ?></title>
 	<?php include("includes/head.php"); ?>
+<style>
+#wardpassword {
+	display: none;
+}
+</style>
 </head>
 <body>
 	
@@ -43,16 +48,29 @@ $isCustom = $currentResidence ? $currentResidence->Custom() : false;
 		<section class="g-12">
 			<div class="text-center">
 				<h1>Edit profile</h1>
-				<p><b>Switch to:</b> <a href="answers.php">Edit survey answers</a><!-- or <a href="member.php?id=<?php echo $MEMBER->ID(); ?>">view profile</a></p> -->
+				<p><b>Switch to:</b> <a href="answers.php">Edit survey answers</a>
 			</div>
 			
 			<p style="font-style: italic;">Fields marked with <span class="req">*</span> are required.</p>
 
 			<form method="post" action="api/saveprofile.php" enctype="multipart/form-data">
 				<table class="formTable">
+					<tr style="background: #EEE;">
+						<td class="reqtd"><span class="req">*</span></td>
+						<td>
+							Ward
+						</td>
+						<td>
+							<?php require "includes/controls/wardpicker.php"; ?>
+							<div id="wardpassword">
+								<span class="req">*</span>
+								To change wards, type its ward password:
+								<input type="password" name="wardpwd" id="wardpwd">
+							</div>
+						</td>
+					</tr>
 					<tr>
 						<td colspan="3">
-							<hr>
 							<h4>About you</h4>
 						</td>
 					</tr>
@@ -182,7 +200,6 @@ $isCustom = $currentResidence ? $currentResidence->Custom() : false;
 					</tr>
 					<tr>
 						<td colspan="3">
-							<hr>
 							<h4>Profile picture</h4>
 						</td>
 					</tr>
@@ -200,14 +217,17 @@ $isCustom = $currentResidence ? $currentResidence->Custom() : false;
 						</td>
 						<td>
 							<input type="file" size="25" name="profilepic" id="profilepic" accept="image/jpeg"> (JPG only; 2 MB max.)
-							<br><i><small>Even if the ward takes pictures of everyone this<br>
-							semester, you can still use your own if you want.<br>Please
-							choose a picture with just you in it.</small></i>
+							<br>
+							<br>
+							<i><small>
+								<b>Please choose a picture with just you in it.</b>
+								<br>
+								Submit the form to save any changes to your profile picture.
+							</small></i>
 						</td>
 					</tr>
 					<tr>
 						<td colspan="3">
-							<hr>
 							<h4>For login</h4>
 						</td>
 					</tr>
@@ -223,7 +243,6 @@ $isCustom = $currentResidence ? $currentResidence->Custom() : false;
 					</tr>
 					<tr>
 						<td colspan="3">
-							<hr>
 							<h4>Change your password</h4>
 							<p>(Leave these blank to keep the same password.)</p>
 						</td>
@@ -244,7 +263,7 @@ $isCustom = $currentResidence ? $currentResidence->Custom() : false;
 						</td>
 						<td>
 							<input type="password" size="35" maxlength="255" name="pwd1">
-							<small><br>(At least 8 characters long; use letters, numbers, and symbols.)</small>
+							<small><br>(At least 8 characters long)</small>
 						</td>
 					</tr>
 					<tr style="background: #EEE;">
@@ -346,6 +365,7 @@ $(function() {
 	//var status = $('#status');
 
 	var hasPic = false;
+
 	$('form').ajaxForm({
 		beforeSend: function(formData, jqForm, options)
 		{
@@ -370,7 +390,15 @@ $(function() {
 			if (xhr.status == 200)
 			{
 				_gaq.push(['_trackEvent', 'Account', 'Submit Form', 'Edit Profile']);
-				toastr.success("Saved your profile!");
+
+				if ($('#wardpwd').is(':visible'))
+				{
+					toastr.info("Redirecting...");
+					setTimeout(function() { window.location = "/answers?new"; }, 1500);
+				}
+				
+				toastr.success(xhr.responseText);
+
 				if (hasPic)
 				{
 					$.hijax({
@@ -414,6 +442,22 @@ $(function() {
 			$('#usualapt input').focus();
 			liveaddress.deactivate();
 		}
+	});
+
+	var startingWardID = <?php echo $WARD->ID(); ?>;
+
+	$('#wardid').change(function()
+	{
+		if (!$('#wardid').val())
+			$('#wardid').val(startingWardID);
+		
+		if ($('#wardid').val() != startingWardID)
+		{
+			$('#wardpassword').show();
+			$('#wardpwd').focus();
+		}
+		else
+			$('#wardpassword').hide();
 	});
 });
 </script>

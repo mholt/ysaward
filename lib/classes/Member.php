@@ -557,46 +557,14 @@ class Member
 		if ($sure !== true || !$this->ID)
 			return false;
 
-		// Delete profile picture, if any
 		$this->DeletePictureFile();
 
-		// Delete calling assignments
-		$q = "DELETE FROM MembersCallings WHERE MemberID='$this->ID'";
-		if (!DB::Run($q))
-			fail("Tried to delete member ID $this->ID's calling assignments, but failed. Any profile picture has been deleted already: ".mysql_error());
-
-		// Delete permissions for this MEMBER (not his/her calling)
-		$q = "DELETE FROM Permissions WHERE ObjectType='Member' AND ObjectID='$this->ID'";
-		if (!DB::Run($q))
-			fail("Deleted calling assignments and profile picture for this member, but could not delete permissions. MySQL error: ".mysql_error());
-
-		// Delete privileges for this MEMBER (not his/her calling)
-		$q = "DELETE FROM GrantedPrivileges WHERE MemberID='$this->ID'";
-		if (!DB::Run($q))
-			fail("Deleted calling assignments, profile picture, and permissions for this member, but could not delete granted privileges. MySQL error: ".mysql_error());
-
-		// Delete any password reset tokens
-		$q = "DELETE FROM PwdResetTokens WHERE CredentialsID='$this->CredentialsID'";
-		if (!DB::Run($q))
-			fail("Deleted this member's picture, calling assignments, privileges, and permissions, but not password reset tokens: ".mysql_error());
-
-		// Delete survey answers
-		$q = "DELETE FROM SurveyAnswers WHERE MemberID='$this->ID'";
-		if (!DB::Run($q))
-			fail("Deleted picture, permissions, callings, privileges, and password reset tokens, but not survey answers. Problem was: ".mysql_error());
+		$this->DeleteWardItems();
 
 		// Delete credentials
 		$q = "DELETE FROM Credentials WHERE ID='$this->CredentialsID'";
 		if (!DB::Run($q))
 			fail("Deleted picture, permissions, callings, privileges, password reset tokens, and survey answers, but not credentials (or user account) (user can still login): ".mysql_error());
-
-		// Delete custom Residence, if any
-		if ($this->HasCustomResidence())
-		{
-			$q = "DELETE FROM Residences WHERE ID='$this->ResidenceID' AND Custom=1";
-			if (!DB::Run($q))
-				fail("Deleted picture, permissions, callings, privileges, password reset tokens, survey answers, and credentials, but not Residence: ".mysql_error());
-		}
 
 		// Delete member record
 		$q = "DELETE FROM Members WHERE ID='$this->ID' LIMIT 1";
@@ -632,6 +600,21 @@ class Member
 			return $res->Address." ".$res->City." ".$res->State;
 		else
 			return $res->Name." ".$this->Apartment;
+	}
+
+	// Changes the member's ward to a different ward, given a ward ID.
+	// It's almost like deleting the account and re-creating it in the new
+	// ward... even the RegistrationDate is updated (registration date =
+	// date registered in that ward)
+	public function ChangeWard($wardid)
+	{
+		$new_ward = Ward::Load($wardid);
+		if (!$new_ward)
+			fail("Could not change ward: ward ID $wardid not valid.");
+		$this->DeleteWardItems();
+		$this->WardID = $wardid;
+		$this->RegistrationDate = now();
+		$this->Save();
 	}
 
 	// Update LastActivity timestamp. This method is error-suppressed because it's
@@ -728,5 +711,44 @@ class Member
 		$this->Salt = salt();
 		$this->Password = hashPwd($newPwd, $this->Salt);
 	}
+
+	// Entirely deletes: calling assignments, permissions, privileges,
+	// survey answers, password reset tokens, and custom residence (if any)
+	private function DeleteWardItems()
+	{
+		// Delete calling assignments
+		$q = "DELETE FROM MembersCallings WHERE MemberID='$this->ID'";
+		if (!DB::Run($q))
+			fail("Tried to delete member ID $this->ID's calling assignments, but failed: ".mysql_error());
+
+		// Delete permissions for this MEMBER (not his/her calling)
+		$q = "DELETE FROM Permissions WHERE ObjectType='Member' AND ObjectID='$this->ID'";
+		if (!DB::Run($q))
+			fail("Deleted calling assignments for this member, but could not delete permissions. MySQL error: ".mysql_error());
+
+		// Delete privileges for this MEMBER (not his/her calling)
+		$q = "DELETE FROM GrantedPrivileges WHERE MemberID='$this->ID'";
+		if (!DB::Run($q))
+			fail("Deleted calling assignments, and permissions for this member, but could not delete granted privileges. MySQL error: ".mysql_error());
+
+		// Delete any password reset tokens
+		$q = "DELETE FROM PwdResetTokens WHERE CredentialsID='$this->CredentialsID'";
+		if (!DB::Run($q))
+			fail("Deleted this member's calling assignments, privileges, and permissions, but not password reset tokens: ".mysql_error());
+
+		// Delete survey answers
+		$q = "DELETE FROM SurveyAnswers WHERE MemberID='$this->ID'";
+		if (!DB::Run($q))
+			fail("Deleted permissions, callings, privileges, and password reset tokens, but not survey answers. Problem was: ".mysql_error());
+
+		// Delete custom Residence, if any
+		if ($this->HasCustomResidence())
+		{
+			$q = "DELETE FROM Residences WHERE ID='$this->ResidenceID' AND Custom=1";
+			if (!DB::Run($q))
+				fail("Deleted permissions, callings, privileges, password reset tokens, survey answers, and credentials, but not Residence: ".mysql_error());
+		}
+	}
+
 }
 ?>

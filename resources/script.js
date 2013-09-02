@@ -2,12 +2,12 @@ var speed = "fast";		// Preferred speed of any effects (slow, medium, fast, can 
 
 // Determine whether this is a browser on a common mobile device
 // and get some basic flags prepared for potential use later on.
-var mobile = /Android|webOS|iPhone|iPad|Kindle|iPod|BlackBerry/i.test(navigator.userAgent);
+var mobile = /Android|webOS|iPhone|iPad|Kindle|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent);
 var isAndroid = /Android/i.test(navigator.userAgent);
 var isChrome = /Chrome/i.test(navigator.userAgent);
 var isIOS = /iPad|iPod|iPhone/i.test(navigator.userAgent);
 var isSafari = /Safari/i.test(navigator.userAgent);
-var isIE;   // TODO
+var isIE = /MSIE /i.test(navigator.userAgent);
 var isFirefox = /Firefox/i.test(navigator.userAgent);
 var isOpera = /Opera/i.test(navigator.userAgent);
 var isWindows = /Windows/i.test(navigator.userAgent);

@@ -10,21 +10,6 @@ if (Member::IsLoggedIn())
 // This keeps the creepers out.
 if (!isset($_SESSION['wardie']) || !isset($_SESSION['ward_id']))
 {
-	// Build the list of wards by stake
-	$r = DB::Run("SELECT `ID`, `Name`, `StakeID` FROM `Wards` WHERE `Deleted` != 1 ORDER BY `StakeID`, `Name`");
-
-	$stakes = array();
-
-	while ($row = mysql_fetch_array($r))
-	{
-		$sid = $row['StakeID'];
-		$wid = $row['ID'];
-
-		if (!array_key_exists($sid, $stakes))
-			$stakes[$sid] = array();
-
-		$stakes[$sid][] = $wid;
-	}
 ?>
 <!DOCTYPE html>
 <html class="bluebg">
@@ -70,30 +55,7 @@ td {
 					<tr>
 						<td><span class="req">*</span> Select your ward:</td>
 						<td class="nopad">
-							<select size="1" name="ward_id" required="required">
-								<option value="" selected="selected"></option>
-							<?php
-							foreach ($stakes as $sid => $wards)
-							{
-								$stakeObj = Stake::Load($sid);
-							?>
-								<optgroup label="<?php echo $stakeObj->Name; ?>">
-							<?php
-								foreach ($wards as $wid)
-								{
-									// Get the bishop's name, if any.
-									$ward = Ward::Load($wid);
-									$bishop = $ward->GetBishop();
-							?>
-									<option value="<?php echo $wid; ?>"><?php echo $ward->Name; if ($bishop) echo " (Bishop ".$bishop->LastName.")"; ?></option>
-							<?php
-								}
-							?>
-								</optgroup>
-							<?php
-							}
-							?>
-							</select>
+							<?php require "includes/controls/wardpicker.php"; ?>
 						</td>
 					</tr>
 					<tr>

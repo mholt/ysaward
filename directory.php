@@ -7,8 +7,12 @@ protectPage(0, true);
 // it'd probably be an error with the non-critical profile
 // picture, make sure to direct them to the survey page
 // to fill it out.
-if (isset($_SESSION['isNew']))
-	header("Location: answers.php?new");
+if ($MEMBER)
+{
+	$answersCount = mysql_fetch_row(DB::Run("SELECT COUNT(1) FROM SurveyAnswers WHERE MemberID=".$MEMBER->ID()))[0];
+	if (!$answersCount)
+		header("Location: answers.php?new");
+}
 
 
 // The directory can take a while to load, so we show a

@@ -72,7 +72,8 @@ class Ward
 
 		// Compile an array of each privilege in the database; currently, we have IDs 1 through 13
 		$privileges = array();
-		for ($i = 1; $i <= 13; $i++)
+		$priv_count = mysql_fetch_row(DB::Run("SELECT COUNT(1) FROM Privileges"))[0];
+		for ($i = 1; $i <= $priv_count; $i++)
 			$privileges[$i] = Privilege::Load($i);
 
 		// Bishopric (excluding executive secretary) can mass email all ward members,

@@ -463,7 +463,7 @@ function errorHandler($level, $errorMsg, $file, $line)
 		$errorType = "Unknown";
 
 	$alertSubject = $errorType.": ".$errorMsg;
-	$alertBody = "FILE: {$file}\r\nLINE: {$line}\r\nPROBLEM: {$errorType}: {$errorMsg}";
+	$alertBody = "FILE: {$file}\r\nLINE: {$line}\r\nPROBLEM: {$errorType}: {$errorMsg}\r\n";
 
 	// See if there's a logged-in user
 	$user = Member::Current();
