@@ -99,7 +99,8 @@ function hashPwd($plaintext, $salt = "")
 // This function is very important...
 function protectPage($privilegeID = 0, $allowStakeLeader = false)
 {
-	$isMember = Member::IsLoggedIn();
+	$currentMember = Member::Current();		// (The $MEMBER variable hasn't been created yet)
+	$isMember = $currentMember != null;
 	$isLeader = StakeLeader::IsLoggedIn();
 
 	if ((!$isMember && !$isLeader)
@@ -112,17 +113,22 @@ function protectPage($privilegeID = 0, $allowStakeLeader = false)
 
 	if ($privilegeID && $isMember)
 	{
-		$current = Member::Current();	// (The $MEMBER variable hasn't been created yet)
-		if (!$current->HasPrivilege($privilegeID))
+		if (!$currentMember->HasPrivilege($privilegeID))
 		{
 			header("Location: /directory.php");
 			exit;
 		}
 	}
-	
-	// Require new members to fill out the survey (this works until they are logged out for the first time)
-	if (isset($_SESSION['isNew']) && strpos($_SERVER['REQUEST_URI'], "answers.php") === false)
-		header("Location: /answers.php");
+
+	// New members, or those who have not updated their profile
+	// or survey answers either since registering or are still registering,
+	// must fill out the survey before being allowed to continue.
+	if ($isMember && $currentMember)
+	{
+		if ($currentMember->LastUpdated() == "0000-00-00 00:00:00"
+				&& strpos($_SERVER['REQUEST_URI'], "answers.php") === false)
+			header("Location: answers.php?new");
+	}
 }
 
 

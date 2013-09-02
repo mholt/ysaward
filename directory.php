@@ -2,19 +2,6 @@
 require_once("lib/init.php");
 protectPage(0, true);
 
-
-// If there was an error while registering, and in this case,
-// it'd probably be an error with the non-critical profile
-// picture, make sure to direct them to the survey page
-// to fill it out.
-if ($MEMBER)
-{
-	$answersCount = mysql_fetch_row(DB::Run("SELECT COUNT(1) FROM SurveyAnswers WHERE MemberID=".$MEMBER->ID()))[0];
-	if (!$answersCount)
-		header("Location: answers.php?new");
-}
-
-
 // The directory can take a while to load, so we show a
 // loading message instead. We use ob ("output buffer") functions
 // to tell PHP when to push down more info to the browser.

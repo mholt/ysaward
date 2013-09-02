@@ -27,10 +27,10 @@ $mem = Member::Load($_SESSION['userID']);
 			<?php
 			// Just finished registration? Make sure they feel like they're not
 			// done until the survey is filled out.
-			if (isset($_SESSION['isNew'])):
+			if (isset($_GET['new'])):
 			?>
 				<h1>registration (page 2 / 2)</h1>
-				<p><b>You're <i>almost</i> done.</b> Please fill out this survey. Thank you!</p>
+				<p><b>Please fill out this survey</b> and then you're done! Thank you.</p>
 			<?php else: ?>
 				<h1>My survey answers</h1>
 				<p><b>Switch to:</b> <a href="editprofile.php">Edit profile</a></p>

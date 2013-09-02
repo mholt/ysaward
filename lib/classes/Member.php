@@ -608,12 +608,14 @@ class Member
 	// date registered in that ward)
 	public function ChangeWard($wardid)
 	{
+		// TODO: Don't allow a change of ward if RegistrationDate was in the last 7 days?
 		$new_ward = Ward::Load($wardid);
 		if (!$new_ward)
 			fail("Could not change ward: ward ID $wardid not valid.");
 		$this->DeleteWardItems();
 		$this->WardID = $wardid;
 		$this->RegistrationDate = now();
+		$this->LastUpdated = 0;
 		$this->Save();
 	}
 
