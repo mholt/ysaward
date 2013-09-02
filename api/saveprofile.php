@@ -170,12 +170,9 @@ if ($pic['tmp_name'])
 
 if ($isChangingWards)
 {
-	// Change the user's ward now
 	$MEMBER->ChangeWard($wardid);
-}
-
-if ($isChangingWards)
 	Response::Send(200, "Saved your profile and switched wards!");
+}
 else
 	Response::Send(200, "Saved your profile!");
 
