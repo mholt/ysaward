@@ -1,5 +1,5 @@
 <?php
-require_once("lib/init.php");
+require_once("../lib/init.php");
 
 @ $eml = trim($_POST['eml']);
 @ $pwd = trim($_POST['pwd']);
@@ -8,6 +8,9 @@ require_once("lib/init.php");
 // First see if they're a regular member...
 
 $m = Member::Login($eml, $pwd);
+
+// Where to potentially redirect the member after login
+$afterLogin = isset($_SESSION['after_login']) ? $_SESSION['after_login'] : "/directory";
 
 if (!$m)
 {
@@ -23,10 +26,10 @@ if (!$m)
 		$_SESSION['wardID'] = $r['ID'];
 		
 		// Stake leader logged in.
-		Response::Send(200);
+		Response::Send(200, $afterLogin);
 	}
 }
 else
-	Response::Send(200);		// Member login
+	Response::Send(200, $afterLogin);
 
 ?>

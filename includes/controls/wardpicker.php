@@ -18,8 +18,8 @@ while ($row = mysql_fetch_array($r))
 
 ?>
 
-<select size="1" name="ward_id" id="wardid" required="required">
-	<option value="" <?php if (!isset($WARD)) echo 'selected="selected"' ?>></option>
+<select size="1" name="ward_id" id="wardid" required>
+	<option value="" <?php if (!isset($WARD)) echo 'selected' ?>>Select a ward</option>
 <?php
 foreach ($stakes as $sid => $wards)
 {

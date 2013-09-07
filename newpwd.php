@@ -5,7 +5,7 @@ if ($MEMBER || $LEADER)	// If logged in... just go to directory.
 	header("Location: /directory.php");
 
 if (!isset($_GET['key']))
-	die("ERROR > Make sure you clicked on the link in the email or copied the full link... could't find the reset token.");
+	die("Oops! Couldn't find any password reset token. Make sure you clicked on the link in the email or copied the entire link... ");
 
 // Valid key?
 $key = '';
@@ -17,7 +17,7 @@ if (isset($_GET['key']))
 	$r = DB::Run($q);
 
 	if (mysql_num_rows($r) == 0)
-		die("ERROR > Sorry, that is not a valid password reset token. Please try again...");
+		die("ERROR > Sorry, that is not a valid password reset token. Please go back to your email and try again?");
 
 	// Get the associated credentials ID...
 	$row = mysql_fetch_array($r);
@@ -30,79 +30,82 @@ if (isset($_GET['key']))
 	$tooLate = strtotime("+48 hours", strtotime($row['Timestamp']));
 	if (time() > $tooLate)
 	{
-		$q = "DELETE FROM PwdResetTokens WHERE ID='$tokenID' LIMIT 1";
-		DB::Run($q);
+		DB::Run("DELETE FROM PwdResetTokens WHERE ID='$tokenID' LIMIT 1");
 		die("ERROR > Sorry, that token has expired. They only last 48 hours.");
 	}
 }
 ?>
 <!DOCTYPE html>
-<html class="bluebg">
-<head>
-	<title>Finish Resetting Password &mdash; <?php echo SITE_NAME; ?></title>
-	<?php include("includes/head.php"); ?>
-</head>
-<body>
-	<div class="grid-12">
-		<br>
-		
-		<section class="g-4 text-center">
-			<br><br>
-			<a href="/"><img src="/images/ysa2-lg.png" alt="<?php echo SITE_NAME; ?>"></a>
-		</section>
-		
-		<section class="g-6 suffix-2">		
-			
-			<h1>finish password reset</h1>
-			
-			
-			<form method="POST" action="/api/resetpwd-finish.php">
-				<p>Type your new password below, then try logging in.</p>
-				
-				<p>Your new password should:</p>
-				
-				<ul>
-					<li>be at least 8 characters long</li>
-					<li>use letters, numbers, and symbols</li>
-					<li>be unique from other passwords you use</li>
-				</ul>
-				
-	
-				<input type="hidden" name="credID" value="<?php echo($credID); ?>">
-				<input type="hidden" name="token" value="<?php echo($key); ?>">
-				<b>New password:</b> <input type="password" name="pwd1">
-				<br>
-				<b>Password again:</b> <input type="password" name="pwd2"><br><br>
-				<input type="submit" value="&nbsp; &#10003; Finish &nbsp;">
-			</form>
-			
-		</section>
-		<hr class="clear">	
-	</div>
+<html>
+	<head>
+		<title>Finish password reset &mdash; <?php echo SITE_NAME; ?></title>
+		<?php include("includes/head.php"); ?>
+	</head>
+	<body class="smallpage">
+		<div id="content">
 
-<script type="text/javascript">
-$(function() {
-	$("input[name=pwd1]").focus();
+			<form method="post" action="/api/resetpwd-finish.php">
+				<div class="text-center">
+					<a href="/">
+						<img src="<?php echo SITE_LARGE_IMG; ?>" alt="<?php echo SITE_NAME; ?>" class="logo-big">
+					</a>
+
+					<h1>Reset Password</h1>
+
+					<p>
+						Type your new password below, then try logging in.
+						Don't use the same password you use on other sites.
+					</p>
+
+					<input type="password" name="pwd1" placeholder="New password" required>
+					<input type="password" name="pwd2" placeholder="Password again" required>
+
+					<input type="hidden" name="credID" value="<?php echo($credID); ?>">
+					<input type="hidden" name="token" value="<?php echo($key); ?>">
+
+					<div class="text-right">
+						<button type="submit">Finish</button>
+					</div>
+					<br>
+
+				</div>
+			</form>
+
+			<?php include("includes/footer.php"); ?>
+		</div>
+
+
+<script>
+$(function()
+{
+	$("input").first().focus();	// TODO Make this the thing for every page?
 
 	var redirecting = false;
 
 	$('form').hijax({
-		before: function() {
+		before: function()
+		{
+			$('[type=submit]').showSpinner();
 			return !redirecting;
 		},
-		complete: function(xhr) {
+		complete: function(xhr)
+		{
 			if (xhr.status == 200)
 			{
 				_gaq.push(['_trackEvent', 'Account', 'Submit Form', 'Reset Finished']);
-				toastr.success("Password changed! Redirecting to login...");
+				$.sticky("Password changed! Going to login...");
 				setTimeout(function() { window.location = '/'; }, 3500);
 				redirecting = true;
 			}
 			else
-				toastr.error(xhr.responseText);
+			{
+				$.sticky(xhr.responseText || "Something went wrong. Check your connection and try again.", { classList: 'error' });
+				$('[type=submit]').hideSpinner();
+			}
 		}
 	});
 });
 </script>
 
-<?php include("includes/footer.php"); ?>
+	</body>
+</html>

@@ -33,4 +33,6 @@ else if ($LEADER)
 	$WARD = Ward::Load($_SESSION['wardID']);
 $USER = $MEMBER ? $MEMBER : $LEADER;
 
+define('IS_MOBILE', isMobile());
+
 ?>

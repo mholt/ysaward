@@ -39,7 +39,7 @@ $msg = "Hi!
 
 You or somebody else is trying to login to this account on ".SITE_DOMAIN.".
 
-To reset your password, click on or navigate to this link:
+To reset your password, go to:
 
 ----------------------------------------------------
 https://".SITE_DOMAIN."/newpwd.php?key={$token}

@@ -2,11 +2,10 @@
 require_once("../lib/init.php");
 
 // Ward password was entered before?
-if (!isset($_SESSION['wardie']) || !isset($_SESSION['ward_id']) || $_SESSION['ward_id'] == 0)
+if (!isset($_SESSION['ward_id']) || $_SESSION['ward_id'] == 0)
 	Response::Send(401);
 
-
-// Um, they have an account and are logged in...
+// Um, if they already have an account and are logged in...
 if (Member::IsLoggedIn())
 	Response::Send(403);
 
@@ -18,10 +17,8 @@ if (Member::IsLoggedIn())
 @ $fname = $_POST['fname'];
 @ $mname = $_POST['mname'];
 @ $lname = $_POST['lname'];
-@ $month = $_POST['month'];
 @ $hideBirthday = isset($_POST['hideBirthday']) ? 1 : 0;
-@ $day = $_POST['day'];
-@ $year = $_POST['year'];
+@ $dob = $_POST['dob'];
 @ $gender = $_POST['gender'];
 @ $resID = $_POST['resID'];
 @ $aptnum = trim($_POST['aptnum']);
@@ -36,9 +33,8 @@ if (Member::IsLoggedIn())
 
 // Required fields filled out?
 if (!$email || !$pwd1 || !$pwd2
-	|| !$fname || !$lname || !$month
-	|| !$day || !$year || !$gender
-	|| !$resID)
+	|| !$fname || !$lname || !$dob
+	|| !$gender || !$resID)
 	Response::Send(400, "Please fill out all required fields.");
 
 $resIsCustom = $resID == "-";
@@ -96,7 +92,7 @@ $m->Gender = $gender;
 $m->SetPassword($pwd1);
 $m->PhoneNumber = $phone;
 $m->HidePhone = $hidePhone;
-$m->Birthday = "$year-$month-$day";
+$m->Birthday = sqldate($dob);
 $m->HideBirthday = $hideBirthday;
 $m->ReceiveEmails = true;
 $m->ReceiveTexts = true;
@@ -121,7 +117,6 @@ else
 $m->Save();
 
 // No need to 'register' anymore.
-unset($_SESSION['wardie']);
 unset($_SESSION['ward_id']);
 
 // Log member in so the survey can be filled out

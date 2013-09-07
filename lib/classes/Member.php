@@ -32,7 +32,8 @@ class Member
 	private $Salt;
 
 	const MAX_DISPLAY_DIM = 250;		// Max height or width of full pic (for display on the site)
-	const THUMB_DIM = 100;				// Size of the thumbnail each way
+	const THUMB_DIM = 100;				// Square size of picture thumbnail
+	const THUMB_DIM_MOBILE = 55;		// Square size of picture thumbnail on mobile devices
 
 	public function __construct()
 	{
@@ -468,9 +469,9 @@ class Member
 			if (!$this->PictureFile)
 			{
 				if ($this->Gender == Gender::Male)
-					return "/images/brother.png";
+					return "/resources/images/brother.png";
 				else
-					return "/images/sister.png";
+					return "/resources/images/sister.png";
 			}
 			$main = filename($this->PictureFile);
 			$ext = extension($this->PictureFile);
@@ -482,17 +483,17 @@ class Member
 	// For a maximum size, pass in $maxDimension; it will not be larger than it either way.
 	// By default, returns medium-sized picture, not thumbnail; specify true for thumbnail.
 	// Set $lazy to false if you want the image to load right away (not just when the user scrolls to it)
-	public function ProfilePicImgTag($thumb = false, $lazy = true, $maxDimension = Member::MAX_DISPLAY_DIM)
+	public function ProfilePicImgTag($thumb = false, $lazy = true, $maxDimension = 0)
 	{
 		$picFile = $this->PictureFile($thumb);
 		
-		if ($thumb)
-			$maxDimension = Member::THUMB_DIM;
+		if (!$maxDimension)
+			$maxDimension = $thumb ? Member::THUMB_DIM : Member::MAX_DISPLAY_DIM;
 
 		if ($lazy)
-			return "<img src=\"/images/grey.gif\" data-original=\"".$picFile."\" alt=\"{$this->FirstName}'s picture\" style=\"max-width: {$maxDimension}px; max-height: {$maxDimension}px;\" class=\"profilePicture lazy\">";
+			return '<img src="/resources/images/loader.gif" data-src="'.$picFile.'" alt="'.$this->FirstName.'\'s picture" style="max-width: '.$maxDimension.'px; max-height: '.$maxDimension.'px;" class="profilePicture">';
 		else
-			return "<img src=\"".$picFile."\" alt=\"{$this->FirstName}'s picture\" style=\"max-width: {$maxDimension}px; max-height: {$maxDimension}px;\" class=\"profilePicture\">";
+			return '<img src='.$picFile.'" alt="'.$this->FirstName.'\'s picture" style="max-width: '.$maxDimension.'px; max-height: '.$maxDimension.'px;" class="profilePicture">';
 	}
 
 	// Deletes the picture file and thumbnail for this member.

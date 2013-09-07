@@ -3,90 +3,76 @@ require_once("lib/init.php");
 
 if (Member::IsLoggedIn() || StakeLeader::IsLoggedIn())
 	header("Location: /directory.php");
-
-//header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-//header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 ?>
 <!DOCTYPE html>
-<html class="bluebg">
-<head>
-	<title>Welcome &mdash; <?php echo SITE_NAME; ?></title>
-	<?php include("includes/head.php"); ?>
-<style>
-button[type=submit] {
-	max-width: 150px;
-	display: inline;
-}
+<html>
+	<head>
+		<title>Welcome &mdash; <?php echo SITE_NAME; ?></title>
+		<?php include("includes/head.php"); ?>
+		<!-- Facebook OpenGraph tags (for sharing) -->
+		<meta name="description" content="Sign up so your ward can get your membership records. You'll also get communication tools and a directory tailored just for you.">
+		<meta property="og:image" content="http://<?php echo $_SERVER['SERVER_NAME']; ?><?php echo SITE_LARGE_IMG; ?>">
+		<meta property="og:title" content="Welcome &mdash; <?php echo SITE_NAME; ?>">
+		<meta property="og:site_name" content="<?php echo SITE_NAME; ?>">
+	</head>
+	<body class="smallpage">
+		<div id="content">
 
-#login-form input, [type=submit] {
-	display: block;
-	width: 90%;
-	max-width: 275px;
-}
-</style>
-</head>
-<body>
-	
-	<div class="grid-12">
-		<section class="g-12 pad-top"></section>
-		<hr class="clear">
-		
-		<section class="g-4 text-center">
-			<br><br><br>
-			<img src="<?php echo SITE_LARGE_IMG; ?>" alt="<?php echo SITE_NAME; ?>">
-		</section>
-		
-		<section class="g-4">
-			<h1>login</h1>
-			<form method="post" action="login.php" id="login-form">
-				<input type="email" name="eml" placeholder="Email address" id="eml" required="required">
-				<input type="password" name="pwd" placeholder="Password" id="pwd" required="required">
-				<button type="submit">
-					Login <span>&raquo;</span>
-				</button>
-				&nbsp; &nbsp;
-				<a href="resetpwd.php">Can't&nbsp;login?</a>
+			<form method="post" action="api/login.php">
+
+				<div class="text-center">
+					<img src="<?php echo SITE_LARGE_IMG; ?>" alt="<?php echo SITE_NAME; ?>" class="logo-big">
+					<br>
+
+					Please <a href="register.php">register</a> if you need an account.
+
+					<hr>
+
+					<input type="email" name="eml" placeholder="Email address" required>
+					<input type="password" name="pwd" placeholder="Password" required>
+				</div>
+
+				<div class="text-right">
+					<button type="submit">Login</button><br>
+					<a href="resetpwd.php">Reset password</a><br>
+					<br>
+				</div>
+
 			</form>
-		</section>
-		
-		<section class="g-4">
-			
-			<h1>sign up</h1>
-			<p>
-				Register so your ward can get your
-				membership records. You'll also get a directory
-				tailored specifically to you, FHE groups,
-				and more.
-			</p>
 
-			<a href="register.php" id="reglink" class="button">Register</a>
-			
-		</section>
-		<hr class="clear">
-	
-	</div>
+			<?php include("includes/footer.php"); ?>
 
-<script type="text/javascript">
-$(function() {
+		</div>
 
-	$('#eml').focus();
+<script>
+$(function()
+{
+	$('input').first().focus();
 
-	// Login form submitted
-	$('#login-form').hijax({
-		before: function() {
-			$('button[type=submit] span').html('<img src="images/loader4.gif">');
+	$('form').hijax({
+		before: function()
+		{
+			$('button[type=submit]').showSpinner();
 		},
-		complete: function(xhr) {
+		complete: function(xhr)
+		{
 			if (xhr.status == 200)
-				window.location = '/directory.php?login=1';
+			{
+				if (!xhr.responseText || xhr.responseText == "")
+					window.location = "/directory?login=1";
+				else
+					window.location = xhr.responseText.indexOf('login=1') > -1
+						? xhr.responseText
+						: xhr.responseText + "?login=1";
+			}
 			else
 			{
-				toastr.error("Wrong email/password combination.", "Bad credentials");
-				$('button[type=submit] span').html('&raquo;');
+				$.sticky("Wrong email/password combination.", { classList: 'error' });
+				$('button[type=submit]').hideSpinner();
 			 }
 		}
 	});
 });
 </script>
-
-<?php include("includes/footer.php"); ?>
+	</body>
+</html>

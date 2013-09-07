@@ -1,0 +1,439 @@
+/* Eric Meyer's Reset CSS v2.0 - http://cssreset.com */
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{border:0;font-size:100%;font:inherit;vertical-align:baseline;margin:0;padding:0}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:none}table{border-collapse:collapse;border-spacing:0}
+
+html,
+body {
+	font: 400 19px/1.5em 'Open Sans', sans-serif;
+	color: #555;
+	z-index: 0;
+	min-height: 100%;
+	
+}
+
+html,
+body,
+header,
+#menu-icon {
+	background: #F8F8F8;
+}
+
+
+form,
+body.smallpage {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	max-width: 500px;
+	margin: 0px auto;
+}
+
+form {
+	padding: 0 15px;
+}
+
+body.smallpage {
+	padding: 30px 0 50px;
+}
+
+header {
+	height: 60px;
+	width: 100%;
+	z-index: 10;
+}
+
+hr {
+	clear: both;
+	border: 0;
+	background: none;
+	margin: 2em 0;
+}
+
+hr.clear {
+	margin: 0;
+}
+
+hr.line {
+	border-bottom: 1px solid #CCC;
+	margin: 1em 0;
+}
+
+a {
+	color: #48cbec;
+	text-decoration: none;
+	outline: none;
+}
+
+a:hover,
+a:focus {
+	color: #0FAACF;
+	text-decoration: underline;
+}
+
+a:active {
+	color: #FF6600;
+}
+
+h1 {
+	font-size: 28px;
+	font-weight: 800;
+	color: #444;
+	margin-bottom: 1em;
+	/*color: #A05A2C; -- Color of the brown logo text */
+}
+
+fieldset legend {
+	display: block;
+	width: 100%;
+	border-bottom: 1px solid #CCC;
+	font-size: 13px;
+	text-transform: uppercase;
+	font-weight: bold;
+	color: #000;
+	text-indent: .75em;
+	margin-bottom: 2em;
+}
+
+fieldset legend label {
+	text-indent: 0;
+}
+
+input[type=text],
+input[type=password],
+input[type=number],
+input[type=email],
+input[type=search],
+input[type=tel],
+select {
+	/*-webkit-appearance: none;*/
+
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	border: 0;
+	border-bottom: 1px solid #6F8A91;
+	padding: 7px 2px;
+	background: none;
+	font: 300 26px/1.25em 'Open Sans', sans-serif;
+	color: #666;
+	outline: none;
+	display: block;
+	margin: 0px auto 1em;
+	width: 100%;
+	position: relative;
+}
+
+select {
+	font-size: 22px;
+	border: 1px solid #6F8A91;
+	margin-bottom: 1.5em;
+}
+
+input[type=text]:focus,
+input[type=password]:focus,
+input[type=number]:focus,
+input[type=email]:focus,
+input[type=search]:focus,
+input[type=tel]:focus,
+select:focus {
+	border-color: #FF6600;
+	color: #000;
+}
+
+::-webkit-input-placeholder {
+	font: 300 26px/1.25em 'Open Sans', sans-serif;
+	color: #B3B3B3;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+	font: 300 26px/1.25em 'Open Sans', sans-serif;
+	color: #B3B3B3;
+}
+
+::-moz-placeholder { /* Firefox 19+ */
+	font: 300 26px/1.25em 'Open Sans', sans-serif;
+	color: #B3B3B3;
+}
+
+:-ms-input-placeholder {  
+	font: 300 26px/1.25em 'Open Sans', sans-serif;
+	color: #B3B3B3;
+}
+
+
+
+button,
+input[type=button],
+input[type=submit],
+.button {
+	background: #6F8A91;
+	color: #FFF;
+	font: 40px/1.25em 'Oswald', sans-serif;
+	text-transform: uppercase;
+	border: 0;
+	padding: 8px 30px;
+	cursor: pointer;
+	display: inline-block;
+	margin-bottom: .25em;
+	outline: none;
+}
+
+
+button:hover,
+input[type=button]:hover,
+input[type=submit]:hover,
+.button:hover {
+	background: #52676C;
+}
+
+
+button:focus, button:active,
+input[type=button]:focus, input[type=button]:active, 
+input[type=submit]:focus, input[type=submit]:active,
+.button:focus, .button:active {
+	background: #FF6600;
+}
+
+button:disabled,
+input[type=button]:disabled,
+input[type=submit]:disabled,
+.button:disabled {
+	background: #7A8487;
+	cursor: default;
+}
+
+
+.half-side {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	float: left;
+	width: 50%;
+	padding: 15px 30px 5px;
+}
+
+.logo {
+	max-width: 80px;
+	vertical-align: middle;
+}
+
+.logo-big {
+	max-width: 300px;
+	margin: 0 auto 50px;
+}
+
+#menu-icon {
+	cursor: pointer;
+	color: inherit;
+	font-size: 16px;
+	text-transform: uppercase;
+	text-decoration: none;
+	display: inline-block;
+	padding: 0 30px;
+}
+
+
+footer {
+	margin: 2.5em auto 0;
+	max-width: 460px;
+	border-top: 1px solid #CCC;
+	font-size: 11px;
+	line-height: 2em;
+	text-align: center;
+	color: #888;
+	padding: 0 20px 25px;
+}
+
+footer a {
+	color: #555;
+	text-decoration: underline;
+}
+
+
+#content {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	background: inherit;
+	/*position: fixed;			<-- this layout (mostly) works...
+	overflow: auto;*/
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 2;
+	width: 100%;
+	height: 100%;
+	box-shadow: 9px 0px 7px -7px #000;
+}
+
+#content p {
+	text-align: left;
+	font-size: 16px;
+	margin: 1.25em 0;
+}
+
+
+.smallpage #content {
+	box-shadow: none;
+	position: static;
+	width: auto;
+	height: auto;
+	z-index: auto;
+
+}
+
+
+
+nav {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	visibility: hidden;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	right: 0;
+	height: 100%;
+	background: #333;
+	color: #FFF;
+	width: 200px;
+	padding: 10px 15px;
+	overflow-y: scroll;
+	font-size: 16px;
+}
+
+nav a {
+	color: #CCC;
+	text-decoration: none;
+	display: block;
+	font-weight: 300;
+	font-size: 15px;
+}
+
+nav a:hover,
+nav a:focus {
+	color: #6BE1FF;
+	text-decoration: none;
+}
+
+nav > b {
+	display: block;
+	margin-top: 1em;
+}
+
+
+
+mark {
+	background: #F9E572;
+	padding: 5px 10px;
+	font-size: 16px;
+	border-radius: 5px;
+	color: #333;
+}
+
+
+.text-left {
+	text-align: left;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.text-right {
+	text-align: right;
+}
+
+b {
+	font-weight: bold;
+}
+
+i {
+	font-style: italic;
+}
+
+small {
+	font-size: 15px;
+}
+
+.float-left {
+	float: left;
+}
+
+.float-right {
+	float: right;
+}
+
+.nowrap {
+	white-space: nowrap;
+}
+
+
+.profilePicture {
+	vertical-align: middle;
+}
+
+.header-text {
+	font-size: 14px;
+	color: #000;
+}
+
+
+
+
+
+
+
+
+
+.stuck {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 3;
+}
+
+
+
+
+
+
+
+
+.sticky {
+	line-height: 1.5em;
+}
+
+.sticky.error {
+	color: #FFF;
+	background: #B94A48;
+}
+
+
+.smarty-autocomplete {
+	line-height: 1.25em;
+}
+
+
+
+
+
+
+
+@media (max-width: 500px) {
+	body {
+		min-width: 370px;
+	}
+
+	.half-side {
+		padding: 10px 25px 0;
+	}
+
+	#menu-icon {
+		padding: 0 25px;
+	}
+}

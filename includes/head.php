@@ -1,14 +1,37 @@
 <meta charset="UTF-8">
-<link href="//fonts.googleapis.com/css?family=Arvo|PT+Sans+Narrow|Open+Sans:300,400,700" rel="stylesheet" type="text/css">
-<link rel="stylesheet" type="text/css" href="/resources/style.css">
-<script type="text/javascript" src="/resources/lib.js"></script>
-<script type="text/javascript" src="/resources/script.js"></script>
-<link rel="shortcut icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
-<link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
+
+<!-- Style sheets and fonts -->
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Oswald|Open+Sans:400,300,700,800">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css">
+<link rel="stylesheet" href="/resources/css/unsemantic.css">
+<link rel="stylesheet" href="/resources/css/sticky.css">
+<link rel="stylesheet" href="/resources/css/prettyCheckable.css">
+<link rel="stylesheet" href="/resources/css/style.css">
+
+<!-- Javascript -->
+<script src="/resources/js/jquery2_0_3.min.js"></script>
+<script src="/resources/js/jquery.hijax.min.js"></script>
+<script src="/resources/js/jquery.sticky.min.js"></script>
+<script src="/resources/js/jquery.form.min.js"></script>
+<script src="/resources/js/jquery.prettycheckable.js"></script>
+<script src="/resources/js/jquery.unveil.min.js"></script>
+<script src="/resources/js/jquery.waypoints.min.js"></script>
+<script src="/resources/js/script.js"></script>
+
+<!-- Fill width -->
+<meta name="viewport" content="width=device-width">
+
+<!-- Disable pinch zooming -->
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+
+<!-- Icons -->
+<!--<link rel="shortcut icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
+<link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon">-->
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="<?php echo SHORT_SITE_NAME; ?>">
-<!--[if lt IE 9]><script src="/resources/html5shiv.js" type="text/javascript"></script><![endif]-->
+
 <script>
+/*
 var img = new Image();
 img.src = "<?php echo SITE_SMALL_IMG_HOVER; ?>";	// Pre-loads the hover image for the logo in the corner
 $(function() {
@@ -18,7 +41,7 @@ $(function() {
 	}, function() {
 		$(this).attr('src',  "<?php echo SITE_SMALL_IMG; ?>");
 	});
-});
+});*/
 
 // GOOGLE ANALYTICS TRACKING CODE
 var _gaq = _gaq || [];

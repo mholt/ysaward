@@ -10,8 +10,8 @@
 // This should be the very first thing included.
 require_once "defines.php";
 
-// Make sure defines.php is filled out
-if (!WEBMASTER_EMAIL || !SITE_DOMAIN || !DB_PRODUCTION_HOST || !DB_PRODUCTION_USERNAME
+// Make sure defines.php is filled out by checking a variety of the most vital definitions
+if (!WEBMASTER_EMAIL || !SITE_NAME || !SITE_DOMAIN || !DB_PRODUCTION_HOST || !DB_PRODUCTION_USERNAME
 	|| !DB_PRODUCTION_PASSWORD || !DB_DEV_HOST || !DB_DEV_USERNAME
 	|| !SMARTYSTREETS_HTML_KEY || !SMS_API_KEY || !SMS_API_SECRET)
 {

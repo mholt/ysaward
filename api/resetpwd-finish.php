@@ -9,7 +9,7 @@ require_once("../lib/init.php");
 if (!$pwd1 || !$pwd2)
 	header("Location: /newpwd.php?key=$token");
 if (!$token)
-	Response::Send(400, "Token value disappeared. What happened, I wonder? Please report this so it can get fixed.");
+	Response::Send(400, "Token value disappeared. That shouldn't happen. Please report this so it can get fixed.");
 
 // Make sure both passswords match
 if ($pwd1 != $pwd2)
@@ -22,8 +22,7 @@ if (strlen($pwd1) < 8)
 // Verify that the credentials ID matches the token
 $credID = DB::Safe($credID);
 $token = DB::Safe($token);
-$q = "SELECT 1 FROM `PwdResetTokens` WHERE `CredentialsID`='$credID' AND `Token`='$token' LIMIT 1";
-$r = DB::Run($q);
+$r = DB::Run("SELECT 1 FROM `PwdResetTokens` WHERE `CredentialsID`='$credID' AND `Token`='$token' LIMIT 1");
 if (mysql_num_rows($r) == 0)
 	Response::Send(400, "Account ID and token do not appear to match. Maybe try again from the link in your email?");
 
