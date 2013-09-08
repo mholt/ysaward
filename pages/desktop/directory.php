@@ -144,7 +144,7 @@ $cKey = stripos($_SERVER['HTTP_USER_AGENT'], "Macintosh") === false ? "Ctrl" : "
 					</div>
 				</div>
 
-				<table id="table-header" style="bottom: 0">
+				<table id="table-header">
 					<thead>
 						<tr>
 							<th>Name</th>
@@ -226,7 +226,7 @@ $(function()
 	var tblBody = $('#table-body');
 	var tblHeaderInitialBottom = tblHeader.offset().top + tblHeader.outerHeight();
 
-	$('#content').scroll(function()
+	$(window).scroll(function()
 	{
 		// Keep the header row in sync with the rest of the table
 		tblHeader.css('left', '-'+$(this).scrollLeft()+'px');

@@ -45,12 +45,12 @@ $isCustom = $currentResidence ? $currentResidence->Custom() : false;
 		</style>
 	</head>
 	<body>
-		<div id="content">
+		
 
 			<?php include "includes/header.php"; ?>
 
 
-			<form method="post" action="/api/register.php">
+			<form method="post" action="/api/saveprofile.php">
 				<div class="text-center">
 					<h1>Edit profile</h1>
 				</div>
@@ -128,7 +128,7 @@ $isCustom = $currentResidence ? $currentResidence->Custom() : false;
 						</legend>
 						<div id="chgward">
 							<?php require "includes/controls/wardpicker.php"; ?>
-							<input type="password" name="wardpwd" id="wardpwd" placeholder="Ward password" required>
+							<input type="password" name="wardpwd" id="wardpwd" placeholder="Ward password">
 						</div>
 					</fieldset>
 					<script>
@@ -136,7 +136,10 @@ $isCustom = $currentResidence ? $currentResidence->Custom() : false;
 					$(function() {
 						$('#wardid').val('');
 						$('#change-ward').change(function() {
-							$('#chgward').slideToggle();
+							if ($(this).is(':checked'))
+								$('#chgward').slideDown().find('input, select').prop('required', true);
+							else
+								$('#chgward').slideUp().find('input, select').prop('required', false);
 						});
 					});
 					</script>
@@ -185,7 +188,7 @@ $isCustom = $currentResidence ? $currentResidence->Custom() : false;
 
 			<?php include "includes/footer.php"; ?>
 
-		</div>
+		
 
 		<?php include "includes/nav.php"; ?>
 

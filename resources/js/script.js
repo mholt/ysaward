@@ -31,7 +31,7 @@ $(function()
 	$('img').unveil();
 
 	// Keep any elements in the 'stay' class stuck to the top
-	$('#content > .stay').first().find('header').length > 0
+	$('body .stay').first().find('header').length > 0
 		? $('.stay').waypoint('sticky') 	// Desktop directory page, or complex pages, only
 		: $('header').waypoint('sticky');	// Every other page
 
@@ -40,6 +40,7 @@ $(function()
 
 	// BEGIN menu toggle
 	var nv = $('nav');
+	var nvWidthPosition = $(this).outerWidth() * -1;
 	var menuVisible = false;
 	$('#menu-icon').mousedown(function() {
 		if (!menuVisible)
@@ -53,11 +54,11 @@ $(function()
 			showMenu();
 	});
 	
-	$('#content').mouseenter(function() {
+	$('nav').mouseleave(function() {
 		hideMenu();
 	});
 
-	$('#content, a, button, input, label').click(function() {
+	$('body, a, button, input, label').click(function() {
 		if (menuVisible)
 			hideMenu();
 	});
@@ -67,10 +68,11 @@ $(function()
 		if (menuVisible)
 			return;
 
-		nv.css('visibility', 'visible');
-		$('#content, .stuck').stop().css('overflow', 'hidden').animate({
-			left: $('nav').outerWidth() * -1
-		}, 100, 'swing', function() {
+		$('body').css('overflow', 'hidden');
+
+		$('nav').animate({
+			right: 0
+		}, 150, 'swing', function() {
 			menuVisible = true;
 		});
 	}
@@ -80,14 +82,11 @@ $(function()
 		if (!menuVisible)
 			return;
 
-		$('#content, .stuck').stop().animate({
-			left: 0
-		}, 100, 'swing', function() {
-			// The overflow fix here, and used above when showing the menu,
-			// fixes problems with the table header row appearing over nav
-			// when it's not fully scrolled to the right
-			$(this).css('overflow', '');
-			nv.css('visibility', 'hidden');
+		$('body').css('overflow', '');
+
+		$('nav').animate({
+			right: nvWidthPosition
+		}, 150, 'swing', function() {
 			menuVisible = false;
 		});
 	}

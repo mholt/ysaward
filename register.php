@@ -46,7 +46,7 @@ if (!isset($_SESSION['ward_id'])):
 <script>
 $(function()
 {
-	$('select').focus();
+	$('select').prop('required', true).focus();
 
 	$('select').change(function()
 	{
