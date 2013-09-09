@@ -3,7 +3,7 @@
 
 	<b>Me</b>
 	<a href="/profile">Edit profile</a>
-	<a href="/answers">Edit survey answers</a>
+	<a href="/survey">Edit survey answers</a>
 
 	<b>Membership</b>
 	<a href="/directory">Directory</a>

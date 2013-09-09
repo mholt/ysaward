@@ -10,6 +10,7 @@ body {
 	position: relative;
 }
 
+
 html,
 body,
 header,
@@ -18,8 +19,7 @@ header,
 }
 
 
-form,
-body.smallpage {
+.narrow {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
@@ -28,16 +28,16 @@ body.smallpage {
 	margin: 0px auto;
 }
 
+body.narrow {
+	padding: 30px 0 50px;
+}
+
 form {
 	padding: 0 15px;
 }
 
-body.smallpage {
-	padding: 30px 0 50px;
-}
-
 header {
-	height: 60px;
+	height: 65px;
 	width: 100%;
 	z-index: 10;
 }
@@ -74,11 +74,21 @@ a:active {
 	color: #FF6600;
 }
 
+header a.icon-large {
+	color: inherit;
+	text-decoration: none;
+	font-size: 18px;
+}
+
+header a.icon-large:hover {
+	color: #000;
+}
+
 h1 {
 	font-size: 28px;
 	font-weight: 800;
 	color: #444;
-	margin-bottom: 1em;
+	margin: 1em 0;
 	/*color: #A05A2C; -- Color of the brown logo text */
 }
 
@@ -98,15 +108,19 @@ fieldset legend label {
 	text-indent: 0;
 }
 
+.narrow input {
+	margin: 0px auto 1em;
+}
+
 input[type=text],
 input[type=password],
 input[type=number],
 input[type=email],
 input[type=search],
 input[type=tel],
+textarea,
 select {
 	/*-webkit-appearance: none;*/
-
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
@@ -119,9 +133,15 @@ select {
 	color: #666;
 	outline: none;
 	display: block;
-	margin: 0px auto 1em;
 	width: 100%;
+	max-width: 500px;
 	position: relative;
+}
+
+textarea {
+	resize: none;
+	overflow-y: hidden;
+	line-height: 1.25em;
 }
 
 select {
@@ -136,6 +156,7 @@ input[type=number]:focus,
 input[type=email]:focus,
 input[type=search]:focus,
 input[type=tel]:focus,
+textarea:focus,
 select:focus {
 	border-color: #FF6600;
 	color: #000;
@@ -251,39 +272,16 @@ footer a {
 }
 
 
-#content {
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-
-	background: inherit;
-	/*position: fixed;			<-- this layout (mostly) works...
-	overflow: auto;*/
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 2;
-	width: 100%;
-	height: 100%;
-	box-shadow: 9px 0px 7px -7px #000;
+.req {
+	color: #CC0000;
+	font-weight: bold;
 }
 
-#content p {
+p {
 	text-align: left;
 	font-size: 16px;
 	margin: 1.25em 0;
 }
-
-
-.smallpage #content {
-	box-shadow: none;
-	position: static;
-	width: auto;
-	height: auto;
-	z-index: auto;
-
-}
-
 
 
 nav {
@@ -346,6 +344,18 @@ mark {
 	text-align: right;
 }
 
+kbd {
+	font-family: Monaco, "Courier New";
+	padding: 2px 4px;
+	margin: 0px 2px;
+	border-radius: 3px;
+	background: #FFF;
+	color: #333;
+	font-size: 11px;
+	box-shadow: 1px 1px 1px #333;
+	cursor: default;
+}
+
 b {
 	font-weight: bold;
 }
@@ -375,11 +385,6 @@ small {
 	vertical-align: middle;
 }
 
-.header-text {
-	font-size: 14px;
-	color: #000;
-}
-
 
 
 
@@ -396,6 +401,17 @@ small {
 	z-index: 3;
 }
 
+.quick-links {
+	font-size: 12px;
+}
+
+.header-text {
+	font-size: 14px;
+	color: #000;
+	display: inline-block;
+	line-height: 1.5em;
+	vertical-align: middle;
+}
 
 
 
@@ -405,6 +421,10 @@ small {
 
 .sticky {
 	line-height: 1.5em;
+}
+
+.sticky p {
+	font-size: 13px;
 }
 
 .sticky.error {

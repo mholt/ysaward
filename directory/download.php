@@ -1,5 +1,5 @@
 <?php
-require_once("lib/init.php");
+require_once "../lib/init.php";
 protectPage(0, true);
 
 // Based on the directory.php operations; Very similar.

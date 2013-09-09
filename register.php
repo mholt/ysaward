@@ -15,7 +15,7 @@ if (!isset($_SESSION['ward_id'])):
 		<title>Register &mdash; <?php echo SITE_NAME; ?></title>
 		<?php include("includes/head.php"); ?>
 	</head>
-	<body class="smallpage">
+	<body class="narrow">
 		<div id="content">
 
 			<form method="post" action="api/wardpwd.php">
@@ -85,7 +85,7 @@ else:
 		<title>Register &mdash; <?php echo SITE_NAME; ?></title>
 		<?php include("includes/head.php"); ?>
 	</head>
-	<body class="smallpage">
+	<body class="narrow">
 
 		<div id="content">
 
@@ -186,8 +186,6 @@ else:
 
 <script src="//d79i1fxsrar4t.cloudfront.net/jquery.liveaddress/2.4/jquery.liveaddress.min.js"></script>
 <script>
-var allowSubmit = true;
-
 $(function()
 {
 	// Stores a custom address in case the user hides then displays it again (cross-browserness)
@@ -200,19 +198,18 @@ $(function()
 	$('#dob').change(function()
 	{
 		$.get('/api/tryparsedate.php', {
-			input: $(this).val()
+			input: $(this).val(),
+			strictMonthDayYear: '1'
 		})
 		.success(function()
 		{
-			allowSubmit = true;
-			$('#dob').css('color', '');
-			$('button[type=submit]').prop('disabled', false);
+			$(this).css('color', '');
+			$('[type=submit]').prop('disabled', false);
 		})
 		.fail(function(jqxhr)
 		{
-			allowSubmit = false;
-			$('#dob').css('color', '#CC0000');
-			$('button[type=submit]').prop('disabled', true);
+			$(this).css('color', '#CC0000');
+			$('[type=submit]').prop('disabled', true);
 			$.sticky(jqxhr.responseText || "Please type a better date, for example: July 3, 1990.", { classList: "error" });
 		});
 	});
@@ -254,7 +251,7 @@ $(function()
 			if (xhr.status == 200)
 			{
 				// They've been logged in, so take them to the answers page
-				window.location = '/answers.php?new';
+				window.location = '/survey?new';
 			}
 			else
 				$.sticky(xhr.responseText || "Something's not quite right. Check your Internet connection, try again, then open a new tab and try logging in.", { classList: "error", autoclose: 7500 });
@@ -278,8 +275,8 @@ liveaddress.on("AddressAccepted", function(event, data, previousHandler)
 	}
 	else
 	{
-		if (data.chosen)
-			fillOutAddressFields(data.response.raw[0]);
+		if (data.response.chosen)
+			fillOutAddressFields(data.response.chosen);
 		previousHandler(event, data);
 	}
 });

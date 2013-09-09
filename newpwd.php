@@ -41,7 +41,7 @@ if (isset($_GET['key']))
 		<title>Finish password reset &mdash; <?php echo SITE_NAME; ?></title>
 		<?php include("includes/head.php"); ?>
 	</head>
-	<body class="smallpage">
+	<body class="narrow">
 		<div id="content">
 
 			<form method="post" action="/api/resetpwd-finish.php">

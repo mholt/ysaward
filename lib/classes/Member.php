@@ -493,7 +493,7 @@ class Member
 		if ($lazy)
 			return '<img src="/resources/images/loader.gif" data-src="'.$picFile.'" alt="'.$this->FirstName.'\'s picture" style="max-width: '.$maxDimension.'px; max-height: '.$maxDimension.'px;" class="profilePicture">';
 		else
-			return '<img src='.$picFile.'" alt="'.$this->FirstName.'\'s picture" style="max-width: '.$maxDimension.'px; max-height: '.$maxDimension.'px;" class="profilePicture">';
+			return '<img src="'.$picFile.'" alt="'.$this->FirstName.'\'s picture" style="max-width: '.$maxDimension.'px; max-height: '.$maxDimension.'px;" class="profilePicture">';
 	}
 
 	// Deletes the picture file and thumbnail for this member.

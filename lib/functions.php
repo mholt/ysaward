@@ -129,7 +129,7 @@ function protectPage($privilegeID = 0, $allowStakeLeader = false)
 	{
 		if (!$currentMember->HasPrivilege($privilegeID))
 		{
-			header("Location: /directory.php");
+			header("Location: /directory");
 			exit;
 		}
 	}
@@ -140,8 +140,9 @@ function protectPage($privilegeID = 0, $allowStakeLeader = false)
 	if ($isMember && $currentMember)
 	{
 		if ($currentMember->LastUpdated() == "0000-00-00 00:00:00"
-				&& strpos($_SERVER['REQUEST_URI'], "answers.php") === false)
-			header("Location: answers.php?new");
+				&& strpos($_SERVER['REQUEST_URI'], "/survey") === false
+					&& strpos($_SERVER['REQUEST_URI'], "/api/saveanswers") === false)
+			header("Location: /survey");
 	}
 }
 

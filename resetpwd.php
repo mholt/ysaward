@@ -11,7 +11,7 @@ if (Member::IsLoggedIn())
 		<?php include("includes/head.php"); ?>
 	</head>
 	<body class="smallpage">
-		<div id="content">
+		<div id="narrow">
 
 			<form method="post" action="/api/resetpwd.php">
 				<div class="text-center">

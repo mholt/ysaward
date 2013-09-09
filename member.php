@@ -189,7 +189,7 @@ else
 
 				<?php if (!$isCurrent): ?><a href="/directory.php">&laquo; Back to directory</a><?php endif; ?>
 				<?php if ($isCurrent): ?>
-				<b><a href="answers.php" title="The information shown below">Edit Survey Answers</a></b> &nbsp; or &nbsp; <b><a href="editprofile.php" title="Basic information shown to the left">Edit Profile</a></b>
+				<b><a href="/survey" title="The information shown below">Edit Survey Answers</a></b> &nbsp; or &nbsp; <b><a href="/profile" title="Basic information shown to the left">Edit Profile</a></b>
 				<?php elseif ($MEMBER && $MEMBER->HasPrivilege(PRIV_DELETE_ACCTS)): ?>
 				&nbsp;|&nbsp; <a id="delmem" href="javascript:" title="Permanently delete this member's account" style="font-weight: 400 !important;">Delete Member</a>
 				<?php endif; ?>
@@ -197,7 +197,7 @@ else
 
 
 			<!--<h2>Survey answers: <?php if ($isCurrent): ?>
-			<span style="font-size: 14px; font-weight: normal;">[<a href="answers.php" title="Edit your survey answers">edit</a>]</span>
+			<span style="font-size: 14px; font-weight: normal;">[<a href="/survey" title="Edit your survey answers">edit</a>]</span>
 			<?php endif; ?></h2>-->
 
 			<?php
@@ -210,7 +210,7 @@ else
 			?>
 			<br>
 			<?php if ($isCurrent): ?>
-				<b><a href="answers.php" title="The information shown above">Edit Survey Answers</a></b>
+				<b><a href="/survey" title="The information shown above">Edit Survey Answers</a></b>
 			<?php endif; ?>
 		</section>
 		<hr class="clear">

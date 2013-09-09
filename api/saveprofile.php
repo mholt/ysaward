@@ -13,9 +13,7 @@ protectPage();
 @ $fname = trim($_POST['fname']);
 @ $mname = trim($_POST['mname']);
 @ $lname = trim($_POST['lname']);
-@ $month = $_POST['month'];
-@ $day = $_POST['day'];
-@ $year = $_POST['year'];
+@ $dob = $_POST['dob'];
 @ $hideBirthday = isset($_POST['hideBirthday']) ? 1 : 0;
 @ $gender = $_POST['gender'];
 @ $resID = $_POST['resID'];
@@ -33,9 +31,9 @@ protectPage();
 $isChangingWards = $WARD->ID() != $wardid && $wardid > 0;
 
 // Required fields filled out?
-if (!$email || !$fname || !$lname || !$month
-	|| !$day || !$year || !$gender
-	|| !$resID || ($isChangingWards && !$wardpwd))
+if (!$email || !$fname || !$lname
+	|| !$gender || !$resID || !$dob
+	|| ($isChangingWards && !$wardpwd))
 {
 	Response::Send(400, "Please fill out all required fields.");
 }
@@ -105,7 +103,7 @@ if ($pwd1 && $pwd2) $MEMBER->ChangePassword($pwd1, $oldpwd);
 $MEMBER->PhoneNumber = $phone;
 $MEMBER->HidePhone = $hidePhone;
 $MEMBER->ReceiveTexts = $receiveSms;
-$MEMBER->Birthday = "$year-$month-$day";
+$MEMBER->Birthday = sqldate($dob);
 $MEMBER->HideBirthday = $hideBirthday;
 
 // Here follows the logic of the member's Residence.

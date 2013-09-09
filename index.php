@@ -15,7 +15,7 @@ if (Member::IsLoggedIn() || StakeLeader::IsLoggedIn())
 		<meta property="og:title" content="Welcome &mdash; <?php echo SITE_NAME; ?>">
 		<meta property="og:site_name" content="<?php echo SITE_NAME; ?>">
 	</head>
-	<body class="smallpage">
+	<body class="narrow">
 		<div id="content">
 
 			<form method="post" action="api/login.php">

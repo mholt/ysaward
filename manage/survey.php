@@ -2,6 +2,7 @@
 require_once("../lib/init.php");
 protectPage(8);
 
+
 $q = "SELECT `ID` FROM `SurveyQuestions` WHERE `WardID`=$MEMBER->WardID ORDER BY `ID` ASC, `Visible` DESC";
 $r = DB::Run($q);
 

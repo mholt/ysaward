@@ -24,6 +24,12 @@
 	};
 }(jQuery));
 
+// Selects 
+$.expr[':'].notin = function(a, i, m)
+{
+	return $(a).parents(m[3]).length == 0;
+};
+
 
 $(function()
 {
@@ -58,11 +64,16 @@ $(function()
 		hideMenu();
 	});
 
+	$('body').on('touchstart click', ':not(nav):notin(nav)', function() {
+		if (menuVisible)
+			hideMenu();
+	});
+/*
 	$('body, a, button, input, label').click(function() {
 		if (menuVisible)
 			hideMenu();
 	});
-
+*/
 	function showMenu()
 	{
 		if (menuVisible)
