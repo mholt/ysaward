@@ -92,6 +92,7 @@ How you choose to restrict access to these files is up to you, but it's very imp
 have no security built-in, and only the webmaster should be able to use them.
 - Completely fill out the [lib/defines_template.php](https://github.com/mholt/ysaward/blob/master/lib/defines_template.php)
 file and rename it to `defines.php`.
+- Configure php.ini and your server config to allow for larger file uploads. This is optional, but typically the default limit is around 2M (2 megabytes) and people may want to use larger profile pictures. In nginx.conf, you'll want to use something like `client_max_body_size 5M;`. In php.ini, consider changing `max_upload_filesize` and also `post_max_size` to be a better size.
 - Set up your MySQL database using [schema.sql](https://github.com/mholt/ysaward/blob/master/_WEBMASTER_ONLY/schema.sql).
 - Create a folder in the root directory of the site called `uploads` and chmod it to 0777. It will store profile pictures.
 - Set up new wards using [createward.php](https://github.com/mholt/ysaward/blob/master/_WEBMASTER_ONLY/createward.php).

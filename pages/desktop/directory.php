@@ -63,15 +63,15 @@ $cKey = stripos($_SERVER['HTTP_USER_AGENT'], "Macintosh") === false ? "Ctrl" : "
 				background: #FFF;
 				border: 1px solid #DDD;
 				font-size: 14px;
-				padding: 5px;
+				padding: 0 5px;
 				vertical-align: middle;
 			}
 
 			thead th {
-				font-weight: 800;
-				text-transform: uppercase;
+				font-size: 12px;
 				line-height: 1.25em;
 				background: #F5F5F5;
+				min-width: 150px;
 			}
 
 			tbody td {
@@ -81,7 +81,7 @@ $cKey = stripos($_SERVER['HTTP_USER_AGENT'], "Macintosh") === false ? "Ctrl" : "
 			}
 
 			tbody td > div {
-				max-height: 100px;
+				max-height: 150px;
 				overflow: hidden;
 			}
 
@@ -95,7 +95,20 @@ $cKey = stripos($_SERVER['HTTP_USER_AGENT'], "Macintosh") === false ? "Ctrl" : "
 			}
 
 			#table-body tr:hover td {
-				background: #FFFFEE;
+				/*background: #FFFFEE;*/
+			}
+
+			#table-body td {
+				background: none;
+				cursor: default;
+			}
+
+			#table-body tr.male {
+				background: #F2F8FF;
+			}
+
+			#table-body tr.female {
+				background: #F9EFEF;
 			}
 
 			.name-field a {
@@ -236,7 +249,7 @@ $(function()
 	{
 		// Allow the table to freely resize and sync instead of being
 		// bound to a minimum at its initial width, then sync the widths
-		$('thead th, tbody td').css({
+		$('thead th, tbody tr td').css({
 			'width': '',
 			'min-width': '',
 			'max-width': ''

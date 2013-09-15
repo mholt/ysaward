@@ -130,7 +130,7 @@ class StakeLeader
 	public function Save($updateLastUpdated = false)
 	{
 		// A valid stake ID is required.
-		if (!Ward::Load($this->StakeID))
+		if (!Stake::Load($this->StakeID))
 			fail("Cannot save account information for leader with email: $this->Email -- a valid stake ID is required ($this->StakeID is not valid).");
 
 		// Make sure the email address is unique

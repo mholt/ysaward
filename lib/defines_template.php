@@ -61,7 +61,6 @@ define('SITE_SMALL_IMG_HOVER', "");		// Example: "/images/custom/ysa-small-hover
 define('ANALYTICS_TRACKING_ID', "");	// Example: "UA-12345678-1"
 
 
-
 /*
 	PRODUCTION DATABASE
 */

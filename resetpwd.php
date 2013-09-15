@@ -10,39 +10,34 @@ if (Member::IsLoggedIn())
 		<title>Reset password &mdash; <?php echo SITE_NAME; ?></title>
 		<?php include("includes/head.php"); ?>
 	</head>
-	<body class="smallpage">
-		<div id="narrow">
+	<body class="narrow">
 
-			<form method="post" action="/api/resetpwd.php">
-				<div class="text-center">
-					<a href="/">
-						<img src="<?php echo SITE_LARGE_IMG; ?>" alt="<?php echo SITE_NAME; ?>" class="logo-big">
-					</a>
+		<form method="post" action="/api/resetpwd.php">
+			<div class="text-center">
+				<a href="/">
+					<img src="<?php echo SITE_LARGE_IMG; ?>" alt="<?php echo SITE_NAME; ?>" class="logo-big">
+				</a>
 
-					<h1>Reset Password</h1>
+				<h1>Reset Password</h1>
 
-					<p>
-						Type your email address
-						below and you'll be sent a special link to reset
-						your password.
-					</p>
+				<p>
+					Type your email address
+					below and you'll be sent a special link to reset
+					your password.
+				</p>
 
-					<input type="email" name="eml" placeholder="Email address" required>
+				<input type="email" name="eml" placeholder="Email address" required>
 
-					<div class="text-right">
-						<button type="submit">Continue</button>
-					</div>
-
-					<br>
-
+				<div class="text-right">
+					<button type="submit">Continue</button>
 				</div>
-			</form>
 
-			<?php include("includes/footer.php"); ?>
-		</div>
+				<br>
 
+			</div>
+		</form>
 
-
+		<?php include("includes/footer.php"); ?>
 
 
 <script>

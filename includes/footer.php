@@ -3,7 +3,7 @@
 
 	<br>
 
-	Not an official site of The Church of Jesus Christ of Latter-day Saints.
+	Not affiliated with The Church of Jesus Christ of Latter-day Saints.
 
 	<br>
 

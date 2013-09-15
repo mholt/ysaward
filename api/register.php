@@ -52,8 +52,13 @@ if ($pwd1 != $pwd2)
 if (strlen($pwd1) < 8)
 	Response::Send(400, "Your password must be at least 8 characters.");
 
+// Valid email?
 if (!filter_var($email, FILTER_VALIDATE_EMAIL))
 	Response::Send(400, "Please type a valid email address.");
+
+// Picture uploaded OK? If not, it's probably too big
+if ($pic['error'])
+	Response::Send(413, "Try uploading a smaller profile picture. Max size: ".ini_get('upload_max_filesize')."B");
 
 // Standardize name (remove accidental punctuation/typos)
 $fname = trim(ucwords(preg_replace('/[^a-zA-Z() ]/', '', $fname)));

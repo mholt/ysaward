@@ -1,17 +1,15 @@
 <?php
-require_once("lib/init.php");
+require_once "lib/init.php";
 protectPage(0, true);
 
-
 if (!isset($_GET['id']))
-	header("Location: /directory.php");
+	header("Location: /directory");
 
 $mem = Member::Load($_GET['id']);
 
 // No member with given ID number, or member is not in the same ward
 if (!$mem || $mem->WardID != $WARD->ID())
-	header("Location: /directory.php");
-
+	header("Location: /directory");
 
 $isCurrent = $MEMBER && $MEMBER->ID() == $mem->ID();
 
@@ -21,218 +19,327 @@ $mm = date("F", $bdate);
 $dd = date("j", $bdate);
 $ordinal = date("S", $bdate);
 
-// Profile picture filename
-$profilePic = $mem->PictureFile();
-
-
-$survey = '';
-// These blocks are poorly designed, I know. (There's a
-// lot of duplicated code in here...)
-if ($isCurrent)
-{
-	// If a member is viewing his/her own profile,
-	// show ALL their survey answers.
-	$q = "SELECT ID FROM SurveyQuestions WHERE WardID='{$mem->WardID}' AND Visible='1'";
-	$r = DB::Run($q);
-
-	if (!$r)
-		die("ERROR > Can't render this page because of a database problem. Please report this: ".mysql_error());
-
-	while ($row = mysql_fetch_array($r))
-	{
-		$tr = "<h4>";
-		$qu = SurveyQuestion::Load($row['ID']);
-		if (!$qu)
-		{
-			$tr .= '</h4>\r\n';
-			$trs.= $tr;
-			continue;
-		}
-		$tr .= $qu->Question."</h4>\r\n\t\t\t\t";
-		$ans = $qu->Answers($mem->ID());
-		if ($ans)
-			$ansDisplay = $ans->ReadonlyAnswer();
-		else
-			$ansDisplay = '<i>no answer</i>'; // No answer to this question
-		$tr .= $ansDisplay."<br><br>\r\n";
-		$survey .= $tr; // Add this question/answer to the rest of them
-	}
-}
-else
-{
-	// Get this person's answers to the survey, and
-	// display those which the current member is allowed
-	// to see.
-	$permissions = $USER->Permissions(true);
-	foreach ($permissions as $per)
-	{
-		$tr = "<h4>";
-		$qu = SurveyQuestion::Load($per->QuestionID());
-		$tr .= $qu->Question."</h4>";
-		$ans = $qu->Answers($mem->ID());
-		if ($ans)
-			$ansDisplay = $ans->ReadonlyAnswer();
-		else
-			$ansDisplay = '<i>no answer</i>'; // No answer to this question
-		$tr .= $ansDisplay."<br><br>\r\n";
-		$survey .= $tr; // Add this question/answer to the rest of them
-	}
-}
-
+// Load survey questions in order to get the answers
+$r = DB::Run("SELECT ID FROM SurveyQuestions WHERE WardID='{$mem->WardID}' AND Visible='1'");
+if (!$r)
+	die("ERROR > Can't render this page because of a database problem. Please report this: ".mysql_error());
 
 ?>
+<!DOCTYPE html>
 <html>
-<head>
-	<title><?php echo $mem->FirstName().' '.$mem->LastName; ?> &mdash; <?php echo $WARD ? $WARD->Name." Ward" : SITE_NAME; ?></title>
-	<?php include("includes/head.php"); ?>
-	<style>
+	<head>
+		<title><?php echo $mem->FirstName().' '.$mem->LastName; ?> &mdash; <?php echo $WARD ? $WARD->Name." Ward" : SITE_NAME; ?></title>
+		<?php include "includes/head.php"; ?>
+		<style>
+		.whitebg {
+			background: #FFF;
+			padding: 2em 0;
+		}
 
-	.nameContainer {
-		margin-bottom: 50px;
-	}
+		.member-name {
+			margin: 20px auto 20px;
+			font-size: 72px;
+			font-weight: 300;
+			line-height: 1em;
+			color: #000;
+			text-align: center;
+		}
 
-	#picContainer img {
-		box-shadow: 2px 2px 10px #AAA;
-		border: 1px solid white;
-	}
+		.member-meta {
+			line-height: 2em;
+			text-align: center;
+		}
 
-	.profile h2 {
-		/*width: 50%;
-		padding: 10px 0;
-		border-bottom: 2px solid #333;
-		text-align: center;*/
-	}
+		.member-meta .metafield {
+			display: inline-block;
+			margin-right: 25px;
+			white-space: nowrap;
+			font-size: 18px;
+		}
 
-	.profile h4 {
-		margin-bottom: 5px;
-		border-bottom: 1px solid #AAA;
-		background: #F3F3F3;
-		padding: 5px;
-	}
+		.member-meta .metafield:last-child {
+			margin-right: 0;
+		}
 
-	.left {
-		width: 75%;
-		min-width: 260px;
-	}
+		.member-meta .metafield a {
+			color: inherit;
+		}
 
-	.name {
-		font-size: 40px;
-		line-height: 1.5em;
-		margin-bottom: 15px;
-	}
-	</style>
-</head>
-<body>
+		.member-meta .metafield a:hover {
+			color: #000;
+			text-decoration: none;
+		}
 
-	<?php include("includes/header.php"); ?>
+		.member-meta .home {
+			font-size: 22px;
+			color: #000;
+			text-align: center;
+			display: block;
+			font-weight: bold;
+		}
 
-	<article class="grid-12 group profile">
-		<br>
-		<section class="g-4 prefix-1">
+		.misc {
+			font-size: 14px;
+			line-height: 1.75em;
+		}
 
-			<!--<h2>Profile:
-			<?php if ($isCurrent): ?>
-				<span style="font-size: 14px; font-weight: normal;">[<a href="editprofile.php" title="Basic information shown below">edit</a>]</span>
-			<?php endif; ?></h2>-->
-			<div class="left">
+		.misc b {
+			display: block;
+			color: #000;
+		}
 
-				<div class="text-center" id="picContainer">
-					<?php echo $mem->ProfilePicImgTag(false, false); ?>
-					<br>
-					<?php if ($isCurrent) echo '[<a href="editprofile.php#pic" title="Edit your profile">Change picture</a>]'; ?>
-				</div><br>
+		.chunk {
+			display: block;
+			margin-bottom: 2em;
+		}
 
-				<h4>Apartment/address</h4>
-				<?php echo $mem->ResidenceString(); ?>
-				<br>
+		.question,
+		.answer {
+			font-size: 16px;
+		}
 
-				<h4>Phone number</h4>
-				<?php echo !$mem->HidePhone || $isCurrent || $LEADER ? formatPhoneForDisplay($mem->PhoneNumber) : ''; ?>
-				<br>
+		.question {
+			margin-bottom: .25em;
+			border-bottom: 1px solid #AAA;
+			background: #F3F3F3;
+			padding: 5px;
+			font-weight: bold;
+		}
 
-				<h4>Email address</h4>
-				<?php echo !$mem->HideEmail || $isCurrent || $LEADER ? $mem->Email : ''; ?>
-				<br>
+		.answer {
+			margin-bottom: 2.5em;
+		}
 
-				<h4>Birthday</h4>
-				<?php echo !$mem->HideBirthday || $isCurrent || $LEADER ? "{$mm} {$dd}<sup>{$ordinal}</sup>" : ''; ?>
-				<br>
+		.deletemem {
+			position: relative;
+			top: -1.5em;
+			font-size: 12px;
+			text-align: center;
+		}
 
-				<h4>Callings</h4>
-				<?php
-					$callings = $mem->Callings();
-					foreach ($callings as $c)
-						echo $c->Name."<br>";
-					if (sizeof($callings) == 0)
-						echo "<br>";
-				?>
+		.deletemem a {
+			text-decoration: none;
+		}
 
-				<h4>FHE Group</h4>
-				<?php
-					$group = FheGroup::Load($mem->FheGroup);
-					if ($group)
-						echo $group->GroupName;
-				?>
+		@media (max-width: 767px) {
+			.member-meta .metafield {
+				display: block;
+				text-align: left;
+				padding-left: 25%;
+			}
+		}
+
+		@media (max-width: 600px) {
+			.member-name {
+				margin: 10px auto 15px;
+				font-size: 42px;
+			}
+
+			.member-meta .metafield {
+				text-align: left;
+				padding-left: 5%;
+			}
+
+			.member-meta .home {
+				font-size: 20px;
+			}
+
+			mark {
+				font-size: 12px;
+			}
+		}
+
+		@media (max-width: 1024px) and (min-width: 768px) {
+			.chunk {
+				display: inline-block;
+				margin-right: 3em;
+				margin-bottom: 4em;
+			}
+
+			.misc {
+				text-align: center;
+			}
+		}
+		</style>
+	</head>
+	<body>
+		<?php include "includes/header.php"; ?>
+
+		<div class="whitebg">
+			<div class="grid-container">
+
+				<div class="grid-30 text-center">
+
+					<?php if ($mem->PictureFile): ?>
+						<a href="/uploads/<?php echo $mem->PictureFile; ?>" style="cursor: -moz-zoom-in; cursor: -webkit-zoom-in;" target="_blank"><?php echo $mem->ProfilePicImgTag(false, false); ?></a>
+					<?php else: ?>
+						<?php echo $mem->ProfilePicImgTag(false, false); ?>
+					<?php endif; ?>
+					
+					<?php if ($isCurrent): ?>
+					<small>
+						<br>[<a href="/profile#pic">Change picture</a>]
+					</small>
+					<?php endif; ?>
+
+				</div>
+
+				<div class="grid-70">
+					<?php if ($isCurrent): ?>
+						<p class="text-center">
+							<mark>
+								This is you. <b><a href="/profile">Edit profile</a></b>
+								| <b><a href="/survey">Edit survey answers</a></b>
+							</mark>
+						</p>
+					<?php endif; ?>
+
+					<div class="member-name">
+						<?php echo $mem->FirstName().' '.$mem->LastName; ?>
+					</div>
+
+					<?php if ($MEMBER && $MEMBER->HasPrivilege(PRIV_DELETE_ACCTS) && $MEMBER->ID() != $mem->ID()): ?>
+						<div class="deletemem">
+							<a id="delmem" class="del" href="javascript:" title="Permanently delete this member's account"><i class="icon-remove-sign"></i> &nbsp;Delete Account</a>
+						</div>
+					<?php endif; ?>
+
+					<div class="member-meta">
+						<span class="home">
+							<i class="icon-home"></i>
+							<?php echo $mem->ResidenceString(); ?>
+						</span>
+
+						<hr>
+
+						<?php if (!$mem->HideEmail || $isCurrent || $LEADER): ?>
+						<span class="metafield">
+							<a href="mailto:<?php echo $mem->Email; ?>" target="_blank" class="mail-link" title="Send email">
+								<i class="icon-envelope-alt"></i>
+								<?php echo $mem->Email; ?>
+							</a>
+						</span>
+						<?php endif; ?>
+						<?php if ($mem->PhoneNumber && (!$mem->HidePhone || $isCurrent || $LEADER)): ?>
+						<span class="metafield">
+							<i class="icon-phone"></i>
+							<?php echo formatPhoneForDisplay($mem->PhoneNumber); ?>
+						</span>
+						<?php endif; ?>
+						<?php if (!$mem->HideBirthday || $isCurrent || $LEADER): ?>
+						<span class="metafield">
+							<i class="icon-gift"></i>
+							<?php echo "{$mm} {$dd}<sup>{$ordinal}</sup>"; ?>
+						</span>
+						<?php endif; ?>
+					</div>
+
+				</div>
+
+				<hr class="clear">
 				<br><br>
 
 
-				<?php if ($isCurrent): ?>
-					<b><a href="editprofile.php" title="Just the basic information shown above">Edit Profile</a></b>
-				<?php endif; ?>
+				<div class="grid-25 mobile-grid-30 misc">
+					<div class="chunk">
+						<?php
+							$callings = $mem->Callings();
+							echo count($callings) == 1 ? '<b>Calling</b>' : '<b>Callings</b>';
+							foreach ($callings as $c)
+								echo $c->Name."<br>";
+							if (sizeof($callings) == 0)
+								echo "<br>";
+						?>
+					</div>
+
+					<div class="chunk">
+						<b>FHE group</b>
+						<?php
+							$group = FheGroup::Load($mem->FheGroup);
+							if ($group)
+								echo $group->GroupName;
+						?>
+					</div>
+
+					<div class="chunk">
+						<b>Member since</b>
+						<?php echo date('F Y', strtotime($mem->RegistrationDate())); ?>
+					</div>
+
+					<div class="chunk">
+						<b>Profile updated</b>
+						<?php echo date('j M Y', strtotime($mem->LastUpdated())); ?>
+					</div>
+					<br>
+
+				</div>
+
+				<div class="grid-75 mobile-grid-70">
+<?php
+if ($isCurrent):
+
+	while ($row = mysql_fetch_array($r)):
+		$qu = SurveyQuestion::Load($row['ID']);
+		if (!$qu)
+			continue;
+		$ans = $qu->Answers($mem->ID());
+		$readonlyAnswer = $ans && $ans->ReadonlyAnswer() ? $ans->ReadonlyAnswer() : '<i>no answer</i>';
+?>
+					<div class="question">
+						<?php echo $qu->Question; ?>
+					</div>
+					<div class="answer">
+						<?php echo $readonlyAnswer; ?>
+					</div>
+<?php
+	endwhile;
+
+else:
+	// Get this person's answers to the survey, and display those which
+	// the current member is allowed to see.
+	$permissions = $USER->Permissions(true);
+	
+	if (count($permissions) == 0)
+		echo "<i>None of {$mem->FirstName()}'s survey answers are available for you to view.</i>";
+
+	foreach ($permissions as $per):
+		$qu = SurveyQuestion::Load($per->QuestionID());
+		if (!$qu)
+			continue;
+		$ans = $qu->Answers($mem->ID());
+		$readonlyAnswer = $ans && $ans->ReadonlyAnswer() ? $ans->ReadonlyAnswer() : '<i>no answer</i>';
+
+?>
+					<div class="question">
+						<?php echo $qu->Question; ?>
+					</div>
+					<div class="answer">
+						<?php echo $readonlyAnswer; ?>
+					</div>
+<?php
+	endforeach;
+endif;
+?>
+				</div>
+
+
 			</div>
-		</section>
-		<section class="g-6 suffix-1">
-			<div class="nameContainer">
-				<h1 class="name text-left" style="margin-top: 0px;">
-					<?php echo $mem->FirstName().' '.$mem->LastName; ?> <?php if ($isCurrent) echo '(you)'; ?>
-				</h1>
-
-				<?php if (!$isCurrent): ?><a href="/directory.php">&laquo; Back to directory</a><?php endif; ?>
-				<?php if ($isCurrent): ?>
-				<b><a href="/survey" title="The information shown below">Edit Survey Answers</a></b> &nbsp; or &nbsp; <b><a href="/profile" title="Basic information shown to the left">Edit Profile</a></b>
-				<?php elseif ($MEMBER && $MEMBER->HasPrivilege(PRIV_DELETE_ACCTS)): ?>
-				&nbsp;|&nbsp; <a id="delmem" href="javascript:" title="Permanently delete this member's account" style="font-weight: 400 !important;">Delete Member</a>
-				<?php endif; ?>
-			</div>
-
-
-			<!--<h2>Survey answers: <?php if ($isCurrent): ?>
-			<span style="font-size: 14px; font-weight: normal;">[<a href="/survey" title="Edit your survey answers">edit</a>]</span>
-			<?php endif; ?></h2>-->
-
-			<?php
-				// Renders the questions/answers that the current user is allowed
-				// to see about this member.
-				if (strlen($survey) > 0)
-					echo $survey;
-				else
-					echo "<i>None of {$mem->FirstName()}'s survey answers are available for you to view.</i>";
-			?>
-			<br>
-			<?php if ($isCurrent): ?>
-				<b><a href="/survey" title="The information shown above">Edit Survey Answers</a></b>
-			<?php endif; ?>
-		</section>
-		<hr class="clear">
-
-		<div class="text-center">
-			<br><br><br>
-
-			<a href="#">Back to top</a>
 		</div>
 
-	</article>
+		<?php include "includes/footer.php"; ?>
+		<?php include "includes/nav.php"; ?>
+
 
 <script>
-
-$('#delmem').click(function() {
+$('#delmem').click(function()
+{
 	var conf = confirm("Everything about this person will be deleted permanently from this website. It CANNOT be undone. Are you sure you want to do this?");
 	if (conf == true)
-		window.location = 'manage/api/deletemem.php?id=<?php echo($mem->ID()); ?>';
+		window.location = '/manage/api/deletemem?id=<?php echo($mem->ID()); ?>';
 	else
 		return;
 });
-
 </script>
 
-<?php include("includes/footer.php"); ?>
+	</body>
+</html>

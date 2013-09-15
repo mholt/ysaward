@@ -1,9 +1,13 @@
 /* Eric Meyer's Reset CSS v2.0 - http://cssreset.com */
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{border:0;font-size:100%;font:inherit;vertical-align:baseline;margin:0;padding:0}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:none}table{border-collapse:collapse;border-spacing:0}
 
+::selection      { background: #3C585B; color: white; }
+::-moz-selection { background: #3C585B; color: white; }
+
+
 html,
 body {
-	font: 400 19px/1.5em 'Open Sans', sans-serif;
+	font: 400 16px/1.5em 'Open Sans', sans-serif;
 	color: #555;
 	z-index: 0;
 	min-height: 100%;
@@ -17,7 +21,6 @@ header,
 #menu-icon {
 	background: #F8F8F8;
 }
-
 
 .narrow {
 	-webkit-box-sizing: border-box;
@@ -85,11 +88,29 @@ header a.icon-large:hover {
 }
 
 h1 {
-	font-size: 28px;
+	font-size: 40px;
 	font-weight: 800;
 	color: #444;
-	margin: 1em 0;
-	/*color: #A05A2C; -- Color of the brown logo text */
+	margin: .5em 0;
+	line-height: 1.5em;
+	text-align: center;
+	/* color: #A05A2C; /* color of big logo text */
+}
+
+h2 {
+	font-weight: bold;
+	font-size: 24px;
+	line-height: 1.25em;
+	color: #000;
+	text-align: center;
+	margin: 5px 0 1em;
+}
+
+h3 {
+	color: #000;
+	font-weight: 800;
+	font-size: 20px;
+	margin: 5px 0 1em;
 }
 
 fieldset legend {
@@ -251,7 +272,7 @@ input[type=submit]:disabled,
 	text-transform: uppercase;
 	text-decoration: none;
 	display: inline-block;
-	padding: 0 30px;
+	padding: 5px 30px 15px;
 }
 
 
@@ -263,7 +284,7 @@ footer {
 	line-height: 2em;
 	text-align: center;
 	color: #888;
-	padding: 0 20px 25px;
+	padding: 0 20px 15px;
 }
 
 footer a {
@@ -297,9 +318,16 @@ nav {
 	background: #333;
 	color: #FFF;
 	width: 200px;
-	padding: 10px 15px;
+	padding: 10px 0;
 	overflow-y: scroll;
 	font-size: 16px;
+
+	box-shadow: 0 0 5px #333;
+}
+
+nav b {
+	padding: 0 15px;
+	margin-bottom: .25em;
 }
 
 nav a {
@@ -307,13 +335,19 @@ nav a {
 	text-decoration: none;
 	display: block;
 	font-weight: 300;
-	font-size: 15px;
+	font-size: 14px;
+	padding: 3px 15px;
 }
 
 nav a:hover,
 nav a:focus {
-	color: #6BE1FF;
+	color: #333;
+	background: #FFF;
 	text-decoration: none;
+}
+
+nav a > i {
+	margin-right: .6em;
 }
 
 nav > b {
@@ -324,11 +358,18 @@ nav > b {
 
 
 mark {
-	background: #F9E572;
+	background: #FCFC74;
 	padding: 5px 10px;
 	font-size: 16px;
 	border-radius: 5px;
 	color: #333;
+}
+
+
+th {
+	font-weight: bold;
+	text-align: center;
+	color: #000;
 }
 
 
@@ -356,16 +397,28 @@ kbd {
 	cursor: default;
 }
 
-b {
+b,
+.bold {
 	font-weight: bold;
 }
 
-i {
+i,
+.italic {
 	font-style: italic;
 }
 
+sup {
+	position: relative;
+	top: -.4em;
+	font-size: 12px;
+}
+
 small {
-	font-size: 15px;
+	font-size: 85%;
+}
+
+big {
+	font-size: 115%;
 }
 
 .float-left {
@@ -380,13 +433,34 @@ small {
 	white-space: nowrap;
 }
 
+.clr-red {
+	color: #CC0000;
+}
+
+.hide {
+	display: none;
+}
+
 
 .profilePicture {
 	vertical-align: middle;
 }
 
+.instructions {
+	padding: 10px 15px;
+	margin: 0px auto 2em;
+	font-size: 13px;
+	background: #DDEEFF;
+	border-radius: 7px;
+	max-width: 850px;
+	border-bottom: 2px solid #225588;
+}
 
-
+.instructions p {
+	margin: .75em 0;
+	font-size: 14px;
+	line-height: 1.5em;
+}
 
 
 
@@ -417,6 +491,55 @@ small {
 
 
 
+.card {
+	background: #FFF;
+	border: 1px solid #AAA;
+	box-shadow: 0px 1px 1px #AAA;
+	max-width: 500px;
+	margin: 0px auto 2em;
+}
+
+.card.padded {
+	padding: 10px;
+}
+
+.card.wide {
+	max-width: none;
+}
+
+.member-link {
+	text-decoration: none;
+	display: block;
+	font-weight: 300;
+	font-size: 16px;
+	padding: 8px;
+	border-top: 1px solid #DDD;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.member-link:hover {
+	text-decoration: none;
+	background: #FFFFDD;
+}
+
+.del {
+	text-decoration: none;
+	color: #CC0000;
+}
+
+.del:hover {
+	color: #FF0000;
+	text-decoration: none;
+}
+
+a[href='#'] {
+	text-decoration: none;
+}
+
+
+
+
 
 
 .sticky {
@@ -433,6 +556,10 @@ small {
 }
 
 
+.prettycheckbox a {
+	zoom: 80%;
+}
+
 .smarty-autocomplete {
 	line-height: 1.25em;
 }
@@ -448,11 +575,28 @@ small {
 		min-width: 370px;
 	}
 
+	h1 {
+		font-size: 28px;
+	}
+
+	.member-link {
+		font-size: 12px;
+		padding: 0px;
+		line-height: 1em;
+		font-weight: normal;
+		border-top: 1px solid #EFEFEF;
+	}
+
+	.card .profilePicture {
+		width: 35px;
+		margin-right: .25em;
+	}
+
 	.half-side {
 		padding: 10px 25px 0;
 	}
 
 	#menu-icon {
-		padding: 0 25px;
+		padding: 5px 25px 15px;
 	}
 }

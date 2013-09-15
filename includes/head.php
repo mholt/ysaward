@@ -1,7 +1,7 @@
 <meta charset="UTF-8">
 
 <!-- Style sheets and fonts -->
-<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Oswald|Open+Sans:400,300,700,800">
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Oswald|Open+Sans:300,400,600,800">
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css">
 <link rel="stylesheet" href="/resources/css/unsemantic.css">
 <link rel="stylesheet" href="/resources/css/sticky.css">
@@ -21,8 +21,9 @@
 <!-- Fill width -->
 <meta name="viewport" content="width=device-width">
 
-<!-- Disable pinch zooming -->
-<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+<!-- Disable pinch zooming and set the width to that of the device -->
+<!-- Also tried with: initial-scale=1.0, maximum-scale=1.0, but it was too wide for iPhone screens -->
+<meta name="viewport" content="width=device-width, user-scalable=0">
 
 <!-- Icons -->
 <!--<link rel="shortcut icon" href="/favicon.ico" type="image/vnd.microsoft.icon">

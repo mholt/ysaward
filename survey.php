@@ -13,7 +13,7 @@ $mem = Member::Load($_SESSION['userID']);
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>My survey &mdash; <?php echo SITE_NAME; ?></title>
+		<title>My survey &mdash; <?php echo $WARD ? $WARD->Name." Ward" : SITE_NAME; ?></title>
 		<?php include "includes/head.php"; ?>
 	</head>
 	<body>
@@ -94,7 +94,7 @@ while ($row = mysql_fetch_array($r)):
 	// Format and display answer field(s) for this question depending on its type
 	if ($sq->QuestionType == QuestionType::FreeResponse):
 ?>
-					<textarea rows="1" name="<?php echo $inputName; ?>" id="<?php echo $inputID; ?>" placeholder="Type your answer here"><?php echo is_object($ans) ? $ans->AnswerValue : ''; ?></textarea>
+					<textarea rows="5" name="<?php echo $inputName; ?>" id="<?php echo $inputID; ?>" placeholder="Type your answer here"><?php echo is_object($ans) ? $ans->AnswerValue : ''; ?></textarea>
 <?php
 	elseif ($sq->QuestionType == QuestionType::MultipleChoice
 			|| $sq->QuestionType == QuestionType::MultipleAnswer):
@@ -132,7 +132,7 @@ while ($row = mysql_fetch_array($r)):
 	elseif ($sq->QuestionType == QuestionType::CSV):
 ?>
 						<!--Please list <i>one per line</i>:<br>-->
-						<textarea rows="1" name="<?php echo $inputName; ?>" placeholder="List one per line"><?php echo formatForClient(is_object($ans) ? $ans->AnswerValue : ''); ?></textarea>
+						<textarea rows="5" name="<?php echo $inputName; ?>" placeholder="List one per line"><?php echo formatForClient(is_object($ans) ? $ans->AnswerValue : ''); ?></textarea>
 <?php
 	else:
 		echo '';
@@ -177,26 +177,21 @@ $(function()
 	// Verify date/time inputs as they're entered
 	$('.timestamp').change(function()
 	{
+		var self = $(this);
 		$.get('/api/tryparsedate.php', {
 			input: $(this).val()
 		})
 		.success(function()
 		{
-			$(this).css('color', '');
+			self.css('color', '');
 			$('[type=submit]').prop('disabled', false);
 		})
 		.fail(function(jqxhr)
 		{
-			$(this).css('color', '#CC0000');
+			self.css('color', '#CC0000');
 			$('[type=submit]').prop('disabled', true);
 			$.sticky(jqxhr.responseText || "Please type a better date, for example: July 3, 1990.", { classList: "error" });
 		});
-	});
-
-	// Resize the textarea vertically as it gets filled out
-	$('textarea').keyup(function()
-	{
-		$(this).css('height', 'auto').css('height', this.scrollHeight+'px');
 	});
 
 
@@ -206,7 +201,6 @@ $(function()
 			$('[type=submit').showSpinner();
 		},
 		complete: function(xhr) {
-			console.log(xhr);
 			if (xhr.status == 200)
 			{
 				_gaq.push(['_trackEvent', 'Account', 'Submit Form', 'Survey Answers']);

@@ -31,6 +31,7 @@ $j = 0;			// Incremented for each apartment group we encounter
 	html,
 	body {
 		background: #FFF;
+		max-width: 7.5in;
 	}
 
 	#container {
@@ -53,22 +54,22 @@ $j = 0;			// Incremented for each apartment group we encounter
 		margin-bottom: -10px;
 	}
 
-	img {
-		/* Profile picture styles...? */
-		max-width: 100px !important;
-		max-height: 100px !important;
-	}
-
 	td {
 		padding: 4px;
 		font: 11px 'Open Sans', sans-serif;
-		vertical-align: top;
+		vertical-align: middle;
 		line-height: 1.5em;
 	}
 
 	td.picTd {
-		width: 100px;
+		width: 1.5in;
+		height: 1.5in;
 		text-align: center;
+	}
+
+	.profilePicture {
+		max-width: 100%;
+		max-height: 100%;
 	}
 
 	.apt {
@@ -88,7 +89,7 @@ $j = 0;			// Incremented for each apartment group we encounter
 	table.memberBlock {
 		display: inline;
 		float: left;
-		width: 290px;
+		width: 300px;
 		margin-right: 10px;
 		page-break-inside: avoid;
 	}
@@ -134,11 +135,10 @@ $j = 0;			// Incremented for each apartment group we encounter
 			$lastApt = $addrString;
 			endif;
 		?>
-
 				<table class="memberBlock">
 					<tr>
 						<td class="picTd">
-							<?php echo $mem->ProfilePicImgTag(false, false, 100); ?>
+							<img src="<?php echo $mem->PictureFile(false); ?>" class="profilePicture">
 						</td>
 						<td class="info">
 							<div class="name">

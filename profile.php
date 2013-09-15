@@ -29,23 +29,29 @@ $isCustom = $currentResidence ? $currentResidence->Custom() : false;
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Edit profile &mdash; <?php echo SITE_NAME; ?></title>
+		<title>Edit profile &mdash; <?php echo $WARD ? $WARD->Name." Ward" : SITE_NAME; ?></title>
 		<?php include "includes/head.php"; ?>
 		<style>
-			#chgward {
-				display: none;
-			}
+		#chgward {
+			display: none;
+		}
 
-			select {
-				margin-bottom: .5em;
-			}
+		select {
+			margin-bottom: .5em;
+		}
+
+		#ppic {
+			max-width: <?php echo Member::MEDIUM_DIM / 2; ?>px;
+			max-height: <?php echo Member::MEDIUM_DIM / 2; ?>px;
+		}
+
+		#pic {
+			line-height: 1em;
+		}
 		</style>
 	</head>
 	<body>
-		
-
 			<?php include "includes/header.php"; ?>
-
 
 			<form method="post" action="/api/saveprofile" class="narrow">
 				<div class="text-center">
@@ -144,18 +150,32 @@ $isCustom = $currentResidence ? $currentResidence->Custom() : false;
 					<hr>
 
 
-					<fieldset>
+					<fieldset id="pic">
 						<legend>
-							Profile picture
+							Current profile picture
 						</legend>
-						<div class="text-left">
-							<img src="<?php echo $profilePic; ?>" id="ppic">
-							<input type="file" size="15" name="profilepic" id="profilepic" accept="image/jpeg" style="font-size: 16px;">
-							<br>
-							<small>
-								<i>Please choose a picture with just you in it.</i>
-							</small>
-						</div>
+						
+						<img src="<?php echo $profilePic; ?>" id="ppic">
+						<hr>
+						<legend style="margin-bottom: 1em;">
+							Change picture
+						</legend>
+
+						<small>
+							<i>
+								<b>This is very important!</b>
+								<br>
+								Please choose a picture with just you in it,
+								<br>
+								then submit the form to save your new picture.
+								<br>
+								(Max size: 5 MB)
+							</i>
+						</small>
+						
+						<br><br>
+
+						<input type="file" name="profilepic" id="profilepic" accept="image/jpeg" style="font-size: 16px;">
 					</fieldset>
 
 					<br>
@@ -171,12 +191,14 @@ $isCustom = $currentResidence ? $currentResidence->Custom() : false;
 							<input type="checkbox" name="hideBirthday" data-label="Keep birth month and day private"<?php if ($MEMBER->HideBirthday) echo ' checked'; ?>>
 							<input type="checkbox" name="hidePhone" data-label="Keep phone number private"<?php if ($MEMBER->HidePhone) echo ' checked'; ?>>
 							<input type="checkbox" name="hideEmail" data-label="Keep email address private"<?php if ($MEMBER->HideEmail) echo ' checked'; ?>>
+							<br><br>
+							<input type="checkbox" name="receiveSms" data-label="Receive occasional ward-related texts"<?php if ($MEMBER->ReceiveTexts) echo ' checked'; ?>>
 						</div>
 					</fieldset>
 
 					<hr>
 
-				<div class="text-right">
+				<div class="text-center">
 					<button type="submit">Save</button>
 					<br>
 					<br>
@@ -187,7 +209,7 @@ $isCustom = $currentResidence ? $currentResidence->Custom() : false;
 
 		
 
-		<?php include "includes/nav.php"; ?>
+			<?php include "includes/nav.php"; ?>
 
 <script src="//d79i1fxsrar4t.cloudfront.net/jquery.liveaddress/2.4/jquery.liveaddress.min.js"></script>
 <script>

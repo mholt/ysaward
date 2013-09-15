@@ -1,5 +1,5 @@
 <?php
-require_once("lib/init.php");
+require_once "lib/init.php";
 protectPage();
 
 // TODO: Currently this page only supports regular members sending texts, not stake leaders.
@@ -30,207 +30,160 @@ $request = new HttpRequest(SMS_META_BASE."/account/get-balance/".SMS_API_KEY."/"
 $request->addHeaders(array("Accept" => "application/json"));
 $request->send();
 $response = json_decode($request->getResponseBody());
-$notEnoughFunds = $response->value < 2 && !$response->autoReload;	// The balance is in EUR
-
+$minFundsRequired = 2;	// Minumum EUR on account to allow sending SMS
+$notEnoughFunds = $response->value < $minFundsRequired && !$response->autoReload;	// The balance is in EUR
 ?>
+<!DOCTYPE html>
 <html>
-<head>
-	<title>Send Text Messages &mdash; <?php echo $WARD ? $WARD->Name." Ward" : SITE_NAME; ?></title>
-	<?php include("includes/head.php"); ?>
-<style>
-#memberlist { font-size: 12px; }
-table label { display: block; padding: 3px; cursor: pointer; }
-table label:hover { background: #EEE; }
-#memberlist td { white-space: nowrap; vertical-align: top; padding-right: 15px; }
-.disabled-always {
-	color: #AAA;
-	background: none !important;
-	cursor: default;
-}
-#notes {
-	float: right;
-	width: 325px;
-	padding-left: 25px;
-	font-size: 14px;
-	line-height: 1em;
-}
-#notes ul {
-	margin: 5px 0 0 0;
-	padding-left: 15px;
-}
-#notes li {
-	font-size: 12px;
-}
-.instructions ul {
-	margin-top: 0;
-	margin-bottom: 0;
-}
-.instructions li {
-	font-size: 14px;
-	line-height: 1.5em;
-}
-#char-count {
-	font-weight: bold;
-}
-.char-count-ok {
-	color: #5588AA;
-}
-.char-count-close {
-	color: #E3BD1C;
-}
-.char-count-warn {
-	color: #CC0000;
-}
-.remaining-faded, .remaining-faded span {
-	color: #CCC !important;
-}
-#message-parts {
-	visibility: hidden;
-	line-height: 1.5em;
-}
-#part-count {
-	font-weight: bold;
-	color: blue;
-}
-#cost {
-	color: green;
-}
-</style>
-</head>
-<body>
-	
-	<?php include("includes/header.php"); ?>
-	
-	<article class="grid-12 group">
-	
-		<h1>Send text messages</h1>
-		
-		<section class="g-12">
-			<div class="instructions">
-				<p>
-					<b style="color: #CC0000;">Hey, feel free to send texts. But keep in mind:</b><br>
-				</p>
-				<ul>
-					<li>This page is for <i>outbound SMS</i> only. (You can send, but can't receive.)</li>
-					<li>Any texts you send will <i>not</i> appear to be from own your phone number and cannot be replied to. (Sorry!)</li>
-					<li>Your ward covers the cost of text messages, so don't worry about that.</li>
-					<li>Each text message costs a little less than &asymp; 1&cent; per recipient.</li>
-					<li>Longer text messages that need to be broken into segments will cost &asymp; 1&cent; per segment per recipient.</li>
-				</ul>
-			</div><br>
-		</section>
-		<hr class="clear">
-		
-		<section class="g-11 prefix-1">
+	<head>
+		<title>Send text messages &mdash; <?php echo $WARD ? $WARD->Name." Ward" : SITE_NAME; ?></title>
+		<?php include "includes/head.php"; ?>
+		<style>
+		/** NOTE: THESE STYLES ARE SAME AS EMAIL PAGE **/
+		fieldset legend {
+			margin-bottom: 1em;
+		}
 
-		<?php if ($notEnoughFunds): ?>
+		.headers {
+			font-size: 14px;
+			margin-bottom: 2em;
+		}
+
+		.memberlist {
+			overflow-y: scroll;
+			height: 300px;
+			display: inline-block;
+			min-width: 200px;
+			background: #FFF;
+			border-radius: 10px;
+			margin-top: 1em;
+			border: 1px solid #AAA;
+		}
+
+		.to label {
+			display: block;
+			cursor: pointer;
+			padding: 0 5px;
+		}
+
+		.to label.bold {
+			width: 150px;
+			border-radius: 5px;
+		}
+
+		.to label:hover {
+			background: #EEE;
+		}
+		/** END STYLES SAME AS EMAIL PAGE **/
+
+		.to label.disabled-always {
+			color: #AAA;
+			background: none;
+			cursor: default;
+		}
+		#char-count {
+			font-weight: bold;
+		}
+		.char-count-ok {
+			color: #5588AA;
+		}
+		.char-count-close {
+			color: #E3BD1C;
+		}
+		.char-count-warn {
+			color: #CC0000;
+		}
+		.remaining-faded, .remaining-faded span {
+			color: #CCC !important;
+		}
+		#message-parts {
+			visibility: hidden;
+			line-height: 1.5em;
+		}
+		#part-count {
+			font-weight: bold;
+			color: blue;
+		}
+		#cost {
+			color: green;
+		}
+
+		.message-area {
+			line-height: 1em;
+		}
+		</style>
+	</head>
+	<body>
+		<?php include "includes/header.php"; ?>
+
+		<form method="post" action="api/startsendingsms" class="narrow">
+			
+			<h1>Text messaging</h1>
+
+<?php if ($notEnoughFunds): ?>
 			<div class="text-center">
-				<br><br><mark>
-				<b>Text messaging is currently unavailable.</b> Please ask your ward website administrator to add funds to the SMS account.</mark>
+				<mark>
+					<b>Text messaging is currently unavailable.</b>
+				</mark>
+				<br><br>
+				Please ask your ward website administrator to add funds to the SMS account.
 			</div>
-		<?php else: ?>
-			
-			<form method="post" action="api/startsendingsms.php">
-			<table>
-				<tr>
-					<td style="min-width: 100px; vertical-align: top; padding-top: 7px;">
-						<b>To:</b>
-					</td>
-					<td style="padding-bottom: 20px;">
-						<?php if ($canSendAll): ?>
-						<label style="width: 220px;"><input type="checkbox" id="sel-all" class="sel"> <b>Select all</b></label>
-						<label style="width: 220px;"><input type="checkbox" id="sel-bro" class="sel"> <b>Select all brothers</b></label>
-						<label style="width: 220px;"><input type="checkbox" id="sel-sis" class="sel"> <b>Select all sisters</b></label>
-						<?php endif; if ($canSendAll || $canSendFHE): ?>
-						<label style="width: 220px;"><input type="checkbox" id="sel-fhe" class="sel" name="fhe"> <b>Select my FHE group</b></label>
-						<?php endif; ?>
-						
-						
-						
-						<table id="memberlist">
-							<tr>
-						<?php
-							$i = 0;
+<?php else:?>
 
-							// How many columns of members and how many per column?
-							// We don't want more than about 5 columnns
-							$numMems = count($mems);
-							$sqrt = sqrt($numMems);
-							$perCol = ceil($sqrt) > 5 ? ceil($numMems / 5) : ceil($sqrt);
+			<fieldset class="to">
+				<legend>To</legend>
+				<div class="headers">
+					<?php if ($canSendAll): ?>
+					<label class="bold"><input type="checkbox" id="sel-all" class="sel standard"> Everyone</label>
+					<label class="bold"><input type="checkbox" id="sel-bro" class="sel standard"> All brothers</label>
+					<label class="bold"><input type="checkbox" id="sel-sis" class="sel standard"> All sisters</label>
+					<?php endif; if ($canSendAll || $canSendFHE): ?>
+					<label class="bold"><input type="checkbox" id="sel-fhe" class="sel standard" name="fhe"> My FHE group</label>
+					<?php endif; ?>
+					<div class="memberlist">
+					<?php 
+						foreach ($mems as $mem):	
+							// Determine if we need to prevent this member from being selected
+							// This could happen if they have a malformed number or opted out
+							$shortNumber = strlen($mem->PhoneNumber) < 10;
+							$disable = $shortNumber || !$mem->ReceiveTexts;
+					?>
+						<label<?php if ($disable) echo !$mem->ReceiveTexts ? ' title="Opted out of texts" class="disabled-always"' : ' title="Phone number too short or none provided" class="disabled-always"'; ?>>
+							<input type="checkbox" name="to[]" value="<?php echo $mem->ID(); ?>" data-gender="<?php echo $mem->Gender; ?>" <?php echo $disable ? 'class="standard disabled-always" disabled' : 'class="standard"'; ?>>
+							<?php echo $mem->FirstName(); ?> <?php echo $mem->LastName; ?>
+						</label>
+					<?php endforeach; ?>
+					</div>
+				</div>
+			</fieldset>
 
-							foreach ($mems as $mem):
+			<fieldset class="message-area">
+				<legend>Message</legend>
 
-								// Determine if we need to prevent this member from being selected
-								// This could happen if they have a malformed number or opted out
-								$shortNumber = strlen($mem->PhoneNumber) < 10;
-								$disable = $shortNumber || !$mem->ReceiveTexts;
-						?>
-							<?php if ($i % $perCol == 0) echo '<td>'; ?>
+				<textarea name="msg" cols="40" rows="4" placeholder="Message body" maxlength="<?php echo SMS_CHARS_PER_TEXT * 4; ?>" required></textarea>
+				
+				<span class="float-right">Cost: <span id="cost">$0.00</span></span>
+				<span id="char-remaining"><span id="char-count" class="char-count-ok"><?php echo SMS_CHARS_PER_TEXT; ?></span> remaining</span>
 
-								<label<?php if ($disable) echo !$mem->ReceiveTexts ? ' title="Opted out of texts" class="disabled-always"' : ' title="Phone number too short or none provided" class="disabled-always"'; ?>>
-									<input type="checkbox" name="to[]" value="<?php echo $mem->ID(); ?>" data-gender="<?php echo $mem->Gender; ?>"<?php if ($disable) echo ' class="disabled-always" disabled' ?>>
-									<?php echo $mem->FirstName(); ?> <?php echo $mem->LastName; ?>
-								</label>
+				<br>
 
-							<?php if ($i % $perCol == $perCol - 1) echo '</td>'; ?>
-						<?php $i++; endforeach; ?>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td style="vertical-align: top;"><b>Message:</b></td>
-					<td>
-					
-						<div style="float: left; width: 360px;">
-							<textarea name="msg" cols="40" rows="4" required></textarea>
-							<br>
-							<span id="char-remaining"><span id="char-count" class="char-count-ok"><?php echo SMS_CHARS_PER_TEXT; ?></span> remaining</span><br>
-							<div id="message-parts">Will be split into <span id="part-count">2</span> parts for each recipient</div>
-	
-							
-							<input type="submit" id="sub" value="Send &raquo;" class="button" style="width: 100px;">
-							<img src="images/ajax-loader.gif" style="visibility: hidden; position: relative; top: 10px; left: 10px; margin-right: 15px;" id="ajaxloader">
-							<span id="price">Cost: <span id="cost">$0.00</span></span>
-						</div>
-						
-						<div id="notes">
-							<b style="color: #CC0000;">Remember:</b><br>
-							<ul>
-								<li>Make it clear who the text is from and what it's about.</li>
-								<li>These texts are <i>not</i> wired up to receive responses.</li>
-								<li>All texts will be from arbitrary Utah numbers.</li>
-							</ul>
-						</div>
-					</td>
-				</tr>
-			</table>
-			</form>
-			
-			<?php if (!$canSendAll && !$canSendFHE): ?>
-			<br>
-			You can send <b><?php echo SMS_MAX_PER_DAY; ?></b> texts every 24 hours. You have <b id="texts-remaining"><?php echo $textsRemaining; ?></b> texts remaining.
-			<br><small>(If a text message has to be broken into different pieces, each piece to each recipient counts as a text message.)</small>
-			<?php endif; ?>
-			
-			<?php if ($canSendAll): ?>
-			<br><br>
-			<small>
-				<b>Your ward's balance:</b> $<?php echo number_format(round($WARD->Balance, 2), 2); ?>
-				<?php if ($WARD->Balance < 0): ?> &nbsp;
-				(Being negative is OK. That's what reimbursements are for.)
-				<?php endif; ?>
-			</small>
-			<?php endif; ?>
+				<div id="message-parts">Will be split into <span id="part-count">2</span> parts for each recipient</div>
+				<br>
+			</fieldset>
+
+			<div class="text-center">
+				<button type="submit">Send</button>
+				<br>
+				<br>
+			</div>
+
+<?php endif; ?>
+
+		<?php include "includes/footer.php"; ?>
+		<?php include "includes/nav.php"; ?>
 
 
-		<?php endif; ?>
-		
-		</section>
-		<hr class="clear">
-	</article>
-
-<script type="text/javascript">
+<script>
 
 // Default number of characters per message. With SMS in the United States, it's 160
 var charsPerMessage = <?php echo SMS_CHARS_PER_TEXT; ?>;
@@ -242,7 +195,8 @@ var charsPerMessage = <?php echo SMS_CHARS_PER_TEXT; ?>;
 var segmentOverhead = <?php echo SMS_SEGMENT_OVERHEAD; ?>;
 
 
-$(function() {
+$(function()
+{
 	var notifyToast, segmentToast;
 	var checkedBeforeFheChecked = [];
 	var fheGroup = {<?php 
@@ -265,28 +219,28 @@ $(function() {
 
 			if ($('input[type=checkbox]:checked').length < 1)
 			{
-				toastr.error("Please select at least one recipient.");
+				$.sticky("Please select at least one recipient.", { classList: 'error' });
 				return false;
 			}
 			if (textarea.val().length == 0)
 			{
-				toastr.error("Please type a message.");
+				$.sticky("Please type a message.", { classList: 'error' });
 				return false;
 			}
 			if (textarea.val().length < 3)
 			{
-				toastr.warning("Please make your message at least 3 characters long.");
+				$.sticky("Please make your message at least 3 characters long.", { classList: 'error' });
 				return false;
 			}
 			
 			if (/[^ -~]/.test(textarea.val())) 	// THE MOST BEAUTIFUL REGULAR EXPRESSION EVER!!!
 			{
-				toastr.warning("Non-ASCII characters are not currently allowed. Please remove all special characters from your message.");
+				$.sticky("Fancy characters are not currently allowed. Please remove all special characters from your message.", { classList: 'error' });
 				return false;
 			}
 			if (segments > 2)
 			{
-				toastr.warning("That's a really long text. Why not send an email instead? Then, if it's really urgent, send a shorter text inviting them to check their email.");
+				$.sticky("That's a really long text. Please consider sending an email instead. If it's really urgent, send a shorter text inviting people to check their email.", { classList: 'error' });
 				return false;
 			}
 
@@ -302,20 +256,20 @@ $(function() {
 				_gaq.push(['_trackEvent', 'Feature', 'SMS', 'Send']);
 
 				if (recipCount > 10)
-					toastr.success("Your texts are being sent! Please allow a few minutes for all messages to arrive.");
+					$.sticky("Your texts are being sent! Please allow a few minutes for all messages to arrive.");
 				else
-					toastr.success("Your text is being sent! All messages should arrive in a few seconds.");
+					$.sticky("Your text is being sent! All messages should arrive in a few seconds.");
 				resetForm(recipCount);
 			}
 			else
 			{
 				if (!xhr.responseText && xhr.status != 500)
 				{
-					toastr.success("Your texts are being sent! Please allow a few minutes for all messages to arrive.");
+					$.sticky("Your texts are being sent! Please allow a few minutes for all messages to arrive.");
 					resetForm(recipCount);
 				}
 				else
-					toastr.error(xhr.responseText || "There was a problem and your message could not be sent. Please report this. Sorry.");
+					$.sticky(xhr.responseText || "There was a problem and your message could not be sent. Please report this. Sorry.", { classList: 'error' });
 			}
 
 			$('#sub').prop('disabled', false);
@@ -347,7 +301,7 @@ $(function() {
 	// Select all
 	$('#sel-all').click(function() {
 		$('input[type=checkbox]').not('#sel-fhe, :disabled').prop('checked', $(this).prop('checked'));
-		updateCost($('#memberlist input[type=checkbox]:checked').length, segments);
+		updateCost($('.memberlist input[type=checkbox]:checked').length, segments);
 	});
 
 	// Select brothers
@@ -355,7 +309,7 @@ $(function() {
 		$('input[type=checkbox]').filter(function() {
 			return $(this).data('gender') == <?php echo Gender::Male; ?> && !$(this).is(':disabled');
 		}).prop('checked', $(this).prop('checked'));
-		updateCost($('#memberlist input[type=checkbox]:checked').length, segments);
+		updateCost($('.memberlist input[type=checkbox]:checked').length, segments);
 	});
 
 	// Select sisters
@@ -363,15 +317,16 @@ $(function() {
 		$('input[type=checkbox]').filter(function() {
 			return $(this).data('gender') == <?php echo Gender::Female; ?> && !$(this).is(':disabled');
 		}).prop('checked', $(this).prop('checked'));
-		updateCost($('#memberlist input[type=checkbox]:checked').length, segments);
+		updateCost($('.memberlist input[type=checkbox]:checked').length, segments);
 	});
 
 	// Select FHE group
-	$('#sel-fhe').click(function() {
+	$('#sel-fhe').click(function()
+	{
 		if ($(this).is(':checked'))
 		{
 			// Save what's checked...
-			checkedBeforeFheChecked = $('#memberlist input[type=checkbox]:checked')
+			checkedBeforeFheChecked = $('.memberlist input[type=checkbox]:checked')
 				.prop('checked', false)
 				.toArray();
 
@@ -379,7 +334,7 @@ $(function() {
 			$('input[type=checkbox]').not('#sel-fhe').prop('disabled', true);
 
 			// Select the FHE group...
-			$('#memberlist input[type=checkbox]').filter(function() {
+			$('.memberlist input[type=checkbox]').filter(function() {
 				// Since disabled fields don't get sent to the server (apparently),
 				// we need to inject some hidden input fields manually
 				if (fheGroup[$(this).val()] && !$(this).hasClass('disabled-always'))
@@ -403,18 +358,18 @@ $(function() {
 			});
 		}
 
-		updateCost($('#memberlist input[type=checkbox]:checked').length, segments);
+		updateCost($('.memberlist input[type=checkbox]:checked').length, segments);
 	});
 
 
 	// This block ensures a user can't select more than they're allowed to
-	$('#memberlist input[type=checkbox]').change(function() {
-
+	$('.memberlist input[type=checkbox]').change(function()
+	{
 		// Since the fields are disabled, this shouldn't be an issue, but just in case...
 		if ($('#sel-fhe').is(':checked'))
 			$('#sel-fhe').click();
 
-		var recipCount = $('#memberlist input[type=checkbox]:checked').length;
+		var recipCount = $('.memberlist input[type=checkbox]:checked').length;
 
 		<?php if (!$canSendAll && !$canSendFHE): ?>
 		// Default privileges
@@ -422,7 +377,7 @@ $(function() {
 		{
 			$(this).prop('checked', false);
 			if (!$(notifyToast).is(':visible'))
-				notifyToast = toastr.info('You can send up to <?php echo SMS_MAX_PER_DAY; ?> texts every 24 hours, but you have only '+textsRemaining+' remaining.'+(segments > 1 ? ' With a message '+segments+' parts long, you cannot send to more recipients.' : ''));
+				notifyToast = $.sticky('You can send up to <?php echo SMS_MAX_PER_DAY; ?> texts every 24 hours, but you have only '+textsRemaining+' remaining.'+(segments > 1 ? ' With a message '+segments+' parts long, you cannot send to more recipients.' : ''));
 			recipCount --;
 		}
 		<?php elseif (!$canSendAll && $canSendFHE): ?>
@@ -431,7 +386,7 @@ $(function() {
 		{
 			$(this).prop('checked', false);
 			if (!$(notifyToast).is(':visible'))
-				notifyToast = toastr.info('You can only send <?php echo SMS_MAX_PER_DAY; ?> text messages every 24 hours.');
+				notifyToast = $.sticky('You can only send <?php echo SMS_MAX_PER_DAY; ?> text messages every 24 hours.');
 			recipCount --;
 		}
 		<?php endif; ?>
@@ -440,19 +395,19 @@ $(function() {
 	});
 
 	// Update the character count and price every keyup
-	$('textarea').keyup(function() {
-
+	$('textarea').keyup(function()
+	{
 		var charCount = $('#char-count');
 		var length = $(this).val().length;
 		var remaining = <?php echo SMS_CHARS_PER_TEXT; ?> - length;
-		var recipCount = $('#memberlist input[type=checkbox]:checked').length;
+		var recipCount = $('.memberlist input[type=checkbox]:checked').length;
 
 
 		$('#char-count').text(remaining);
 		
-		if (remaining <= 5)
+		if (remaining <= 15)
 			charCount.removeClass().addClass('char-count-warn');
-		else if (remaining <= 20)
+		else if (remaining <= 35)
 			charCount.removeClass().addClass('char-count-close');
 		else if (!charCount.hasClass('char-count-ok'))
 			charCount.removeClass().addClass('char-count-ok');
@@ -501,4 +456,5 @@ $(function() {
 	}
 });
 </script>
-<?php include("includes/footer.php"); ?>
+	</body>
+</html>

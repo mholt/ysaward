@@ -1,101 +1,93 @@
 <?php
-require_once("lib/init.php");
+require_once "lib/init.php";
 protectPage();
 
 // Build list of callings and members who hold those callings
 // to render it below.
 $list = '';
 
-$q = "SELECT ID FROM Callings WHERE WardID={$MEMBER->WardID} ORDER BY Name ASC";
-$r = DB::Run($q);
+$r = DB::Run("SELECT ID FROM Callings WHERE WardID={$MEMBER->WardID} ORDER BY Name ASC");
 
 if (!$r)
-	die("ERROR > Something happened; can't list callings. Please report this: ".mysql_error());
+	fail("ERROR > Could not request callings. Please report this: ".mysql_error());
+
+$callings = array();
 
 while ($row = mysql_fetch_array($r))
 {
 	$c = Calling::Load($row['ID']);
+
 	if (!$c)
 		continue;
-	$list .= "<tr><td>{$c->Name}</td><td>";
 	
-	$q2 = "SELECT MemberID FROM MembersCallings WHERE CallingID={$c->ID()}";
-	$r2 = DB::Run($q2);
+	$r2 = DB::Run("SELECT MemberID FROM MembersCallings WHERE CallingID={$c->ID()}");
+	
 	if (!$r2)
-		die("ERROR > Something happened; can't list callings. Please report this: ".mysql_error());
+		fail("ERROR > Can't list members' callings. Please report this: ".mysql_error());
+
 	if (mysql_num_rows($r2) > 0)
 	{
-		$list .= "\r\n";
+		$callings[$c->Name] = array();
 		
-		// Get a list of members with each calling
+		// Get a list of members with this calling
 		while ($row2 = mysql_fetch_array($r2))
 		{
 			$m = Member::Load($row2['MemberID']);
 			if (!$m)
 				continue;
-			$list .= "<a href=\"member.php?id={$m->ID()}\" style='display: block;' title='View profile'>{$m->FirstName()} {$m->LastName}</a>\r\n";
+			$callings[$c->Name][] = $m;
 		}
-		$list .= "\r\n";
 	}
-	$list .= "</td></tr>\r\n";
 }
 ?>
+<!DOCTYPE html>
 <html>
-<head>
-	<title>Callings &mdash; <?php echo $WARD ? $WARD->Name." Ward" : SITE_NAME; ?></title>
-	<?php include("includes/head.php"); ?>
-<style>
+	<head>
+		<title>Callings &mdash; <?php echo $WARD ? $WARD->Name." Ward" : SITE_NAME; ?></title>
+		<?php include "includes/head.php"; ?>
+		<style>
+		.calling-name {
+			background: #EFEFEF;
+			font-size: 14px;
+			padding: 10px 15px;
+			line-height: 1em;
+			font-weight: bold;
+		}
+		</style>
+	</head>
+	<body>
+		<?php include "includes/header.php"; ?>
 
-.callings {
-	max-width: 750px;
-	width: 80%;
-	margin: 0px auto;
-	border-collapse: collapse;
-	font-size: 14px;
-}
+		<h1>Callings</h1>
 
-th, td {
-	border-bottom: 1px solid #CCC;
-	padding: 7px;
-}
+		<div class="grid-container">
 
-.callingHeader {
-	width: 30%;
-	min-width: 350px;
-}
-</style>
-</head>
-<body>
-	
-	<?php include("includes/header.php"); ?>
-	
-	<article class="grid-12 group">
-		
-		<section class="g-12">
+<?php
+foreach ($callings as $callingName => $members):
+?>
+			<div class="grid-25 mobile-grid-50">
+				<div class="card">
+					<div class="calling-name">
+						<?php echo $callingName; ?>
+					</div>
+<?php
+	foreach ($members as $mem):
+?>
+					<a href="/member?id=<?php echo $mem->ID(); ?>" class="member-link">
+						<?php echo $mem->ProfilePicImgTag(true, true, 45); ?>
+						<?php echo $mem->FirstName().' '.$mem->LastName; ?>
+					</a>
+<?php
+	endforeach;
+?>
+				</div>
+			</div>
+<?php
+endforeach;
+?>
+		</div>
 
-			<h1>Callings</h1>
-
-			<p class="text-center">Listed alphabetically by calling.
-				<br>
-				<i style="font-size: 14px;">
-					Note: This may be incomplete and is not a replacement for the 
-					official list of callings on <a href="https://www.lds.org/directory/#x" target="_blank">LDS.org</a>.
-				</i>
-			</p>
-			
-			<table class="callings">
-				<tr>
-					<th class="callingHeader">Calling</th>
-					<th>Members</th>
-				</tr>
-				<?php echo $list; ?>
-			</table>
-			
-			<br><br>
-			<a href="#">Back to top</a>
-
-		</section>
-		
-	</article>
-	
-<?php include("includes/footer.php"); ?>
+		<?php include "includes/footer.php"; ?>
+		<?php include "includes/nav.php"; ?>
+	</body>
+</html>

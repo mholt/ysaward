@@ -1,10 +1,10 @@
 <?php
 /*
 	This file helps insert a new stake leader account into the system.
-	It should be secured so that only the webmaster can access it.
+	Make sure only the webmaster can access it.
 */
 
-exit;	// SAFETY. Comment-out or remove this line to use this file.
+exit;	// SAFETY LINE; comment-out or remove this line to use this file.
 
 
 

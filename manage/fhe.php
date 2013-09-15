@@ -1,5 +1,5 @@
 <?php
-require_once("../lib/init.php");
+require_once "../lib/init.php";
 protectPage(7);
 
 // Get a list of all members of the ward by name
@@ -10,7 +10,7 @@ while ($row = mysql_fetch_array($r))
 	array_push($mems, Member::Load($row['ID']));
 
 // Build list of options
-$memList = "<option value=''></option>";
+$memList = "";
 foreach ($mems as $mem)
 	$memList .= "\r\n<option value=\"{$mem->ID()}\">".$mem->FirstName()." ".$mem->LastName."</option>";
 $memList .= "\r\n";
@@ -23,187 +23,207 @@ while ($row = mysql_fetch_array($r2))
 	array_push($groups, FheGroup::Load($row['ID']));
 
 ?>
+<!DOCTYPE html>
 <html>
-<head>
-	<title>Manage FHE Groups &mdash; <?php echo $WARD ? $WARD->Name." Ward" : SITE_NAME; ?></title>
-	<?php include("../includes/head.php"); ?>
-	<style>
-	.no-group { background-color: #FFFFAA !important; }
-	.no-leader { padding: 10px; background-color: #FFFFAA; }
-	h3 { margin: 0px; }
-	</style>
-</head>
-<body>
-	
-	<?php include("../includes/header.php"); ?>
-	
-	<article class="grid-12 group">
+	<head>
+		<title>Manage FHE groups &mdash; <?php echo $WARD ? $WARD->Name." Ward" : SITE_NAME; ?></title>
+		<?php include "../includes/head.php"; ?>
+		<style>
+		.no-group {
+			background-color: #FFFFAA !important;
+		}
 		
+		.no-leader {
+			padding: 10px;
+			background-color: #FFFFAA;
+		}
+
+		td {
+			vertical-align: middle;
+		}
+
+		tr:nth-child(even) {
+			background: #FFF;
+		}
+
+		tr:nth-child(odd) {
+			background: #EFEFEF;
+		}
+
+		td select {
+			margin: 5px 0;
+			font-size: 14px;
+		}
+		</style>
+	</head>
+	<body>
+		<?php include "../includes/header.php"; ?>
+
 		<h1>Manage FHE Groups</h1>
 
-		<section class="g-12">
-			<div class="instructions">
-				<p>
-					Make sure members are assigned to their proper FHE group. Most
-					groups are titled simply by their number, such as "1" or "3" &mdash; unless
-					your ward decides to name the groups.
-				</p>
+		<div class="grid-container">
 
-				<p>
-					Each group usually has two leaders, but up to three may be assigned. When you assign
-					a member to be a group leader, they will automatically join that group.
-				</p>
-				
-				<b>1.</b> On the right, create the groups by giving them a name and assigning leaders. &nbsp; &nbsp;
-				<b>2.</b> On the left, assign each member to a group.
-			</div><br>
-		</section>
-		<hr class="clear">
+			<div class="grid-100">
+				<div class="instructions">
+					<p>
+						Make sure members are assigned to their proper FHE group. Most
+						groups are titled simply by their number, such as "1" or "3" &mdash; unless
+						your ward decides to name the groups.
+					</p>
 
-		<section class="g-5 text-center">
-			<h2>Assign members to FHE groups</h2>
+					<p>
+						Each group usually has two leaders, but up to three may be assigned. When you assign
+						a member to be a group leader, they will automatically join that group.
+					</p>
+					
+					<b>1.</b> On the right, create the groups by giving them a name and assigning leaders. &nbsp; &nbsp;
+					<br>
+					<b>2.</b> On the left, assign each member to a group.
+					
+				</div>
+			</div>
+
+			<div class="grid-40">
+
+				<div class="padded card wide">
+
+					<h2>Put members in FHE groups</h2>
 
 
-			<div id="nogroup" class="hide" style="background: #FFFFAA; padding: 10px; color: #CC0000; width: 90%;">
-				At least one member is not assigned to any group.
-			</div><br>
+					<div id="nogroup" class="hide" style="background: #FFFFAA; padding: 10px; color: #CC0000; width: 90%;">
+						At least one member is not assigned to any group.
+					</div><br>
 
-			<table style="border-collapse: collapse; min-width: 300px;" class="center">
-				<?php $i = 0; foreach ($mems as $mem): $i++; ?>
+					<table style="width: 100%;">
+						<?php $i = 0; foreach ($mems as $mem): ?>
 
-				<?php if ($mem->FheGroup > 0): ?>
-				<tr style="background-color: <?php echo $i % 2 == 0 ? '#EFEFEF' : '#FFF'; ?>">
-				<?php else: ?>
-				<tr class="no-group">
-				<?php endif; ?>
-					<td style="padding: 3px;">
-						<?php echo $mem->FirstName()." ".$mem->LastName; ?> &nbsp;
-					</td>
-					<td style="padding: 3px;">
-						<form method="POST" action="api/fhe.php?assign" class="assign">
-							<input type="hidden" name="user" value="<?php echo $mem->ID(); ?>">
-							<?php
-								echo '<select size="1" class="groups" name="group"><option value=""></option>';
-								foreach ($groups as $group)
-								{
-									echo "\r\n" . "<option value=\"{$group->ID()}\"";
-									if ($mem->FheGroup == $group->ID())
-										echo ' selected="selected"';
-									echo ">{$group->GroupName}</option>";
-								}
-								echo "\r\n</select>";
-							?>
+						<?php if ($mem->FheGroup > 0): ?>
+						<tr>
+						<?php else: ?>
+						<tr class="no-group">
+						<?php endif; ?>
+							<td style="padding: 3px;">
+								<?php echo $mem->FirstName()." ".$mem->LastName; ?> &nbsp;
+							</td>
+							<td style="padding: 3px;">
+								<form method="POST" action="api/fhe.php?assign" class="assign">
+									<input type="hidden" name="user" value="<?php echo $mem->ID(); ?>">
+									<?php
+										echo '<select size="1" class="groups" name="group"><option value=""></option>';
+										foreach ($groups as $group)
+										{
+											echo "\r\n" . "<option value=\"{$group->ID()}\"";
+											if ($mem->FheGroup == $group->ID())
+												echo ' selected="selected"';
+											echo ">{$group->GroupName}</option>";
+										}
+										echo "\r\n</select>";
+									?>
+								</form>
+							</td>
+						</tr>
+						<?php endforeach; ?>
+					</table>
+
+					<br><a href="#">Top <i class="icon-arrow-up"></i></a>
+				</div>
+			</div>
+
+
+			<div class="grid-60">
+				<div class="padded card wide">
+					<h2>Edit groups and leaders</h2>
+
+					<div id="noleader" class="hide" style="background: #FFFFAA; padding: 10px; color: #CC0000;">
+						At least one of the groups does not have any leaders. Please be sure to assign one.
+					</div><br>
+
+					<form method="POST" action="api/fhe?new" id="newGroup" style="background-color: #F0F0F0; padding: 10px;">
+						<h3>Create new group</h3>
+						<!--<i><small>
+							Each group can have up to three leaders, but usually only two are assigned.
+							<br>Leaders will automatically be moved to their assigned groups.
+						</small></i>-->
+						<input type="text" size="20" name="groupname" placeholder="Group name (example: 1)">
+						<br>
+						<select size="1" name="ldr1"><option value="">(Leader 1)</option><?php echo $memList; ?></select>
+						<select size="1" name="ldr2"><option value="">(Leader 2)</option><?php echo $memList; ?></select>
+						<select size="1" name="ldr3"><option value="">(Leader 3) (optional)</option><?php echo $memList; ?></select>
+						<input type="submit" value="Create">
+					</form>
+					<br><br><br>
+
+
+					<h3>Existing groups</h3>
+					<!--<i><small>New group leaders will automatically join their assigned group.</small></i>-->
+
+					<?php foreach ($groups as $group): ?>
+
+					<?php $hasLeader = $group->Leader1 || $group->Leader2 || $group->Leader3; ?>
+
+					<form method="POST" action="api/fhe?edit" class="edit<?php if (!$hasLeader) echo ' no-leader'; ?>">
+						<input type="hidden" name="id" value="<?php echo $group->ID(); ?>">
+						<input type="text" size="20" name="groupname" value="<?php echo $group->GroupName; ?>" placeholder="Group name (example: 1)">
+						<small>
+							<a class="del" href="api/fhe?del&id=<?php echo $group->ID(); ?>"><i class="icon-remove-sign"></i> Delete</a>
+						</small>
+						<br><br>
+						<select size="1" name="ldr1"><option value="">(Leader 1)</option>
+						<?php
+							foreach ($mems as $mem)
+							{
+								echo "\r\n" . "<option value=\"{$mem->ID()}\"";
+								if ($group->Leader1 == $mem->ID())
+									echo ' selected="selected"';
+								echo ">{$mem->FirstName()} {$mem->LastName}</option>";
+							}
+						?>
+						</select>
+						<select size="1" name="ldr2"><option value="">(Leader 2)</option>
+						<?php
+							foreach ($mems as $mem)
+							{
+								echo "\r\n" . "<option value=\"{$mem->ID()}\"";
+								if ($group->Leader2 == $mem->ID())
+									echo ' selected="selected"';
+								echo ">{$mem->FirstName()} {$mem->LastName}</option>";
+							}
+						?>
+						</select>
+						<select size="1" name="ldr3"><option value="">(Leader 3) (optional)</option>
+						<?php
+							foreach ($mems as $mem)
+							{
+								echo "\r\n" . "<option value=\"{$mem->ID()}\"";
+								if ($group->Leader3 == $mem->ID())
+									echo ' selected="selected"';
+								echo ">{$mem->FirstName()} {$mem->LastName}</option>";
+							}
+						?>
+						</select>
+
+							<input type="submit" value="Save">
 						</form>
-					</td>
-				</tr>
-				<?php endforeach; ?>
-			</table>
+						<br><hr class="line">
+						<br>
+					<?php endforeach; ?>
 
-			<br><br><a href="#" class="toTop">Back to top</a><br><br>
-		</section>
+					<?php if (count($groups) == 0): ?><p>No FHE groups! Make some?</p><?php endif; ?>
 
-
-		<section class="g-7">
-			<h2>Edit groups and leaders</h2>
-
-			<div id="noleader" class="hide" style="background: #FFFFAA; padding: 10px; color: #CC0000;">
-				At least one of the groups does not have any leaders. Please be sure to assign one.
-			</div><br>
-
-			<form method="POST" action="api/fhe.php?new" id="newGroup" style="background-color: #F0F0F0; padding: 10px;">
-				<h3>Create new group</h3>
-				<!--<i><small>
-					Each group can have up to three leaders, but usually only two are assigned.
-					<br>Leaders will automatically be moved to their assigned groups.
-				</small></i>-->
-				<br>
-				Group name: <input type="text" size="20" name="groupname"> <i>(example: 1)</i>
-				<br><br>
-				Leader 1: <select size="1" name="ldr1"><?php echo $memList; ?></select>
-				<br>
-				Leader 2: <select size="1" name="ldr2"><?php echo $memList; ?></select>
-				<br>
-				Leader 3: <select size="1" name="ldr3"><?php echo $memList; ?></select> <i>(not usually needed)</i>
-				<br><br>
-				<div style="text-indent: 120px;">
-					<input type="submit" class="button" value="&#10003; Create">
+					<a href="#"><i class="icon-arrow-up"></i> Top</a>
 				</div>
-			</form>
-			<br><br><br>
+			</div>
 
 
-			<h3>Existing groups</h3>
-			<!--<i><small>New group leaders will automatically join their assigned group.</small></i>-->
-
-			<?php foreach ($groups as $group): ?>
-
-			<?php $hasLeader = $group->Leader1 || $group->Leader2 || $group->Leader3; ?>
-
-			<form method="POST" action="api/fhe.php?edit" class="edit<?php if (!$hasLeader) echo ' no-leader'; ?>">
-				<input type="hidden" name="id" value="<?php echo $group->ID(); ?>">
-				<br>
-				Group name: <input type="text" size="20" name="groupname" value="<?php echo $group->GroupName; ?>">
-				<br>
-				Leader 1:
-				<select size="1" name="ldr1"><option value=""></option>
-				<?php
-					foreach ($mems as $mem)
-					{
-						echo "\r\n" . "<option value=\"{$mem->ID()}\"";
-						if ($group->Leader1 == $mem->ID())
-							echo ' selected="selected"';
-						echo ">{$mem->FirstName()} {$mem->LastName}</option>";
-					}
-				?>
-				</select>
-				<br>
-				Leader 2:
-				<select size="1" name="ldr2"><option value=""></option>
-				<?php
-					foreach ($mems as $mem)
-					{
-						echo "\r\n" . "<option value=\"{$mem->ID()}\"";
-						if ($group->Leader2 == $mem->ID())
-							echo ' selected="selected"';
-						echo ">{$mem->FirstName()} {$mem->LastName}</option>";
-					}
-				?>
-				</select>
-				<br>
-				Leader 3:
-				<select size="1" name="ldr3"><option value=""></option>
-				<?php
-					foreach ($mems as $mem)
-					{
-						echo "\r\n" . "<option value=\"{$mem->ID()}\"";
-						if ($group->Leader3 == $mem->ID())
-							echo ' selected="selected"';
-						echo ">{$mem->FirstName()} {$mem->LastName}</option>";
-					}
-				?>
-				</select> <i><small>(not usually needed)</small></i>
-
-				<br><br>
-				<div style="text-indent: 120px;">
-					<input type="submit" value="&#10003; Save" class="button sm">
-					&nbsp;  &nbsp;
-					<small><a class="del" href="api/fhe.php?del&id=<?php echo $group->ID(); ?>" style="color: #CC0000;">Delete</a></small>
-				</div>
-				</form>
-				<br><hr>
-			<?php endforeach; ?>
-
-			<?php if (count($groups) == 0): ?><p>No FHE groups! Make some?</p><?php endif; ?>
-
-			<br><br><a href="#" class="toTop">Back to top</a><br><br>
-		</section>
-		<hr class="clear">
-		
-	</article>
+		</div>
 
 
-<script type="text/javascript">
-$(function() {
+		<?php include "../includes/footer.php"; ?>
+		<?php include "../includes/nav.php"; ?>
+
+<script>
+$(function()
+{
 	var reloading = false;
 
 	// Update group assignment form submit
@@ -214,7 +234,7 @@ $(function() {
 		complete: function(xhr) {
 			if (xhr.status == 200)
 			{
-				toastr.success(xhr.responseText);
+				$.sticky(xhr.responseText);
 				$('select', 'form.assign').filter(function() {
 					return $(this).val() > 0;
 				}).closest('tr').removeClass('no-group');
@@ -225,12 +245,12 @@ $(function() {
 				groupHlt();
 			}
 			else
-				toastr.error(xhr.responseText);
+				$.sticky(xhr.responseText, { classList: 'error' });
 
 			// We have to reload the groups to get updated leader info
 			if (xhr.responseText.indexOf('no longer a leader') > -1)
 			{
-				toastr.warning("Reloading; please wait...");
+				$.sticky("Reloading; please wait...");
 				reloading = true;
 				setTimeout(function() { window.location.reload(); }, 1000);
 			}
@@ -250,12 +270,12 @@ $(function() {
 		complete: function(xhr) {
 			if (xhr.status == 200)
 			{
-				toastr.success("FHE group created successfully!<br>Reloading; please wait...");
+				$.sticky("FHE group created successfully!<br>Reloading; please wait...");
 				reloading = true;
 				setTimeout(function() { window.location.reload(); }, 1000);
 			}
 			else
-				toastr.error(xhr.responseText);
+				$.sticky(xhr.responseText, { classList: 'error' });
 		}
 	});
 
@@ -270,12 +290,12 @@ $(function() {
 		complete: function(xhr) {
 			if (xhr.status == 200)
 			{
-				toastr.success("FHE group deleted.<br>Reloading; please wait...");
+				$.sticky("FHE group deleted.<br>Reloading; please wait...");
 				reloading = true;
 				setTimeout(function() { window.location.reload(); }, 1000);
 			}
 			else
-				toastr.error(xhr.responseText);
+				$.sticky(xhr.responseText, { classList: 'error' });
 		}
 	});
 
@@ -287,7 +307,7 @@ $(function() {
 		complete: function(xhr) {
 			if (xhr.status == 200)
 			{
-				toastr.success("Changes saved.<br>Reloading; please wait...");
+				$.sticky("Changes saved.<br>Reloading; please wait...");
 				reloading = true;
 				setTimeout(function() { window.location.reload(); }, 1000);
 
@@ -308,7 +328,7 @@ $(function() {
 				*/
 			}
 			else
-				toastr.error(xhr.responseText);
+				$.sticky(xhr.responseText, { classList: 'error' });
 		}
 	});
 
@@ -336,5 +356,6 @@ function groupHlt()
 		$('#nogroup').hide();
 }
 </script>
-	
-<?php include("../includes/footer.php"); ?>
+
+	</body>
+</html>

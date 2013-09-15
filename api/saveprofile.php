@@ -2,7 +2,6 @@
 require_once("../lib/init.php");
 protectPage();
 
-
 @ $wardid = $_POST['ward_id'];
 @ $wardpwd = $_POST['wardpwd'];
 @ $email = trim($_POST['email']);
@@ -163,8 +162,10 @@ else 	// But if the previous Residence IS custom...
 $MEMBER->Save(true);
 
 // Now upload and save the profile picture...
-if ($pic['tmp_name'])
+if ($pic['tmp_name'] && !$pic['error'])
 	$MEMBER->PictureFile(false, $pic);
+else if ($pic['error'])
+	Response::Send(413, "Saved your profile, except your picture is too large. Maximum size: ".ini_get('upload_max_filesize')."B");
 
 if ($isChangingWards)
 {

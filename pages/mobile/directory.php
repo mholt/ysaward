@@ -69,7 +69,7 @@ $memberCount = mysql_num_rows($r);
 
 				?>
 				<a href="member?id=<?php echo($memb->ID()); ?>" class="<?php echo $memb->Gender == Gender::Male ? 'male' : 'female'; ?>">
-					<?php echo $memb->ProfilePicImgTag(true, true, Member::THUMB_DIM_MOBILE); ?>
+					<?php echo $memb->ProfilePicImgTag(true, true, 75); ?>
 					<?php echo $memb->FirstName().' '.$memb->LastName; ?>
 				</a>
 			<?php

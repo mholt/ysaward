@@ -1,4 +1,5 @@
 lib/defines.php
 custom/
+dkim/
 uploads/
 google*.html

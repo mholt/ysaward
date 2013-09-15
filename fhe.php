@@ -1,5 +1,5 @@
 <?php
-require_once("lib/init.php");
+require_once "lib/init.php";
 protectPage();
 
 $mGroup = $MEMBER->FheGroup();
@@ -11,154 +11,141 @@ $r = DB::Run($q);
 while ($row = mysql_fetch_array($r))
 	array_push($mems, Member::Load($row['ID']));
 
-
-
-function renderMember($mem, $leader = false)
+// Arrange the members, grouped by FHE group, into groups. (Huh?)
+$groups = array();
+foreach ($mems as $mem)
 {
-?>
-	<a href="member.php?id=<?php echo $mem->ID(); ?>"<?php if ($leader) echo ' class="bold"'; ?>>
-		<?php echo $mem->ProfilePicImgTag(true, true, 35); ?>
-		&nbsp;
-		<?php echo $mem->FirstName().' '.$mem->LastName; ?>
-		<?php if ($leader): ?>&nbsp;<small class="caption not-bold">(leader)</small><?php endif; ?>
-	</a>
-<?php
+	$groupid = $mem->FheGroup;
+
+	if (!array_key_exists($groupid, $groups))
+	{
+		$group = $mem->FheGroup();
+		$groups[$groupid] = array();
+		$groups[$groupid]['group'] = $group;
+		$groups[$groupid]['leaders'] = array();
+		$groups[$groupid]['members'] = array();
+
+		$ldr1 = Member::Load($group->Leader1);
+		$ldr2 = Member::Load($group->Leader2);
+		$ldr3 = Member::Load($group->Leader3);
+		
+		if ($ldr1) $groups[$groupid]['leaders'][] = $ldr1;
+		if ($ldr2) $groups[$groupid]['leaders'][] = $ldr2;
+		if ($ldr3) $groups[$groupid]['leaders'][] = $ldr3;
+	}
+
+	// Only add the member to the regular member list if they're not a group leader
+	$isLeader = false;
+	foreach ($groups[$groupid]['leaders'] as $ldr)
+	{
+		if ($ldr->ID() == $mem->ID())
+		{
+			$isLeader = true;
+			break;
+		}
+	}
+	if (!$isLeader)
+		$groups[$groupid]['members'][] = $mem;
 }
+
 ?>
+<!DOCTYPE html>
 <html>
-<head>
-	<title>FHE Groups &mdash; <?php echo $WARD ? $WARD->Name." Ward" : SITE_NAME; ?></title>
-	<?php include("includes/head.php"); ?>
-<style>
-table {
-	margin: 0px auto;
-}
+	<head>
+		<title>FHE Groups &mdash; <?php echo $WARD ? $WARD->Name." Ward" : SITE_NAME; ?></title>
+		<?php include "includes/head.php"; ?>
+		<style>
+		.group-name {
+			padding: 10px 5px;
+			background: #E0E0E0;
+			text-align: center;
+			font-weight: bold;
+		}
 
-td {
-	vertical-align: top;
-	min-width: 250px;
-	float: left;
-	width: 225px;
-	padding-right: 25px;
-	padding-bottom: 50px;
-	font-size: 12px;
-}
+		.grouping-header {
+			font-size: 10px;
+			line-height: 2em;
+			padding: 0px 10px;
+			text-transform: uppercase;
+			background: #444;
+			color: #FFF;
+			font-weight: 600;
+			border-bottom: 1px solid #AAA;
+		}
+		</style>
+	</head>
+	<body>
+		<?php include "includes/header.php"; ?>
 
-td a {
-	display: block;
-	padding: 5px;
-}
+		<h1>FHE Groups</h1>
 
-td a:hover {
-	text-decoration: none;
-	background: #DDEEFF;
-}
+<?php if ($mGroup): ?>
+		<p class="text-center">
+			<mark>
+				Your FHE group:
+				&nbsp;
+				<b><?php echo $mGroup->GroupName; ?></b>
+			</mark>
+		</p><br>
+<?php endif; ?>
 
-td a img {
-	width: 35px;
-	vertical-align: middle;
-}
 
-hr {
-	border: 1px solid #AACCFF;
-	margin-top: -15px;
-	margin-bottom: 15px;
-}
+		<div class="grid-container">
 
-.leaders {
-	margin-bottom: 15px;
-}
+<?php
 
-.leaders b {
-	font-size: 12px;
-}
-/*
-Styles using divs instead of table:
-.fhegrp { float: left; width: 250px; margin-right: 50px; margin-bottom: 50px; }
-.fhegrp a { display: block; padding: 3px; margin-bottom: 5px; } .fhegrp a img { width: 35px; vertical-align: middle; }
-*/
-</style>
-</head>
-<body>
-	
-	<?php include("includes/header.php"); ?>
-	
-	<article class="grid-12 group">
-		
-		<section class="g-12">
-			<h1>FHE Groups</h1>
+foreach ($groups as $grp):
+	$groupName = $grp['group']->GroupName;
+	$leaders = $grp['leaders'];
+	$members = $grp['members'];
+	$leaderCount = count($leaders);
+	$memberCount = count($members);
+?>
+			<div class="grid-25 mobile-grid-50 clearfix">
 
-			<?php if ($mGroup): ?>
-			<p class="text-center"><mark>You are in FHE group: &nbsp; <b><?php echo $mGroup->GroupName; ?></b></mark></p>
-			<?php endif; ?>
+				<div class="card">
+					<div class="group-name">
+						<?php echo $groupName; ?>
+					</div>
 
-			<table>
-				<?php
-					$maxAcross = 3;		// How many groups should be shown side-by-side before wrapping (default 3)
-					$current = NULL;	// Copy of the current FHE group
-					$counter = 0;		// Group counter
+					<div class="grouping-header">
+						<?php echo $leaderCount; echo $leaderCount == 1 ? " Group Leader" : " Group Leaders"; ?>
+					</div>
+<?php
+	foreach ($leaders as $ldr):
+?>
+					<a href="/member?id=<?php echo $ldr->ID(); ?>" class="member-link">
+						<?php echo $ldr->ProfilePicImgTag(true, true, 45); ?>
+						<?php echo $ldr->FirstName().' '.$ldr->LastName; ?>
+					</a>
+<?php
+	endforeach;
+?>
+					<div class="grouping-header">
+						<?php echo $memberCount; echo $memberCount == 1 ? " Member" : " Members"; ?>
+					</div>
 
-					foreach ($mems as $mem)
-					{
+<?php
+	foreach ($members as $mem):
+?>
+					<a href="/member?id=<?php echo $mem->ID(); ?>" class="member-link">
+						<?php echo $mem->ProfilePicImgTag(true, true, 45); ?>
+						<?php echo $mem->FirstName().' '.$mem->LastName; ?>
+					</a>
+<?php
+	endforeach;
+?>
 
-						if (!$current || $mem->FheGroup != $current->ID())
-						{
-							// Next group!
-							$current = $mem->FheGroup();
+				</div>
 
-							if ($counter > 0)
-								echo "</td>";
-							//	echo "</div>\r\n";
+			</div>
+<?php
+endforeach;
+?>
+		</div>
 
-							if (!($counter % $maxAcross))
-							{
-								if ($counter > 0)
-									echo "</tr>\r\n";
-								echo "<tr>\r\n";
-							}
 
-							//echo "<td><h2 class=\"text-center\">{$current->GroupName}</h2><hr>\r\n";
-							//echo '<div class="fhegrp"><h3>Group: '.$current->GroupName."</h3>\r\n";
-							// If you toggle the above line to use <div>s instead of the table, don't forget to toggle the styles above!
-					?>
-							<td>
-								<h2 class="text-center"><?php echo $current->GroupName; ?></h2>
-								
-								<div class="leaders">
-									<!--<b>Leaders</b>-->
-									<?php
-										$ldr1 = Member::Load($current->Leader1);
-										$ldr2 = Member::Load($current->Leader2);
-										$ldr3 = Member::Load($current->Leader3);
-
-										if ($ldr1)
-											renderMember($ldr1, true);
-										if ($ldr2)
-											renderMember($ldr2, true);
-										if ($ldr3)
-											renderMember($ldr3, true);
-									?>
-								</div>
-					<?php
-							$counter ++;
-						}
-
-						if ($mem->ID() != $current->Leader1 && $mem->ID() != $current->Leader2 && $mem->ID() != $current->Leader3)
-							renderMember($mem); // Display the member's name as a link to their profile (function is above)
-
-						//echo "\t<a href=\"member.php?id={$mem->ID()}\"";
-						//if ($current->Leader1 == $mem->ID() || $current->Leader2 == $mem->ID() || $current->Leader3 == $mem->ID())
-						//	echo ' style="background-color: #D1F0FF;"';
-						//echo '>';
-						//echo $mem->ProfilePicImgTag(true, true, 35).'&nbsp; &nbsp;';
-						//echo $mem->FirstName().' '.$mem->LastName."</a>\r\n";
-					}
-				?>
-					</td>
-				</tr>
-			</table>
-		</section>
-		
-	</article>
-	
-<?php include("includes/footer.php"); ?>
+		<?php include "includes/footer.php"; ?>
+		<?php include "includes/nav.php"; ?>
+	</body>
+</html>

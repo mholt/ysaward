@@ -2,7 +2,7 @@
 require_once("lib/init.php");
 
 if (Member::IsLoggedIn() || StakeLeader::IsLoggedIn())
-	header("Location: /directory.php");
+	header("Location: /directory");
 ?>
 <!DOCTYPE html>
 <html>
@@ -10,7 +10,7 @@ if (Member::IsLoggedIn() || StakeLeader::IsLoggedIn())
 		<title>Welcome &mdash; <?php echo SITE_NAME; ?></title>
 		<?php include("includes/head.php"); ?>
 		<!-- Facebook OpenGraph tags (for sharing) -->
-		<meta name="description" content="Sign up so your ward can get your membership records. You'll also get communication tools and a directory tailored just for you.">
+		<meta name="description" content="Sign up so your ward can get your membership records. You'll also get a custom directory and abilities to text and email.">
 		<meta property="og:image" content="http://<?php echo $_SERVER['SERVER_NAME']; ?><?php echo SITE_LARGE_IMG; ?>">
 		<meta property="og:title" content="Welcome &mdash; <?php echo SITE_NAME; ?>">
 		<meta property="og:site_name" content="<?php echo SITE_NAME; ?>">
@@ -24,7 +24,7 @@ if (Member::IsLoggedIn() || StakeLeader::IsLoggedIn())
 					<img src="<?php echo SITE_LARGE_IMG; ?>" alt="<?php echo SITE_NAME; ?>" class="logo-big">
 					<br>
 
-					Please <a href="register.php">register</a> if you need an account.
+					<big>Please <a href="register.php">register</a> if you need an account.</big>
 
 					<hr>
 

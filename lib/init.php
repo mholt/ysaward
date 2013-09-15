@@ -5,7 +5,6 @@
 	for basic functionality. Be careful in here.
 	(Not used, however, by CLI-invoked scripts)
 */
-
 // Start session... we'll need it
 session_start();
 

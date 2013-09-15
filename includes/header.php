@@ -9,17 +9,19 @@
 			</b>
 			&mdash;
 			<?php echo $WARD->Name; ?> Ward
+			<?php if ($MEMBER && !$LEADER): ?>
 			<br>
 			<span class="quick-links">
 				<a href="/profile">Update profile</a>
 				&bull;
 				<a href="/survey">Update survey answers</a>
 			</span>
+			<?php endif; ?>
 		</span>
 <?php endif; ?>
 	</div>
 	<div class="half-side text-right nowrap" style="padding-right: 0px;">
-<?php if (strpos($_SERVER['REQUEST_URI'], "/directory") !== false): ?>
+<?php if (!IS_MOBILE && strpos($_SERVER['REQUEST_URI'], "/directory") !== false): ?>
 		<a href="/directory/download" class="icon-download-alt icon-large"></a>
 		&nbsp; &nbsp;
 		<a href="/directory/print" class="icon-print icon-large" target="_blank"></a>

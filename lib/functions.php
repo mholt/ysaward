@@ -116,9 +116,14 @@ function protectPage($privilegeID = 0, $allowStakeLeader = false)
 	$isMember = $currentMember != null;
 	$isLeader = StakeLeader::IsLoggedIn();
 
+	if ($isLeader && !$allowStakeLeader)
+	{
+		header("Location: /directory");
+		exit;	// not usually necessary, but extra safety
+	}
+
 	if ((!$isMember && !$isLeader)
-		|| ($privilegeID && !$isMember)	// This condition shouldn't ever happen, right...?
-		|| ($isLeader && !$allowStakeLeader))
+		|| ($privilegeID && !$isMember))	// This condition shouldn't ever happen, right...?
 	{
 		$_SESSION['after_login'] = $_SERVER['REQUEST_URI'];
 		header("Location: /");
@@ -256,7 +261,8 @@ function randomString($length, $specialChars = true)
 function create_jpgthumb($original, $thumbnail, $max_width, $max_height, $quality, $scale = true)
 {
 	ini_set("gd.jpeg_ignore_warning", 1);	// For intermittent problems with imagecreatefromjpeg() below; see: http://stackoverflow.com/q/3901455/1048862
-	ini_set('memory_limit', '64M');
+	if (!ini_set('memory_limit', '128M'))	// Typically this is enough for pictures up to about 5MB
+		ini_set('memory_limit', '64M');
 	list ($src_width, $src_height, $type, $w) = getimagesize($original);
 	
 	if (!($srcImage = imagecreatefromjpeg($original)))

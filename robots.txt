@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /directory
+Disallow: /directory/
+Disallow: /uploads/
+Disallow: /manage/
+Disallow: /pages/
+Disallow: /api/
+Disallow: /member
+Disallow: /includes/
+Disallow: /lib/

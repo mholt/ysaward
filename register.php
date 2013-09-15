@@ -1,5 +1,5 @@
 <?php
-require_once("lib/init.php");
+require_once "lib/init.php";
 
 // Springboard if logged in
 if (Member::IsLoggedIn())
@@ -13,10 +13,9 @@ if (!isset($_SESSION['ward_id'])):
 <html>
 	<head>
 		<title>Register &mdash; <?php echo SITE_NAME; ?></title>
-		<?php include("includes/head.php"); ?>
+		<?php include "includes/head.php"; ?>
 	</head>
 	<body class="narrow">
-		<div id="content">
 
 			<form method="post" action="api/wardpwd.php">
 				<div class="text-center">
@@ -39,9 +38,7 @@ if (!isset($_SESSION['ward_id'])):
 				</div>
 			</form>
 
-			<?php include("includes/footer.php"); ?>
-
-		</div>
+			<?php include "includes/footer.php"; ?>
 
 <script>
 $(function()
@@ -58,7 +55,7 @@ $(function()
 		{
 			if (xhr.status == 200)
 				// Correct ward/password combination; proceed to registration form.
-				window.location = '/register.php';
+				window.location = '/register';
 			else
 				$.sticky(xhr.responseText || "There was a problem. (Maybe the Internet is really slow right now?) Please try again, or check your connection.", { classList: "error" });
 		}
@@ -83,106 +80,113 @@ else:
 <html>
 	<head>
 		<title>Register &mdash; <?php echo SITE_NAME; ?></title>
-		<?php include("includes/head.php"); ?>
+		<?php include "includes/head.php"; ?>
 	</head>
 	<body class="narrow">
 
-		<div id="content">
+		<form method="post" action="/api/register.php">
+			<div class="text-center">
+				<a href="/">
+					<img src="<?php echo SITE_LARGE_IMG; ?>" alt="<?php echo SITE_NAME; ?>" class="logo-big">
+				</a>
 
-			<form method="post" action="/api/register.php">
-				<div class="text-center">
-					<a href="/">
-						<img src="<?php echo SITE_LARGE_IMG; ?>" alt="<?php echo SITE_NAME; ?>" class="logo-big">
-					</a>
+				<h1>Register</h1>
 
-					<h1>Register</h1>
+				<mark>
+					<b>Ward:</b> <?php echo $ward->Name; ?>
+				</mark>
 
-					<mark>
-						<b>Ward:</b> <?php echo $ward->Name; ?>
-					</mark>
+				<hr>
 
-					<hr>
+				<input type="email" name="email" placeholder="Email address" required>
+				<input type="password" name="pwd1" placeholder="Password" required>
+				<input type="password" name="pwd2" placeholder="Password again" required>
+				
+				<br>
 
-					<input type="email" name="email" placeholder="Email address" required>
-					<input type="password" name="pwd1" placeholder="Password" required>
-					<input type="password" name="pwd2" placeholder="Password again" required>
+				<input type="text" name="fname" placeholder="First name" required>
+				<input type="text" name="mname" placeholder="Middle name or initial">
+				<input type="text" name="lname" placeholder="Last name" required>
+
+				<hr>
+
+				<input type="radio" name="gender" data-label="I'm a guy" value="<?php echo Gender::Male; ?>">
+				&nbsp;
+				<input type="radio" name="gender" data-label="I'm a girl" value="<?php echo Gender::Female; ?>"9>
+				
+				<hr>
+
+				<div class="text-left" style="line-height: 18px;">
+					<hr class="line">
 					
-					<br>
-
-					<input type="text" name="fname" placeholder="First name" required>
-					<input type="text" name="mname" placeholder="Middle name or initial">
-					<input type="text" name="lname" placeholder="Last name" required>
-
-					<hr>
-
-					<input type="radio" name="gender" data-label="I'm a guy" value="<?php echo Gender::Male; ?>">
-					&nbsp;
-					<input type="radio" name="gender" data-label="I'm a girl" value="<?php echo Gender::Female; ?>"9>
+					<b>Profile picture:</b>
 					
-					<hr>
+					<br><br>
 
-					<div class="text-left">
-						<hr class="line">
-						<b>Profile picture:</b><br>
-						<input type="file" size="15" name="profilepic" accept="image/jpeg" style="font-size: 16px;">
-						<br>
-						<small>
-							<i>Please choose a picture with just you in it.</i>
-						</small>
-						<hr class="line">
-					</div>
+					<small class="clr-red">
+						<i>
+							<b>This is very important!</b><br>
+							Please choose a picture with just you in it.<br>
+							Max size: 5 MB
+						</i>
+					</small>
 
-					<hr>
+					<br><br>
 
-					<!-- HOUSING -->
-					<select size="1" name="resID" id="bldg" required>
-						<option value="" selected>Housing...</option>
-						
-						<?php foreach ($residences as $residence): ?>
-						<option value="<?php echo $residence->ID(); ?>"><?php echo $residence->Name; if (!$residence->NameUnique()) echo ' ('.$residence->Address.')'; ?></option>
-						<?php endforeach; ?>
-						
-						<option value="-">(Other)</option>
-					</select>
-					<span id="usualapt" style="display: none;">
-						<input type="text" name="aptnum" maxlength="4" placeholder="Unit #">
-					</span>
-					<span id="otherapt" style="display: none;">
-						<input type="text" id="address" placeholder="Your full address" name="address" size="45" maxlength="255">
-					</span>
-					<input type="hidden" name="streetAddress" id="streetAddress" value="">
-					<input type="hidden" name="city" id="city" value="">
-					<input type="hidden" name="state" id="state" value="">
-					<input type="hidden" name="zipcode" id="zipcode" value="">
-					<!-- END HOUSING -->
-
-					<hr>
-
-					<input type="text" name="dob" id="dob" placeholder="Date of birth" required>
-					<input type="tel" name="phone" placeholder="Phone number">
+					<input type="file" name="profilepic" accept="image/jpeg" style="font-size: 16px;">
 					
-					<hr>
-
-					<div class="text-left">
-						<input type="checkbox" data-label="Keep birth year private" checked disabled>
-						<input type="checkbox" name="hideBirthday" data-label="Keep birth month and day private">
-						<input type="checkbox" name="hidePhone" data-label="Keep phone number private">
-						<input type="checkbox" name="hideEmail" data-label="Keep email address private">
-					</div>
-
-					<hr>
-
+					<hr class="line">
 				</div>
 
-				<div class="text-right">
-					<button type="submit">Continue</button><br>
-					<br>
+				<hr>
+
+				<!-- HOUSING -->
+				<select size="1" name="resID" id="bldg" required>
+					<option value="" selected>Housing...</option>
+					
+					<?php foreach ($residences as $residence): ?>
+					<option value="<?php echo $residence->ID(); ?>"><?php echo $residence->Name; if (!$residence->NameUnique()) echo ' ('.$residence->Address.')'; ?></option>
+					<?php endforeach; ?>
+					
+					<option value="-">(Other)</option>
+				</select>
+				<span id="usualapt" style="display: none;">
+					<input type="text" name="aptnum" maxlength="4" placeholder="Unit #">
+				</span>
+				<span id="otherapt" style="display: none;">
+					<input type="text" id="address" placeholder="Your full address" name="address" size="45" maxlength="255">
+				</span>
+				<input type="hidden" name="streetAddress" id="streetAddress" value="">
+				<input type="hidden" name="city" id="city" value="">
+				<input type="hidden" name="state" id="state" value="">
+				<input type="hidden" name="zipcode" id="zipcode" value="">
+				<!-- END HOUSING -->
+
+				<hr>
+
+				<input type="text" name="dob" id="dob" placeholder="Date of birth" required>
+				<input type="tel" name="phone" placeholder="Phone number">
+				
+				<hr>
+
+				<div class="text-left">
+					<input type="checkbox" data-label="Keep birth year private" checked disabled>
+					<input type="checkbox" name="hideBirthday" data-label="Keep birth month and day private">
+					<input type="checkbox" name="hidePhone" data-label="Keep phone number private">
+					<input type="checkbox" name="hideEmail" data-label="Keep email address private">
 				</div>
-			</form>
 
-			<?php include("includes/footer.php"); ?>
+				<hr>
 
-		</div>
+			</div>
+
+			<div class="text-right">
+				<button type="submit">Continue</button><br>
+				<br>
+			</div>
+		</form>
+
+		<?php include "includes/footer.php"; ?>
 
 <script src="//d79i1fxsrar4t.cloudfront.net/jquery.liveaddress/2.4/jquery.liveaddress.min.js"></script>
 <script>

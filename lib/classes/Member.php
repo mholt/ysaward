@@ -31,9 +31,9 @@ class Member
 	private $Password;
 	private $Salt;
 
-	const MAX_DISPLAY_DIM = 250;		// Max height or width of full pic (for display on the site)
-	const THUMB_DIM = 100;				// Square size of picture thumbnail
-	const THUMB_DIM_MOBILE = 55;		// Square size of picture thumbnail on mobile devices
+	// These next two size values will be divided by 2 when actually displayed (FOR RETINA DISPLAYS)
+	const MEDIUM_DIM = 700;	// Max. height or width of medium picture x 2
+	const THUMB_DIM = 300;	// Square dimensions of thumbnail x 2
 
 	public function __construct()
 	{
@@ -435,10 +435,6 @@ class Member
 			if ((strtolower($ext) != "jpg" && strtolower($ext) != "jpeg") || $type != "image/jpeg")
 				fail("You are only allowed to upload JPG files, nothing else. You tried to upload a $type file ($filename).");
 
-			// Exact size of 2 MB is 2,097,152 bytes
-			if ($size > 2097152)
-				fail("The file you selected ($filename) is too large. It must be under 2 MB.");
-
 			// Random number to append to filename (helps with browser caching issues)
 			$rnd = rand(1000, 9999);
 
@@ -456,8 +452,8 @@ class Member
 			$this->DeletePictureFile();
 
 			// Create and save new profile pictures.
-			create_jpgthumb($tmppath, $newpath.$newfilenameMedium, Member::MAX_DISPLAY_DIM, Member::MAX_DISPLAY_DIM, 80); // Medium for display on site
-			create_jpgthumb($tmppath, $newpath.$newfilenameThumb, Member::THUMB_DIM, Member::THUMB_DIM, 75, false);	  // Thumbnail
+			create_jpgthumb($tmppath, $newpath.$newfilenameMedium, Member::MEDIUM_DIM, Member::MEDIUM_DIM, 90);	// For display on site
+			create_jpgthumb($tmppath, $newpath.$newfilenameThumb, Member::THUMB_DIM, Member::THUMB_DIM, 90, false);	// Thumbnail
 			move_uploaded_file($tmppath, $newpath.$newfilename);
 
 			// Save database row
@@ -488,7 +484,7 @@ class Member
 		$picFile = $this->PictureFile($thumb);
 		
 		if (!$maxDimension)
-			$maxDimension = $thumb ? Member::THUMB_DIM : Member::MAX_DISPLAY_DIM;
+			$maxDimension = $thumb ? Member::THUMB_DIM / 2 : Member::MEDIUM_DIM / 2;
 
 		if ($lazy)
 			return '<img src="/resources/images/loader.gif" data-src="'.$picFile.'" alt="'.$this->FirstName.'\'s picture" style="max-width: '.$maxDimension.'px; max-height: '.$maxDimension.'px;" class="profilePicture">';
@@ -506,10 +502,12 @@ class Member
 		$ext = extension($this->PictureFile);
 		$thumb = $main."_thumb.".$ext;
 		$med = $main."_med.".$ext;
-		$this->PictureFile = '';
-		$result = @unlink(DOCROOT."/uploads/".$main.'.'.$ext) && @unlink(DOCROOT."/uploads/".$thumb) && @unlink(DOCROOT."/uploads/".$med);
+		$result = @unlink(DOCROOT."/uploads/".$this->PictureFile) && @unlink(DOCROOT."/uploads/".$thumb) && @unlink(DOCROOT."/uploads/".$med);
 		if ($result)
+		{
+			$this->PictureFile = '';
 			$this->Save();
+		}
 		return $result;
 	}
 

@@ -1,5 +1,5 @@
 <?php
-require_once("lib/init.php");
+require_once "lib/init.php";
 
 if ($MEMBER || $LEADER)	// If logged in... just go to directory.
 	header("Location: /directory.php");
@@ -39,40 +39,39 @@ if (isset($_GET['key']))
 <html>
 	<head>
 		<title>Finish password reset &mdash; <?php echo SITE_NAME; ?></title>
-		<?php include("includes/head.php"); ?>
+		<?php include "includes/head.php"; ?>
 	</head>
 	<body class="narrow">
-		<div id="content">
 
-			<form method="post" action="/api/resetpwd-finish.php">
-				<div class="text-center">
-					<a href="/">
-						<img src="<?php echo SITE_LARGE_IMG; ?>" alt="<?php echo SITE_NAME; ?>" class="logo-big">
-					</a>
+		<form method="post" action="/api/resetpwd-finish.php">
+			<div class="text-center">
+				<a href="/">
+					<img src="<?php echo SITE_LARGE_IMG; ?>" alt="<?php echo SITE_NAME; ?>" class="logo-big">
+				</a>
 
-					<h1>Reset Password</h1>
+				<h1>Reset Password</h1>
 
-					<p>
-						Type your new password below, then try logging in.
-						Don't use the same password you use on other sites.
-					</p>
+				<p>
+					Type your new password below, then try logging in.
+					Don't use the same password you use on other sites.
+				</p>
 
-					<input type="password" name="pwd1" placeholder="New password" required>
-					<input type="password" name="pwd2" placeholder="Password again" required>
+				<input type="password" name="pwd1" placeholder="New password" required>
+				<input type="password" name="pwd2" placeholder="Password again" required>
 
-					<input type="hidden" name="credID" value="<?php echo($credID); ?>">
-					<input type="hidden" name="token" value="<?php echo($key); ?>">
+				<input type="hidden" name="credID" value="<?php echo($credID); ?>">
+				<input type="hidden" name="token" value="<?php echo($key); ?>">
 
-					<div class="text-right">
-						<button type="submit">Finish</button>
-					</div>
-					<br>
-
+				<div class="text-right">
+					<button type="submit">Finish</button>
 				</div>
-			</form>
+				<br>
 
-			<?php include("includes/footer.php"); ?>
-		</div>
+			</div>
+		</form>
+
+		<?php include "includes/footer.php"; ?>
+
 
 
 <script>

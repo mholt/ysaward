@@ -52,7 +52,7 @@ class FheGroup
 		return $r ? true : false;
 	}
 
-	// Organizes leadership, e.g. if leader1 and leader3 are assigned, leader 2 will fill the gap.
+	// Organizes leadership, e.g. if leader1 and leader3 are assigned, leader2 will fill the gap.
 	// Saves the object.
 	public function ConsolidateLeaders()
 	{

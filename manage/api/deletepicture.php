@@ -19,6 +19,6 @@ if ($mem->WardID != $MEMBER->WardID)
 if ($mem->DeletePictureFile())
 	Response::Send(200, $memberID);
 else
-	fail("Could not delete profile picture, probably because the picture is already the default one.");
+	fail("Could not delete profile picture, probably because the user doesn't have a picture, or it is already the default one.");
 
 ?>
