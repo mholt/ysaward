@@ -82,7 +82,7 @@ $cKey = userAgentContains("Macintosh") ? "command" : "Ctrl";
 
 			tbody td > div {
 				max-height: 150px;
-				overflow-y: scroll;
+				overflow-y: auto;
 			}
 
 			tbody tr:first-child td {
