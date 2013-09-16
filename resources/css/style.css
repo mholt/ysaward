@@ -67,12 +67,6 @@ a {
 	outline: none;
 }
 
-a:hover,
-a:focus {
-	color: #0FAACF;
-	text-decoration: underline;
-}
-
 a:active {
 	color: #FF6600;
 }
@@ -339,8 +333,7 @@ nav a {
 	padding: 3px 15px;
 }
 
-nav a:hover,
-nav a:focus {
+nav a:active {
 	color: #333;
 	background: #FFF;
 	text-decoration: none;
@@ -567,6 +560,20 @@ a[href='#'] {
 
 
 
+@media (min-width: 501px) {
+	a:hover,
+	a:active {
+		color: #0FAACF;
+		text-decoration: underline;
+	}
+
+	nav a:hover {
+		color: #333;
+		background: #FFF;
+		text-decoration: none;
+	}
+}
+
 
 
 
@@ -596,7 +603,17 @@ a[href='#'] {
 		padding: 10px 25px 0;
 	}
 
+	.header-text,
+	header .icon-download-alt,
+	header .icon-print {
+		display: none;
+	}
+
 	#menu-icon {
 		padding: 5px 25px 15px;
+	}
+
+	nav a {
+		padding: 5px 15px;
 	}
 }

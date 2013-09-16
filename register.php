@@ -3,7 +3,7 @@ require_once "lib/init.php";
 
 // Springboard if logged in
 if (Member::IsLoggedIn())
-	header("Location: /directory.php");
+	header("Location: /directory");
 
 // If user hasn't entered a ward password yet, prompt for it.
 // This keeps the creepers out.

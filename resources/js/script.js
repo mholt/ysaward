@@ -3,7 +3,7 @@
 	// Stores button contents while its spinner is being displayed in its place
 	var buttonHtmls = {};
 
-	// HTML that makes up the spinner image
+	// HTML that makes up the spinner image while the forms submit
 	var spinnerImg = '<img src="/resources/images/ajax-gray.gif">';
 
 
@@ -24,11 +24,15 @@
 	};
 }(jQuery));
 
-// Selects elements not within another element (as a child)
-$.expr[':'].notin = function(a, i, m)
+(function($)
 {
-	return $(a).parents(m[3]).length == 0;
-};
+	$.fn.notIn = function(sel)
+	{
+		return this.filter(function() {
+			return $(this).parents(sel).length == 0;
+		});
+	}
+}(jQuery));
 
 
 $(function()
@@ -50,11 +54,11 @@ $(function()
 	// Make check boxes and radio buttons pretty
 	$('input[type=radio], input[type=checkbox]').not('.standard').prettyCheckable();
 
-	// BEGIN menu toggle
+	// BEGIN nav menu drawer toggle
 	var nv = $('nav');
 	var nvWidthPosition = nv.outerWidth() * -1;
 	var menuVisible = false;
-	$('#menu-icon').mousedown(function() {
+	$('#menu-icon').click(function() {
 		if (!menuVisible)
 			showMenu();
 		else
@@ -70,7 +74,7 @@ $(function()
 		hideMenu();
 	});
 
-	$('body').on('click', ':not(nav):notin(nav)', function() {
+	$('body *').not('nav').notIn('nav').click(function(e) {
 		if (menuVisible)
 			hideMenu();
 	});
@@ -102,14 +106,7 @@ $(function()
 			menuVisible = false;
 		});
 	}
-	// END menu toggle
-
-	// Resize textareas vertically as it gets filled out
-	/*$('textarea').keyup(function()
-	{
-		$(this).css('height', 'auto').css('height', this.scrollHeight+'px');
-	});*/
-
+	// END nav menu drawer toggle
 });
 
 
@@ -124,3 +121,34 @@ function suppress(event) {
 		event.cancelBubble = true;
 	return false;
 }
+
+
+/*
+A couple of snippets from the old version of the site:
+
+// Determine whether this is a browser on a common mobile device
+// and get some basic flags prepared for potential use later on.
+var mobile = /Android|webOS|iPhone|iPad|Kindle|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent);
+var isAndroid = /Android/i.test(navigator.userAgent);
+var isChrome = /Chrome/i.test(navigator.userAgent);
+var isIOS = /iPad|iPod|iPhone/i.test(navigator.userAgent);
+var isSafari = /Safari/i.test(navigator.userAgent);
+var isIE = /MSIE /i.test(navigator.userAgent);
+var isFirefox = /Firefox/i.test(navigator.userAgent);
+var isOpera = /Opera/i.test(navigator.userAgent);
+var isWindows = /Windows/i.test(navigator.userAgent);
+var isMac = /Macintosh/i.test(navigator.userAgent);
+var isLinux = /Linux/i.test(navigator.userAgent);
+
+
+// Courtesy of Artem Barger:
+// http://stackoverflow.com/questions/901115/get-query-string-values-in-javascript
+function queryStringParam(name)
+{
+	name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+	var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+	var results = regex.exec(window.location.search);
+	return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+*/

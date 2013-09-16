@@ -32,11 +32,12 @@ foreach ($permissions as $per)
 {
 	$question = SurveyQuestion::Load($per->QuestionID());
 	$questions[] = $question;
-	$th .= "<th>".$question->Question."</th>\r\n";
+	$th .= '<th style="width: 250px; min-width: 250px">'.$question->Question."</th>\r\n";
 }
 
+
 // Show "Ctrl" (non-Mac) or "Command" (Mac)
-$cKey = stripos($_SERVER['HTTP_USER_AGENT'], "Macintosh") === false ? "Ctrl" : "command";
+$cKey = userAgentContains("Macintosh") ? "command" : "Ctrl";
 
 
 ?>
@@ -71,7 +72,6 @@ $cKey = stripos($_SERVER['HTTP_USER_AGENT'], "Macintosh") === false ? "Ctrl" : "
 				font-size: 12px;
 				line-height: 1.25em;
 				background: #F5F5F5;
-				min-width: 150px;
 			}
 
 			tbody td {
@@ -82,7 +82,7 @@ $cKey = stripos($_SERVER['HTTP_USER_AGENT'], "Macintosh") === false ? "Ctrl" : "
 
 			tbody td > div {
 				max-height: 150px;
-				overflow: hidden;
+				overflow-y: scroll;
 			}
 
 			tbody tr:first-child td {
@@ -95,7 +95,7 @@ $cKey = stripos($_SERVER['HTTP_USER_AGENT'], "Macintosh") === false ? "Ctrl" : "
 			}
 
 			#table-body tr:hover td {
-				/*background: #FFFFEE;*/
+				background: #FFFFEE;
 			}
 
 			#table-body td {
@@ -127,7 +127,6 @@ $cKey = stripos($_SERVER['HTTP_USER_AGENT'], "Macintosh") === false ? "Ctrl" : "
 
 			.vert-align-middle {
 				display: inline-block;
-				height: 100%;
 				vertical-align: middle;
 			}
 
@@ -151,20 +150,22 @@ $cKey = stripos($_SERVER['HTTP_USER_AGENT'], "Macintosh") === false ? "Ctrl" : "
 					Showing <b><span id="count"><?php echo $memberCount ?></span></b>
 					<input type="checkbox" data-label="guys" id="show-guys" checked>
 					<input type="checkbox" data-label="ladies" id="show-girls" checked>
+					<?php if (!userAgentContains("iPad")): ?>
 					<div id="help-text">
 						To search, press <kbd><?php echo $cKey; ?></kbd>+<kbd>F</kbd> and type
 						what you're looking for.
 					</div>
+					<?php endif; ?>
 				</div>
 
 				<table id="table-header">
 					<thead>
 						<tr>
-							<th>Name</th>
-							<th>Apartment</th>
-							<th>Phone Number</th>
-							<th>Email Address</th>
-							<th>Birthday</th>
+							<th style="width: 375px; min-width: 375px;">Name</th>
+							<th style="width: 200px; min-width: 200px;">Apartment</th>
+							<th style="width: 200px; min-width: 200px;">Phone Number</th>
+							<th style="width: 300px; min-width: 300px;">Email Address</th>
+							<th style="width: 200px; min-width: 200px;">Birthday</th>
 							<?php echo $th; /* Additional info this user has permission to see */  ?>
 						</tr>
 					</thead>
@@ -185,7 +186,7 @@ $cKey = stripos($_SERVER['HTTP_USER_AGENT'], "Macintosh") === false ? "Ctrl" : "
 						$yyyy = date("Y", $bdate);
 				?>
 					<tr id="<?php echo $memb->ID(); ?>" class="<?php echo $memb->Gender == Gender::Male ? 'male' : 'female'; ?>">
-						<td class="name-field nowrap">
+						<td style="width: 375px; min-width: 375px;" class="name-field nowrap">
 							<div>
 								<a href="member?id=<?php echo($memb->ID()); ?>" title="View profile">
 									<?php echo $memb->ProfilePicImgTag(true); ?>
@@ -193,22 +194,22 @@ $cKey = stripos($_SERVER['HTTP_USER_AGENT'], "Macintosh") === false ? "Ctrl" : "
 								</a>
 							</div>
 						</td>
-						<td>
+						<td style="width: 200px; min-width: 200px;">
 					 		<div>
 					 			<div class="vert-align-middle">
 					 				<?php echo $memb->ResidenceString(); ?>
 					 			</div>
 					 		</div>
 					 	</td>
-						<td><?php echo !$memb->HidePhone/* || $allPhones */ || $LEADER ? formatPhoneForDisplay($memb->PhoneNumber) : ''; ?></td>
-						<td><?php echo !$memb->HideEmail/* || $allEmails*/ || $LEADER ? $memb->Email : ''; ?></td>
-						<td><?php echo !$memb->HideBirthday/* || $allBdays*/ || $LEADER ? "{$mm} {$dd}<sup>{$ordinal}</sup>" : ''; if (/*$allBdays ||*/ $LEADER) echo ', '.$yyyy; ?></td>
+						<td style="width: 200px; min-width: 200px;"><?php echo !$memb->HidePhone/* || $allPhones */ || $LEADER ? formatPhoneForDisplay($memb->PhoneNumber) : ''; ?></td>
+						<td style="width: 300px; min-width: 300px;"><?php echo !$memb->HideEmail/* || $allEmails*/ || $LEADER ? $memb->Email : ''; ?></td>
+						<td style="width: 200px; min-width: 200px;"><?php echo !$memb->HideBirthday/* || $allBdays*/ || $LEADER ? "{$mm} {$dd}<sup>{$ordinal}</sup>" : ''; if (/*$allBdays ||*/ $LEADER) echo ', '.$yyyy; ?></td>
 				<?php
 						// Display the members' answers this user is allowed to see
 						foreach ($questions as $question):
 							$ans = $question->Answers($memb->ID());
 				?>
-						<td>
+						<td style="width: 250px; min-width: 250px;">
 							<div>
 					 			<div class="vert-align-middle">
 									<?php echo $ans ? $ans->ReadonlyAnswer() : ''; ?>
@@ -236,8 +237,8 @@ $cKey = stripos($_SERVER['HTTP_USER_AGENT'], "Macintosh") === false ? "Ctrl" : "
 $(function()
 {
 	var tblHeader = $('#table-header');
-	var tblBody = $('#table-body');
-	var tblHeaderInitialBottom = tblHeader.offset().top + tblHeader.outerHeight();
+	//var tblBody = $('#table-body');
+	//var tblHeaderInitialBottom = tblHeader.offset().top + tblHeader.outerHeight();
 
 	$(window).scroll(function()
 	{
@@ -249,21 +250,21 @@ $(function()
 	{
 		// Allow the table to freely resize and sync instead of being
 		// bound to a minimum at its initial width, then sync the widths
-		$('thead th, tbody tr td').css({
+		/*$('thead th, tbody tr td').css({
 			'width': '',
 			'min-width': '',
 			'max-width': ''
-		});
-		syncTables();
+		});*/
+		//syncTables();
 	});
 
 	// When showing/hiding rows, it's important to re-sync the tables
-	$('#show-girls, #show-guys').change(syncTables);
+	//$('#show-girls, #show-guys').change(syncTables);
 
 	// Sync tables at page load
-	syncTables();
+	//syncTables();
 
-	function syncTables()
+	/*function syncTables()
 	{
 		// Set the widths of the headers to be the same as their column below them
 		// To do this, loop through each header cell (th) and see if it or its
@@ -284,7 +285,7 @@ $(function()
 		// In case a header row text wraps (likely), this keeps the table with the content
 		// so it doesn't start from underneath the fold of the header row...
 		tblBody.css('top', tblHeader.offset().top + tblHeader.outerHeight() - tblHeaderInitialBottom);
-	}
+	}*/
 });
 </script>
 

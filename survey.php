@@ -198,7 +198,7 @@ $(function()
 	// Capture form submit and save the answers
 	$('form').hijax({
 		before: function() {
-			$('[type=submit').showSpinner();
+			$('[type=submit]').showSpinner();
 		},
 		complete: function(xhr) {
 			if (xhr.status == 200)
@@ -211,7 +211,7 @@ $(function()
 			else
 				$.sticky(xhr.responseText || "There was a problem and your survey was probably not saved. Check your Internet connection and try again.", { classList: "error" });
 
-			$('[type=submit').hideSpinner();
+			$('[type=submit]').hideSpinner();
 		}
 	});
 });

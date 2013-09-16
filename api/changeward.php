@@ -1,5 +1,5 @@
 <?php
-require_once("lib/init.php");
+require_once("../lib/init.php");
 protectPage(0, true);
 
 
@@ -31,6 +31,6 @@ if ($ward->Deleted)
 $_SESSION['wardID'] = $id;
 
 // Redirect.
-header("Location: /directory.php");
+header("Location: /directory");
 
 ?>

@@ -2,7 +2,7 @@
 require_once("lib/init.php");
 
 if (Member::IsLoggedIn())
-	header("Location: /directory.php");
+	header("Location: /directory");
 ?>
 <!DOCTYPE html>
 <html>

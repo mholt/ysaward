@@ -23,6 +23,6 @@ if (!$mem->Delete(true))
 	fail("Could not delete member; probably forgot to be set confirmation flag to 'true', or bad ID was supplied.");
 
 
-header("Location: ../../directory.php");
+header("Location: ../../directory");
 
 ?>

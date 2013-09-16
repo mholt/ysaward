@@ -59,6 +59,13 @@ function euroToUsdRate()
 	return $result->rate;
 }
 
+function userAgentContains($str)
+{
+	if (isset($_SERVER) && array_key_exists('HTTP_USER_AGENT', $_SERVER))
+		return stripos($_SERVER['HTTP_USER_AGENT'], $str) !== false;
+	else
+		return false;
+}
 
 // Epic regexps from: http://detectmobilebrowser.com
 function isMobile()
@@ -155,15 +162,15 @@ function protectPage($privilegeID = 0, $allowStakeLeader = false)
 // Returns the client's newline character(s)
 function clientCRLF()
 {
-    $ua = $_SERVER['HTTP_USER_AGENT'];
+	$ua = $_SERVER['HTTP_USER_AGENT'];
 
-    if (stripos($ua, "Windows") !== false
-    	|| stripos($ua, "OS X") !== false)
-    	return "\r\n";	// Windows, Mac OS X+
-    elseif (stripos($ua, "Macintosh") !== false)
-    	return "\r";	// Mac < OS X
-    else
-    	return "\n";	// Linux, FreeBSD, etc.
+	if (stripos($ua, "Windows") !== false
+		|| stripos($ua, "OS X") !== false)
+		return "\r\n";	// Windows, Mac OS X+
+	elseif (stripos($ua, "Macintosh") !== false)
+		return "\r";	// Mac < OS X
+	else
+		return "\n";	// Linux, FreeBSD, etc.
 }
 
 // Formats a string's newlines for the DB
@@ -257,16 +264,40 @@ function randomString($length, $specialChars = true)
 
 
 /* From PHP.net manual, a note added by a user, in entry "imagecopyresampled" */
-// MODIFIED SLIGHTLY (see $off_h ...)
+// MODIFIED SLIGHTLY (see $off_h ... and the EXIF reading/rotation code)
 function create_jpgthumb($original, $thumbnail, $max_width, $max_height, $quality, $scale = true)
 {
 	ini_set("gd.jpeg_ignore_warning", 1);	// For intermittent problems with imagecreatefromjpeg() below; see: http://stackoverflow.com/q/3901455/1048862
 	if (!ini_set('memory_limit', '128M'))	// Typically this is enough for pictures up to about 5MB
 		ini_set('memory_limit', '64M');
-	list ($src_width, $src_height, $type, $w) = getimagesize($original);
 	
 	if (!($srcImage = imagecreatefromjpeg($original)))
 		return false;
+
+	list ($src_width, $src_height, $type, $w) = getimagesize($original);
+
+	// This block of code from: http://www.php.net/manual/en/function.exif-read-data.php#110894
+	$exif = exif_read_data($original);
+	if($exif && !empty($exif['Orientation']))
+	{
+		switch($exif['Orientation']) {
+			case 8:
+				$srcImage = imagerotate($srcImage, 90, 0);
+				$tmp_src_width = $src_width;
+				$src_width = $src_height;
+				$src_height = $tmp_src_width;
+				break;
+			case 3:
+				$srcImage = imagerotate($srcImage, 180, 0);
+				break;
+			case 6:
+				$srcImage = imagerotate($srcImage, -90, 0);
+				$tmp_src_width = $src_width;
+				$src_width = $src_height;
+				$src_height = $tmp_src_width;
+				break;
+		}
+	}
 
 	if ($scale == true)
 	{
@@ -337,7 +368,7 @@ function create_jpgthumb($original, $thumbnail, $max_width, $max_height, $qualit
 		 }
 		 else
 		 {
-		 	// thumbnail is square
+			// thumbnail is square
 			if ($src_width > $src_height)
 			{
 				$off_w = ($src_width - $src_height) / 2;
@@ -432,7 +463,7 @@ function phoneAlphaToNumeric($string)
 				$num = 9;
 				break;
 			default:
-			 	$num = $char;
+				$num = $char;
 		}
 		$newstring .= $num;
 	}

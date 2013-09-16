@@ -2,10 +2,13 @@
 <?php if ($MEMBER != null && $LEADER == null): ?>
 	<b>Me</b>
 	<a href="/profile"><i class="icon-pencil"></i>Edit profile</a>
-	<a href="/survey"><i class="icon-edit" style="margin-right: .45em"></i>Edit survey</a>
+	<a href="/survey"><i class="icon-edit" style="margin-right: .45em;"></i>Edit survey</a>
 
 	<b>Membership</b>
 	<a href="/directory"><i class="icon-list-alt"></i>Directory</a>
+	<?php if ($MEMBER && $MEMBER->HasPresetCalling()): ?>
+	<a href="/exportmls"><i class="icon-share"></i>Export to MLS</a>
+	<?php endif; ?>
 	<a href="/fhe"><i class="icon-group"></i>FHE groups</a>
 	<a href="/callings"><i class="icon-sitemap"></i>Callings</a>
 
@@ -40,7 +43,7 @@
 	$wardsQuery = DB::Run("SELECT Name, ID FROM Wards WHERE StakeID='{$LEADER->StakeID}' AND Deleted != 1 ORDER BY Name ASC");
 	while ($wardRow = mysql_fetch_array($wardsQuery)):
 	?>
-		<a href="/changeward?id=<?php echo $wardRow['ID']; ?>"><i class="icon-asterisk"></i><?php echo $wardRow['Name']; ?></a></li>
+		<a href="/api/changeward?id=<?php echo $wardRow['ID']; ?>"><i class="icon-asterisk"></i><?php echo $wardRow['Name']; ?></a></li>
 	<?php endwhile; ?>
 
 	<b>Membership</b>

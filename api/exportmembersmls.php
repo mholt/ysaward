@@ -8,7 +8,7 @@ protectPage();
 // which includes EQP and RSP. (Also see ../exportmls.php for this)
 if (!$MEMBER || !$MEMBER->HasPresetCalling())
 {
-	header("Location: /directory.php");
+	header("Location: /directory");
 	exit;
 }
 

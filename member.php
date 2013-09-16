@@ -268,7 +268,7 @@ if (!$r)
 
 					<div class="chunk">
 						<b>Profile updated</b>
-						<?php echo date('j M Y', strtotime($mem->LastUpdated())); ?>
+						<?php echo $mem->LastUpdated() > 0 ? date('j M Y', strtotime($mem->LastUpdated())) : "<i>Never</i>"; ?>
 					</div>
 					<br>
 

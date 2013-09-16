@@ -487,7 +487,7 @@ class Member
 			$maxDimension = $thumb ? Member::THUMB_DIM / 2 : Member::MEDIUM_DIM / 2;
 
 		if ($lazy)
-			return '<img src="/resources/images/loader.gif" data-src="'.$picFile.'" alt="'.$this->FirstName.'\'s picture" style="max-width: '.$maxDimension.'px; max-height: '.$maxDimension.'px;" class="profilePicture">';
+			return '<img src="/resources/images/unveil-loader.gif" data-src="'.$picFile.'" alt="'.$this->FirstName.'\'s picture" style="max-width: '.$maxDimension.'px; max-height: '.$maxDimension.'px;" class="profilePicture">';
 		else
 			return '<img src="'.$picFile.'" alt="'.$this->FirstName.'\'s picture" style="max-width: '.$maxDimension.'px; max-height: '.$maxDimension.'px;" class="profilePicture">';
 	}
