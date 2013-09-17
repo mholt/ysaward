@@ -65,7 +65,7 @@ while ($row = mysql_fetch_array($r))
 <?php
 foreach ($callings as $callingName => $members):
 ?>
-			<div class="grid-25 mobile-grid-50">
+			<div class="grid-25 mobile-grid-50 calling">
 				<div class="card">
 					<div class="calling-name">
 						<?php echo $callingName; ?>
@@ -89,5 +89,23 @@ endforeach;
 
 		<?php include "includes/footer.php"; ?>
 		<?php include "includes/nav.php"; ?>
+
+<script>
+$(function()
+{
+	// For callings boxes of different heights,
+	// these 'clear' divs will force them to fold
+	// under each other properly. Mobile layout
+	// only shows 2 boxes per row; desktop 4.
+	// We employ a similar tactic on the FHE groups page.
+	$('.calling').each(function(i)
+	{
+		if ((i + 1) % 2 == 0)
+			$(this).after('<div class="clear hide-on-desktop"></div>');
+		if ((i + 1) % 4 == 0)
+			$(this).after('<div class="clear hide-on-mobile"></div>');
+	});
+});
+</script>
 	</body>
 </html>

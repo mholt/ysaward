@@ -101,7 +101,7 @@ foreach ($groups as $grp):
 	$leaderCount = count($leaders);
 	$memberCount = count($members);
 ?>
-			<div class="grid-25 mobile-grid-50 clearfix">
+			<div class="grid-25 mobile-grid-50 fhegroup">
 
 				<div class="card">
 					<div class="group-name">
@@ -147,5 +147,23 @@ endforeach;
 
 		<?php include "includes/footer.php"; ?>
 		<?php include "includes/nav.php"; ?>
+		
+<script>
+$(function()
+{
+	// For FHE groups boxes of different heights,
+	// these 'clear' divs will force them to fold
+	// under each other properly. Mobile layout
+	// only shows 2 FHE groups per row; desktop 4.
+	// We employ a similar tactic on the Callings page.
+	$('.fhegroup').each(function(i)
+	{
+		if ((i + 1) % 2 == 0)
+			$(this).after('<div class="clear hide-on-desktop"></div>');
+		if ((i + 1) % 4 == 0)
+			$(this).after('<div class="clear hide-on-mobile"></div>');
+	});
+});
+</script>
 	</body>
 </html>
