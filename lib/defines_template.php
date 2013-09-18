@@ -122,10 +122,10 @@ define('EMAIL_MAX_RECIPIENTS', 5);	// typically 5 is good
 // The SMTP host to use when sending emails
 define('SMTP_HOST', "");
 
-// The Amazon AWS IAM username for SES
+// The Amazon AWS IAM username for SES (of the IAM user with SMTP credentials)
 define('AWS_IAM_USERNAME', "");
 
-// The Amazon AWS IAM password for SES
+// The Amazon AWS IAM password for SES (of the IAM user with SMTP credentials)
 define('AWS_IAM_PASSWORD', "");
 
 
@@ -134,6 +134,9 @@ define('AWS_IAM_PASSWORD', "");
 define('DKIM_DOMAIN', "");		// example: ysaward.com; whatever domain your site is served on
 
 // Path to the DKIM private key file
+// This allows you to send mail without the "via amazonses.com" stuff
+// VERY helpful article:
+// https://www.lessannoyingcrm.com/blog/2012/05/255/Sending+verified+emails+through+Amazon+Simple+Email+Service+with+DKIM+and+PHPMailer
 define('DKIM_PRIVATE_KEY', "");
 
 // The DKIM selector, as found in the DNS record as a TXT entry

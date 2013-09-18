@@ -170,8 +170,7 @@ $(function() {
 				return false;
 			}
 
-			$('#sub').prop('disabled', true);
-			$('#ajaxloader').css('visibility', 'visible');
+			$('[type=submit]').showSpinner();
 		},
 		complete: function(xhr) {
 			if (xhr.status == 200)
@@ -199,8 +198,7 @@ $(function() {
 					$.sticky(xhr.responseText || "There was and your message could not be sent. Please report this.", { classList: 'error' });
 			}
 
-			$('#sub').prop('disabled', false);
-			$('#ajaxloader').css('visibility', 'hidden');
+			$('[type=submit]').hideSpinner();
 		}
 	});
 

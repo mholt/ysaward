@@ -244,8 +244,7 @@ $(function()
 				return false;
 			}
 
-			$('#sub').prop('disabled', true);
-			$('#ajaxloader').css('visibility', 'visible');
+			$('[type=submit]').showSpinner();
 		},
 		complete: function(xhr)
 		{
@@ -272,8 +271,7 @@ $(function()
 					$.sticky(xhr.responseText || "There was a problem and your message could not be sent. Please report this. Sorry.", { classList: 'error' });
 			}
 
-			$('#sub').prop('disabled', false);
-			$('#ajaxloader').css('visibility', 'hidden');
+			$('[type=submit]').hideSpinner();
 		}
 	});
 
