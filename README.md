@@ -128,3 +128,25 @@ little gems in there related to error handling, failovers, UI, etc.
 So no, there's no PHP framework here. No MVC. It's just plain-jane PHP mixed with HTML and
 Javascript. Sorry if it's gross, but again, now it's open source: so feel free to improve
 upon it. It does the job, seems to do it well, and I hope that others will find it useful.
+
+
+
+Recent Changes (Published Sept. 2013)
+-----------------------
+
+- Open-sourced to GitHub; anyone is welcome to contribute or use
+- New, mobile-friendly design
+- Optimized for retina (high-DPI) displays
+- Printable directory, grouped by apartment, won't orphan a picture from the person's name
+- Cleaner URLs; for example, instead of site.com/fhe.php, it's just site.com/fhe
+- Login redirects; if you try to load site.com/callings, you'll be redirected there after logging in
+- More helpful error messages
+- Improved layout of the directory page
+- More pleasing profile view
+- Larger, clearer profile pictures
+- Profile pictures rotated automatically if needed
+- Only shows callings to whom members are assigned
+- More appealing, simpler forms
+- Slide-out navigation drawer
+- Users can change their own wards if they move within the same site/stake
+- General and important bug fixes
