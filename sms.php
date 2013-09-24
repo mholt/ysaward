@@ -162,7 +162,7 @@ $notEnoughFunds = $response->value < $minFundsRequired && !$response->autoReload
 
 				<textarea name="msg" cols="40" rows="4" placeholder="Message body" maxlength="<?php echo SMS_CHARS_PER_TEXT * 4; ?>" required></textarea>
 				
-				<span class="float-right">Cost: <span id="cost">$0.00</span></span>
+				<span class="float-right" style="visibility: hidden;">Cost: <span id="cost">$0.00</span></span>
 				<span id="char-remaining"><span id="char-count" class="char-count-ok"><?php echo SMS_CHARS_PER_TEXT; ?></span> remaining</span>
 
 				<br>

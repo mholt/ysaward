@@ -214,7 +214,7 @@ if (!$r)
 
 						<?php if (!$mem->HideEmail || $isCurrent || $LEADER): ?>
 						<span class="metafield">
-							<a href="mailto:<?php echo $mem->Email; ?>" target="_blank" class="mail-link" title="Send email">
+							<a href="mailto:<?php echo $mem->Email; ?>" target="_blank" title="Send email">
 								<i class="icon-envelope-alt"></i>
 								<?php echo $mem->Email; ?>
 							</a>
@@ -222,8 +222,10 @@ if (!$r)
 						<?php endif; ?>
 						<?php if ($mem->PhoneNumber && (!$mem->HidePhone || $isCurrent || $LEADER)): ?>
 						<span class="metafield">
+							<?php if (IS_MOBILE) echo '<a href="tel:'.$mem->PhoneNumber.'">'; ?>
 							<i class="icon-phone"></i>
 							<?php echo formatPhoneForDisplay($mem->PhoneNumber); ?>
+							<?php if (IS_MOBILE) echo '</a>'; ?>
 						</span>
 						<?php endif; ?>
 						<?php if (!$mem->HideBirthday || $isCurrent || $LEADER): ?>
