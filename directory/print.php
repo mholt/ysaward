@@ -38,33 +38,49 @@ $j = 0;			// Incremented for each apartment group we encounter
 		padding: 10px;
 	}
 
-	#header {
-		text-align: center;
-	}
-
 	#title {
 		font-weight: 300;
-		font-size: 42px;
+		font-size: 28px;
 		color: #000;
-		margin: 0 0 10px 0;
 	}
 
 	#meta {
 		font-size: 12px;
-		margin-bottom: -10px;
+		margin-bottom: -15px;
 	}
 
-	td {
-		padding: 4px;
-		font: 11px 'Open Sans', sans-serif;
-		vertical-align: middle;
-		line-height: 1.5em;
-	}
-
-	td.picTd {
-		width: 1.5in;
-		height: 1.5in;
+	.apt {
 		text-align: center;
+		background: #DDD;
+		color: #000;
+		font: 800 22px 'Open Sans', 'Arial Black', sans-serif;
+		margin: .5em 0 .5em;
+		text-transform: uppercase;
+	}
+
+	.apt-group {
+		page-break-inside: avoid;
+	}
+
+	.member-block {
+		display: inline;
+		float: left;
+		width: 24%;
+		margin-left: 1%;
+		
+		page-break-inside: avoid;
+
+		white-space: nowrap;
+		overflow: hidden;
+		font: 11px 'Open Sans', sans-serif;
+		line-height: 1.5em;
+		margin-bottom: 1em;
+	}
+
+	.pic-container {
+		max-height: 1.5in;
+		text-align: center;
+		margin-bottom: .5em;
 	}
 
 	.profilePicture {
@@ -72,30 +88,12 @@ $j = 0;			// Incremented for each apartment group we encounter
 		max-height: 100%;
 	}
 
-	.apt {
-		color: #000;
-		font: 800 22px 'Open Sans', 'Arial Black', sans-serif;
-		margin: 1.5em 0 .5em;
-		text-transform: uppercase;
-	}
-
 	.name {
 		font-size: 16px;
 		font-weight: 600;
 		color: #000;
-		margin-bottom: .8em;
-	}
-
-	table.memberBlock {
-		display: inline;
-		float: left;
-		width: 300px;
-		margin-right: 10px;
-		page-break-inside: avoid;
-	}
-
-	.apt-group {
-		page-break-inside: avoid;
+		margin-bottom: .5em;
+		text-align: center;
 	}
 	</style>
 </head>
@@ -104,9 +102,12 @@ $j = 0;			// Incremented for each apartment group we encounter
 		
 		<div id="header">
 			<div id="title"><?php echo $WARD->Name; ?> Ward</div>
-			<div id="meta">As of <?php echo date("F j, Y"); ?></div>
+			<div id="meta">
+				According to <b><?php echo SITE_DOMAIN; ?></b>
+				as of <b><?php echo date("F j, Y"); ?></b>
+			</div>
 		</div>
-		<hr class="line">
+		<hr class="line" style="margin-bottom: -.5em">
 				
 		<?php
 			while ($r = mysql_fetch_array($q)):
@@ -116,6 +117,9 @@ $j = 0;			// Incremented for each apartment group we encounter
 				// a full address AND a "regular" one e.g. ("Stratford 203")
 				// Prefer the "regular" one over the full one.
 				$addrString = trim($r['RegularAddr']) ? $r['RegularAddr'] : $r['FullAddr'];
+
+				if ($addrString == "")
+					$addrString = "(No address provided)";
 
 				// Get parts of the birth date (don't show year on printed directories)
 				$bdate = strtotime($mem->Birthday);
@@ -135,29 +139,25 @@ $j = 0;			// Incremented for each apartment group we encounter
 			$lastApt = $addrString;
 			endif;
 		?>
-				<table class="memberBlock">
-					<tr>
-						<td class="picTd">
-							<img src="<?php echo $mem->PictureFile(false); ?>" class="profilePicture">
-						</td>
-						<td class="info">
-							<div class="name">
-								<?php echo $mem->FirstName(); ?>
-								<?php echo $mem->LastName; ?>
-							</div>
+				<div class="member-block">
+					<div class="pic-container">
+						<img src="<?php echo $mem->PictureFile(false); ?>" class="profilePicture">
+					</div>
+					<div class="name">
+						<?php echo $mem->FirstName(); ?>
+						<?php echo $mem->LastName; ?>
+					</div>
 
-							<?php if (!$mem->HideBirthday): ?>
-								<b>Birthday:</b> <?php echo "{$mm} {$dd}"; ?><br>
-							<?php endif; if (!$mem->HideEmail): ?>
-								<?php echo $mem->Email; ?><br>
-							<?php endif; if (!$mem->HidePhone && $mem->PhoneNumber): ?>
-								<?php echo formatPhoneForDisplay($mem->PhoneNumber); ?>
-							<?php endif; ?>
-						</td>
-					</tr>
-				</table>
+				<?php if (!$mem->HidePhone && $mem->PhoneNumber): ?>
+					<i class="icon-phone"></i>&nbsp;&nbsp;<?php echo formatPhoneForDisplay($mem->PhoneNumber); ?><br>
+				<?php endif; if (!$mem->HideEmail): ?>
+					<i class="icon-envelope-alt"></i>&nbsp;<?php echo $mem->Email; ?><br>
+				<?php endif; if (!$mem->HideBirthday): ?>
+					<i class="icon-gift"></i>&nbsp;&nbsp;<?php echo "{$mm} {$dd}"; ?>
+				<?php endif; ?>
+				</div>
 			
-			<?php $i++; if ($i % 2 == 0) echo '<hr class="clear">'; ?>
+			<?php $i++; if ($i % 4 == 0) echo '<hr class="clear">'; ?>
 
 		<?php endwhile; ?>
 				</div> <!-- closes the last .apt-group container -->
