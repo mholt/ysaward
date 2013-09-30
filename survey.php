@@ -6,9 +6,6 @@ protectPage();
 $q = "SELECT ID FROM SurveyQuestions WHERE Visible=1 AND WardID={$MEMBER->WardID} ORDER BY ID ASC";
 $r = DB::Run($q);
 
-// Current member
-$mem = Member::Load($_SESSION['userID']);
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -52,7 +49,7 @@ while ($row = mysql_fetch_array($r)):
 	$sq = SurveyQuestion::Load($row['ID']);
 
 	// Load this member's answer
-	$ans = $sq->Answers($mem->ID());
+	$ans = $sq->Answers($MEMBER->ID());
 
 	// Create the name for this question's answer's input field
 	$inputName = 'answers['.$sq->ID().']'; // Array idx is question ID
