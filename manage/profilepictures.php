@@ -63,6 +63,14 @@ $r = DB::Run($q);
 				</div>
 
 				<br>
+
+				<div class="text-center">
+					<mark><b>Take pictures now:</b> <a href="/manage/capture">Capture pictures with your phone camera</a></b></mark>
+					<br>
+					<small>(requires Android or iOS 6+ with Chrome or Safari)</small>
+				</div>
+
+				<br>
 				
 				<div class="text-center">
 					<mark><b>Export profile pictures:</b> <a href="exportprofilepictures.php">Download <b>.zip</b> file</a></mark>

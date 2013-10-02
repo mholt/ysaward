@@ -95,6 +95,12 @@ $j = 0;			// Incremented for each apartment group we encounter
 		margin-bottom: .5em;
 		text-align: center;
 	}
+		
+	.member-info {
+		background: rgb(255, 255, 255);
+		position: relative;
+		padding: 2px;
+	}	
 	</style>
 </head>
 <body>
@@ -143,18 +149,20 @@ $j = 0;			// Incremented for each apartment group we encounter
 					<div class="pic-container">
 						<img src="<?php echo $mem->PictureFile(false); ?>" class="profilePicture">
 					</div>
-					<div class="name">
-						<?php echo $mem->FirstName(); ?>
-						<?php echo $mem->LastName; ?>
+					<div class="member-info">
+						<div class="name">
+							<?php echo $mem->FirstName(); ?>
+							<?php echo $mem->LastName; ?>
+						</div>
+	
+					<?php if (!$mem->HidePhone && $mem->PhoneNumber): ?>
+						<i class="icon-phone"></i>&nbsp;&nbsp;<?php echo formatPhoneForDisplay($mem->PhoneNumber); ?><br>
+					<?php endif; if (!$mem->HideEmail): ?>
+						<i class="icon-envelope-alt"></i>&nbsp;<?php echo $mem->Email; ?><br>
+					<?php endif; if (!$mem->HideBirthday): ?>
+						<i class="icon-gift"></i>&nbsp;&nbsp;<?php echo "{$mm} {$dd}"; ?>
+					<?php endif; ?>
 					</div>
-
-				<?php if (!$mem->HidePhone && $mem->PhoneNumber): ?>
-					<i class="icon-phone"></i>&nbsp;&nbsp;<?php echo formatPhoneForDisplay($mem->PhoneNumber); ?><br>
-				<?php endif; if (!$mem->HideEmail): ?>
-					<i class="icon-envelope-alt"></i>&nbsp;<?php echo $mem->Email; ?><br>
-				<?php endif; if (!$mem->HideBirthday): ?>
-					<i class="icon-gift"></i>&nbsp;&nbsp;<?php echo "{$mm} {$dd}"; ?>
-				<?php endif; ?>
 				</div>
 			
 			<?php $i++; if ($i % 4 == 0) echo '<hr class="clear">'; ?>

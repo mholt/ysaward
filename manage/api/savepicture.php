@@ -7,15 +7,15 @@ protectPage(12);
 @ $memberID = $_POST['memberID'];
 
 if (!$pic || count($pic) == 0)
-	fail("Nothing to do. Make sure you choose a picture to upload.");
+	fail("Please choose a picture to upload.");
 
 if (!$memberID)
-	fail("No member was specified...");
+	fail("No member was specified - please report this bug.");
 
 $mem = Member::Load($memberID);
 
 if (!$mem)
-	fail("Could not load member with ID ".$memberID." - please report this.");
+	fail("Could not load member with ID ".$memberID." - please report this bug.");
 
 if ($mem->WardID != $MEMBER->WardID)
 	fail("Member ".$memberID." is not in your ward.");
