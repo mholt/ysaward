@@ -102,6 +102,11 @@ $j = 0;			// Incremented for each apartment group we encounter
 		padding: 2px;
 	}	
 	</style>
+<script>
+var isChrome = /Chrome/i.test(navigator.userAgent);
+if (!isChrome)
+	alert("For best printing results, please use Google Chrome browser.");
+</script>
 </head>
 <body>
 	<div id="container">

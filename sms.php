@@ -130,6 +130,12 @@ $notEnoughFunds = $response->value < $minFundsRequired && !$response->autoReload
 			</div>
 <?php else:?>
 
+			<p>
+				Keep in mind that text messages sent from here
+				cannot be replied to and will come from an
+				arbitrary US number.
+			</p>
+
 			<fieldset class="to">
 				<legend>To</legend>
 				<div class="headers">
