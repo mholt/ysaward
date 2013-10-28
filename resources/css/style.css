@@ -155,7 +155,7 @@ select {
 
 textarea {
 	resize: none;
-	overflow-y: hidden;
+	overflow-y: auto;
 	line-height: 1.25em;
 }
 
