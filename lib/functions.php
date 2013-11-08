@@ -56,6 +56,11 @@ function fail($msg)
 function euroToUsdRate()
 {
 	$result = json_decode(file_get_contents("http://rate-exchange.appspot.com/currency?from=EUR&to=USD"));
+	if (!$result || !$result->rate)
+	{
+		$result = new stdClass;
+		$result->rate = 1.3;	// fairly safe default in case request fails
+	}
 	return $result->rate;
 }
 
