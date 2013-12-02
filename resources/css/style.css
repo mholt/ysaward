@@ -578,10 +578,6 @@ a[href='#'] {
 
 
 @media (max-width: 500px) {
-	body {
-		min-width: 370px;
-	}
-
 	h1 {
 		font-size: 28px;
 	}

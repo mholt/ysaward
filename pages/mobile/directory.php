@@ -17,22 +17,29 @@ $memberCount = mysql_num_rows($r);
 			.list > a {
 				padding: 0;
 				display: block;
-				color: #808080;
+				color: #505050;
 				font-weight: 300;
 				text-decoration: none;
+				white-space: nowrap;
+				overflow: hidden;
 			}
 
-			.list > a:nth-child(even) {
-				background: #E6E6E6;
+			.list a.male {
+				background: #F2F8FF;
 			}
 
-			.list > a:nth-child(odd) {
-				background: #EFEFEF;
+			.list a.female {
+				background: #F9EFEF;
 			}
 
 			.list > a:hover,
 			.list > a:active {
 				background: #7A7A88;
+				color: #FFF;
+			}
+
+			.list > a:hover .apt,
+			.list > a:active .apt {
 				color: #FFF;
 			}
 
@@ -45,6 +52,14 @@ $memberCount = mysql_num_rows($r);
 				font-size: 14px;
 				margin-bottom: 1.5em;	
 				text-align: center;
+			}
+
+			.apt {
+				display: inline-block;
+				font-size: 10px;
+				margin-left: .5em;
+				color: #AAA;
+				font-style: italic;
 			}
 		</style>
 	</head>
@@ -71,6 +86,7 @@ $memberCount = mysql_num_rows($r);
 				<a href="member?id=<?php echo($memb->ID()); ?>" class="<?php echo $memb->Gender == Gender::Male ? 'male' : 'female'; ?>">
 					<?php echo $memb->ProfilePicImgTag(true, true, 75); ?>
 					<?php echo $memb->FirstName().' '.$memb->LastName; ?>
+					<span class="apt"><?php echo $memb->ResidenceString(); ?></span>
 				</a>
 			<?php
 				endwhile;

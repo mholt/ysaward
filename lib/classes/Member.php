@@ -578,7 +578,7 @@ class Member
 	public function HasCustomResidence()
 	{
 		$res = $this->Residence();
-		return $res ? $this->Residence()->Custom() : false;
+		return $res ? $res->Custom() : false;
 	}
 
 	// Returns this member's Residence object
@@ -592,13 +592,45 @@ class Member
 	public function ResidenceString()
 	{
 		$res = $this->Residence();
-		
 		if (!$res)
 			return "";
 		elseif ($res->Custom())
 			return $res->Address." ".$res->City." ".$res->State;
 		else
 			return $res->Name." ".$this->Apartment;
+	}
+
+	// Returns an array of Member objects, of members who have the same
+	// residence ID as this member, or if it's a custom residence,
+	// the same residence string value.
+	public function Roommates()
+	{
+		$res = $this->Residence();
+		$roommates = array();
+
+		if ($this->HasCustomResidence())
+		{
+			$addr = $res->Address;
+			$city = $res->City;
+			$state = $res->State;
+			$zip = $res->PostalCode;
+			$r = DB::Run("SELECT Members.ID FROM Members INNER JOIN Residences ".
+						"ON Members.ResidenceID=Residences.ID WHERE Residences.Address='$addr' ".
+						"AND Residences.City='$city' AND Residences.State='$state' ".
+						"AND Residences.PostalCode='$zip'");
+			while ($row = mysql_fetch_array($r))
+				if ($row['ID'] != $this->ID)
+					array_push($roommates, Member::Load($row['ID']));
+		}
+		else
+		{
+			$r = DB::Run("SELECT ID FROM Members WHERE ResidenceID='{$this->ResidenceID}' AND Apartment='{$this->Apartment}' LIMIT 9");
+			while ($row = mysql_fetch_array($r))
+				if ($row['ID'] != $this->ID)
+					array_push($roommates, Member::Load($row['ID']));
+		}
+
+		return $roommates;
 	}
 
 	// Changes the member's ward to a different ward, given a ward ID.

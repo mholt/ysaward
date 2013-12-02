@@ -80,6 +80,9 @@ class Residence
 	}
 
 	// Returns whether or not this Residence entry is custom, or sets the value to true or false
+	// A custom residence is one that may be outside of the ward boundaries, or
+	// in any case, was created by the user: a residence that didn't "come" with the
+	// ward... like a house, instead of part of an apartment building.
 	public function Custom($c = 1)
 	{
 		if ($c === true || $c === false)

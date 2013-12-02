@@ -245,12 +245,18 @@ if (!$r)
 				<div class="grid-25 mobile-grid-30 misc">
 					<div class="chunk">
 						<?php
+							$roommates = $mem->Roommates();
+							echo count($roommates) == 1 ? '<b>Roommate</b>' : '<b>Roommates</b>';
+							foreach ($roommates as $rm)
+								echo '<a href="/member?id='.$rm->ID().'">'.$rm->FirstName()." ".$rm->LastName."</a><br>";
+						?>
+					</div>
+					<div class="chunk">
+						<?php
 							$callings = $mem->Callings();
 							echo count($callings) == 1 ? '<b>Calling</b>' : '<b>Callings</b>';
 							foreach ($callings as $c)
 								echo $c->Name."<br>";
-							if (sizeof($callings) == 0)
-								echo "<br>";
 						?>
 					</div>
 
