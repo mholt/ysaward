@@ -115,7 +115,7 @@ foreach ($groups as $grp):
 	foreach ($leaders as $ldr):
 ?>
 					<a href="/member?id=<?php echo $ldr->ID(); ?>" class="member-link">
-						<?php echo $ldr->ProfilePicImgTag(true, true, 45); ?>
+						<?php echo $ldr->ProfilePicImgTag(true, true, "45px"); ?>
 						<?php echo $ldr->FirstName().' '.$ldr->LastName; ?>
 					</a>
 <?php
@@ -129,7 +129,7 @@ foreach ($groups as $grp):
 	foreach ($members as $mem):
 ?>
 					<a href="/member?id=<?php echo $mem->ID(); ?>" class="member-link">
-						<?php echo $mem->ProfilePicImgTag(true, true, 45); ?>
+						<?php echo $mem->ProfilePicImgTag(true, true, "45px"); ?>
 						<?php echo $mem->FirstName().' '.$mem->LastName; ?>
 					</a>
 <?php

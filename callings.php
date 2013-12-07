@@ -74,7 +74,7 @@ foreach ($callings as $callingName => $members):
 	foreach ($members as $mem):
 ?>
 					<a href="/member?id=<?php echo $mem->ID(); ?>" class="member-link">
-						<?php echo $mem->ProfilePicImgTag(true, true, 45); ?>
+						<?php echo $mem->ProfilePicImgTag(true, true, "45px"); ?>
 						<?php echo $mem->FirstName().' '.$mem->LastName; ?>
 					</a>
 <?php

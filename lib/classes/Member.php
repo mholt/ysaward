@@ -476,7 +476,8 @@ class Member
 	}
 
 	// Returns the HTML "img" tag of this member's profile pic.
-	// For a maximum size, pass in $maxDimension; it will not be larger than it either way.
+	// For a maximum size, pass in $maxDimension as a CSS width/height value;
+	// it will not be larger than it either way.
 	// By default, returns medium-sized picture, not thumbnail; specify true for thumbnail.
 	// Set $lazy to false if you want the image to load right away (not just when the user scrolls to it)
 	public function ProfilePicImgTag($thumb = false, $lazy = true, $maxDimension = 0)
@@ -484,12 +485,12 @@ class Member
 		$picFile = $this->PictureFile($thumb);
 		
 		if (!$maxDimension)
-			$maxDimension = $thumb ? Member::THUMB_DIM / 2 : Member::MEDIUM_DIM / 2;
+			$maxDimension = $thumb ? (Member::THUMB_DIM / 2) . "px" : "100%";
 
 		if ($lazy)
-			return '<img src="/resources/images/unveil-loader.gif" data-src="'.$picFile.'" alt="'.$this->FirstName.'\'s picture" style="max-width: '.$maxDimension.'px; max-height: '.$maxDimension.'px;" class="profilePicture">';
+			return '<img src="/resources/images/unveil-loader.gif" data-src="'.$picFile.'" alt="'.$this->FirstName.'\'s picture" style="max-width: '.$maxDimension.'; max-height: '.$maxDimension.';" class="profilePicture">';
 		else
-			return '<img src="'.$picFile.'" alt="'.$this->FirstName.'\'s picture" style="max-width: '.$maxDimension.'px; max-height: '.$maxDimension.'px;" class="profilePicture">';
+			return '<img src="'.$picFile.'" alt="'.$this->FirstName.'\'s picture" style="max-width: '.$maxDimension.'; max-height: '.$maxDimension.';" class="profilePicture">';
 	}
 
 	// Deletes the picture file and thumbnail for this member.

@@ -58,7 +58,7 @@ $memberCount = mysql_num_rows($r);
 				display: inline-block;
 				font-size: 10px;
 				margin-left: .5em;
-				color: #AAA;
+				color: #888;
 				font-style: italic;
 			}
 		</style>
@@ -84,7 +84,7 @@ $memberCount = mysql_num_rows($r);
 
 				?>
 				<a href="member?id=<?php echo($memb->ID()); ?>" class="<?php echo $memb->Gender == Gender::Male ? 'male' : 'female'; ?>">
-					<?php echo $memb->ProfilePicImgTag(true, true, 75); ?>
+					<?php echo $memb->ProfilePicImgTag(true, true, "75px"); ?>
 					<?php echo $memb->FirstName().' '.$memb->LastName; ?>
 					<span class="apt"><?php echo $memb->ResidenceString(); ?></span>
 				</a>
