@@ -213,7 +213,7 @@ $(function()
 		.fail(function(jqxhr)
 		{
 			$(this).css('color', '#CC0000');
-			$('[type=submit]').prop('disabled', true);
+			$('[type=submit]').prop('disabled', false);
 			$.sticky(jqxhr.responseText || "Please type a better date, for example: July 3, 1990.", { classList: "error" });
 		});
 	});
