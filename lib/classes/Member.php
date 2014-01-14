@@ -426,7 +426,7 @@ class Member
 			$size = $newpic['size'];
 
 			if (!$tmppath)
-				fail("No valid uploaded file found for $filename... please report this.");
+				fail("That picture file ($filename) was probably too large; try a smaller one, or report this error to have it resolved.");
 
 			// Get extension (excluding the '.')
 			$ext = extension($filename);

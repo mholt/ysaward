@@ -30,19 +30,19 @@ if (time() < $tooSoon)
 
 
 // Generate reset token
-$token = randomString(15, false);
+$token = urlencode(randomString(15, false));
 
 
 // Prepare the email
 $subj = "Reset your ward website password";
 $msg = "Hi!
 
-You or somebody else is trying to login to this account on ".SITE_DOMAIN.".
+You or somebody else is trying to log in with this account on ".SITE_DOMAIN.".
 
 To reset your password, go to:
 
 ----------------------------------------------------
-https://".SITE_DOMAIN."/newpwd.php?key={$token}
+https://".SITE_DOMAIN."/newpwd?key={$token}
 ----------------------------------------------------
 
 If you didn't ask for a password reset, just ignore and delete this message. It expires in 48 hours anyway.

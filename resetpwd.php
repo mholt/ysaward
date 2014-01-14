@@ -12,7 +12,7 @@ if (Member::IsLoggedIn())
 	</head>
 	<body class="narrow">
 
-		<form method="post" action="/api/resetpwd.php">
+		<form method="post" action="/api/resetpwd">
 			<div class="text-center">
 				<a href="/">
 					<img src="<?php echo SITE_LARGE_IMG; ?>" alt="<?php echo SITE_NAME; ?>" class="logo-big">

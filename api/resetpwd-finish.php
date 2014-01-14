@@ -7,7 +7,7 @@ require_once("../lib/init.php");
 @ $token = $_POST['token'];
 
 if (!$pwd1 || !$pwd2)
-	header("Location: /newpwd.php?key=$token");
+	header("Location: /newpwd?key=$token");
 if (!$token)
 	Response::Send(400, "Token value disappeared. That shouldn't happen. Please report this so it can get fixed.");
 

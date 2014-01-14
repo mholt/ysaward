@@ -53,7 +53,7 @@ $isCustom = $currentResidence ? $currentResidence->Custom() : false;
 	<body>
 			<?php include "includes/header.php"; ?>
 
-			<form method="post" action="/api/saveprofile" class="narrow">
+			<form method="post" action="/api/saveprofile" class="narrow" autocomplete="off">
 				<div class="text-center">
 					<h1>Edit profile</h1>
 				</div>
@@ -63,9 +63,9 @@ $isCustom = $currentResidence ? $currentResidence->Custom() : false;
 						<legend>
 							Email and password
 						</legend>
-						<input type="email" name="email" placeholder="Email address" maxlength="255" value="<?php echo htmlentities($MEMBER->Email); ?>" required>
-						<input type="password" name="pwd1" placeholder="New password">
-						<input type="password" name="pwd2" placeholder="New password again">
+						<input type="email" name="email" placeholder="Email address" maxlength="255" value="<?php echo htmlentities($MEMBER->Email); ?>" required autocomplete="off">
+						<input type="password" name="pwd1" placeholder="New password" autocomplete="off">
+						<input type="password" name="pwd2" placeholder="New password again" autocomplete="off">
 					</fieldset>
 
 					<br>
@@ -230,7 +230,7 @@ $(function()
 	// Verify date of birth is a good date format
 	$('#dob').change(function()
 	{
-		$.get('/api/tryparsedate.php', {
+		$.get('/api/tryparsedate', {
 			input: $(this).val(),
 			strictMonthDayYear: '1'
 		})

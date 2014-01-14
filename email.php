@@ -283,7 +283,7 @@ $(function() {
 		{
 			$(this).prop('checked', false);
 			if (!$(notifyToast).is(':visible'))
-				notifyToast = $.sticky('You can only email up to <?php echo EMAIL_MAX_RECIPIENTS; ?> members at a time.');
+				notifyToast = $.sticky('You can only email up to ' + <?php echo EMAIL_MAX_RECIPIENTS; ?> + ' members at a time.');
 		}
 		<?php elseif ($has2): ?>
 		// May email all brothers but not much more than that

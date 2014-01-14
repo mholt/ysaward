@@ -24,7 +24,7 @@ if (Member::IsLoggedIn() || StakeLeader::IsLoggedIn())
 					<img src="<?php echo SITE_LARGE_IMG; ?>" alt="<?php echo SITE_NAME; ?>" class="logo-big">
 					<br>
 
-					<big>Please <a href="register.php">register</a> if you need an account.</big>
+					<big><b><a href="/register">Click here to register</a></b> if you're new!</big>
 
 					<hr>
 
@@ -33,8 +33,8 @@ if (Member::IsLoggedIn() || StakeLeader::IsLoggedIn())
 				</div>
 
 				<div class="text-right">
-					<button type="submit">Login</button><br>
-					<a href="resetpwd.php">Reset password</a><br>
+					<button type="submit">Log In</button><br>
+					<a href="/resetpwd">Reset password</a><br>
 					<br>
 				</div>
 
