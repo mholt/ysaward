@@ -26,9 +26,15 @@
 -->
 <meta name="viewport" content="width=device-width, maximum-scale=1.0">
 
+<!-- Android makes this look goooood. -->
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="shortcut icon" sizes="196x196" href="favicon.png">
+
 <!-- Icons -->
 <!--<link rel="shortcut icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
 <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon">-->
+
+
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="<?php echo SHORT_SITE_NAME; ?>">
 
