@@ -20,6 +20,14 @@ $canSendAll = $MEMBER->HasPrivilege(PRIV_TEXT_ALL);
 $canSendFHE = $MEMBER->HasPrivilege(PRIV_TEXT_FHE);
 
 
+// The member doesn't need the *privilege* to send to FHE if they're a group leader
+$group = $MEMBER->FheGroup();
+if ($group->Leader1 == $MEMBER->ID()
+		|| $group->Leader2 == $MEMBER->ID()
+		|| $group->Leader3 == $MEMBER->ID())
+	$canSendFHE = true;
+
+
 // Send emails to selected recipients. First, check input.
 @ $recipients = $_POST['to'];
 @ $msg = trim($_POST['msg']);
