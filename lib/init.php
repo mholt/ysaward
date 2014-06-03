@@ -5,6 +5,12 @@
 	for basic functionality. Be careful in here.
 	(Not used, however, by CLI-invoked scripts)
 */
+
+// Keep users logged in for a month... TODO: This doesn't work??
+$SESSION_LIFETIME = 60 * 60 * 24 * 30;
+session_set_cookie_params($SESSION_LIFETIME);
+ini_set('session.gc_maxlifetime', $SESSION_LIFETIME);
+
 // Start session... we'll need it
 session_start();
 
