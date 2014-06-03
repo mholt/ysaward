@@ -187,7 +187,7 @@ $(function()
 		{
 			self.css('color', '#CC0000');
 			$('[type=submit]').prop('disabled', true);
-			$.sticky(jqxhr.responseText || "Please type a better date, for example: July 3, 1990.", { classList: "error" });
+			alert(jqxhr.responseText || "Please type a better date, for example: July 3, 1990.");
 		});
 	});
 
