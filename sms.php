@@ -8,6 +8,15 @@ protectPage();
 $canSendAll = $MEMBER->HasPrivilege(PRIV_TEXT_ALL);
 $canSendFHE = $MEMBER->HasPrivilege(PRIV_TEXT_FHE);
 
+// The member doesn't need the *privilege* to send to FHE if they're a group leader
+$group = $MEMBER->FheGroup();
+if ($group &&
+		($group->Leader1 == $MEMBER->ID()
+		|| $group->Leader2 == $MEMBER->ID()
+		|| $group->Leader3 == $MEMBER->ID()))
+	$canSendFHE = true;
+
+
 // Get a list of all members of the ward
 $mems = array();
 $q = "SELECT ID FROM Members WHERE WardID='$MEMBER->WardID' ORDER BY FirstName,LastName ASC";
@@ -385,7 +394,7 @@ $(function()
 			recipCount --;
 		}
 		<?php elseif (!$canSendAll && $canSendFHE): ?>
-		// Can send to FHE group but not more than <?php echo MAX_PER_DAY ?>, otherwise
+		// Can send to FHE group but not more than <?php echo SMS_MAX_PER_DAY ?>, otherwise
 		if (recipCount * segments > <?php echo SMS_MAX_PER_DAY; ?> && !$('#sel-fhe').is(':checked'))
 		{
 			$(this).prop('checked', false);
@@ -402,11 +411,23 @@ $(function()
 	$('textarea').keyup(function()
 	{
 		var charCount = $('#char-count');
-		var length = $(this).val().length;
-		var remaining = <?php echo SMS_CHARS_PER_TEXT; ?> - length;
 		var recipCount = $('.memberlist input[type=checkbox]:checked').length;
+		var length = $(this).val().length;
 
 
+		// UPDATE, MAY 2014: It appears that long, multi-segment text messages are
+		// send as those special, long texts, but only some carriers deliver them,
+		// even though Nexmo says they group them into regular-sized segments.
+		// Since many people are not receiving those messages even though their API
+		// says delivery to the carrier succeeded, I'm disabling sending messages
+		// longer than 160 characters.
+		if (length >= <?php echo SMS_CHARS_PER_TEXT; ?>)
+		{
+			$(this).val($(this).val().substring(0, <?php echo SMS_CHARS_PER_TEXT; ?>));
+			length = $(this).val().length;
+		}
+
+		var remaining = <?php echo SMS_CHARS_PER_TEXT; ?> - length;
 		$('#char-count').text(remaining);
 		
 		if (remaining <= 15)
@@ -415,6 +436,8 @@ $(function()
 			charCount.removeClass().addClass('char-count-close');
 		else if (!charCount.hasClass('char-count-ok'))
 			charCount.removeClass().addClass('char-count-ok');
+
+
 
 		if (length > <?php echo SMS_CHARS_PER_TEXT; ?>)
 			segments = Math.ceil(length / (<?php echo SMS_CHARS_PER_TEXT; ?> - <?php echo SMS_SEGMENT_OVERHEAD; ?>));
