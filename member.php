@@ -200,13 +200,13 @@ if (!$r)
 
 					<?php if ($MEMBER && $MEMBER->HasPrivilege(PRIV_DELETE_ACCTS) && $MEMBER->ID() != $mem->ID()): ?>
 						<div class="deletemem">
-							<a id="delmem" class="del" href="javascript:" title="Permanently delete this member's account"><i class="icon-remove-sign"></i> &nbsp;Delete Account</a>
+							<a id="delmem" class="del" href="javascript:" title="Permanently delete this member's account"><i class="fa fa-times"></i> &nbsp;Delete Account</a>
 						</div>
 					<?php endif; ?>
 
 					<div class="member-meta">
 						<span class="home">
-							<i class="icon-home"></i>
+							<i class="fa fa-home"></i>
 							<?php echo $mem->ResidenceString(); ?>
 						</span>
 
@@ -215,7 +215,7 @@ if (!$r)
 						<?php if (!$mem->HideEmail || $isCurrent || $LEADER): ?>
 						<span class="metafield">
 							<a href="mailto:<?php echo $mem->Email; ?>" target="_blank" title="Send email">
-								<i class="icon-envelope-alt"></i>
+								<i class="fa fa-envelope"></i>
 								<?php echo $mem->Email; ?>
 							</a>
 						</span>
@@ -223,14 +223,14 @@ if (!$r)
 						<?php if ($mem->PhoneNumber && (!$mem->HidePhone || $isCurrent || $LEADER)): ?>
 						<span class="metafield">
 							<?php if (IS_MOBILE) echo '<a href="tel:'.$mem->PhoneNumber.'">'; ?>
-							<i class="icon-phone"></i>
+							<i class="fa fa-phone"></i>
 							<?php echo formatPhoneForDisplay($mem->PhoneNumber); ?>
 							<?php if (IS_MOBILE) echo '</a>'; ?>
 						</span>
 						<?php endif; ?>
 						<?php if (!$mem->HideBirthday || $isCurrent || $LEADER): ?>
 						<span class="metafield">
-							<i class="icon-gift"></i>
+							<i class="fa fa-gift"></i>
 							<?php echo "{$mm} {$dd}<sup>{$ordinal}</sup>"; ?>
 						</span>
 						<?php endif; ?>

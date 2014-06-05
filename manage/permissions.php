@@ -241,7 +241,7 @@ while ($row = mysql_fetch_array($rp)):
 							<tr>
 								<th>
 									<a href="javascript:" title="Expand/collapse" class="toggler" id="toggler-<?php echo $objID; ?>-<?php echo $objType; ?>">
-										<span class="arrow"><i class="icon-expand-alt"></i></span> <?php echo $objName ?></a>
+										<span class="arrow"><i class="fa fa-caret-down"></i></span> <?php echo $objName ?></a>
 									</a>
 								</th>
 								<td><?php echo $objType ?></td>
@@ -250,7 +250,7 @@ while ($row = mysql_fetch_array($rp)):
 						<div class="pers" id="pers-<?php echo $objID; ?>-<?php echo $objType; ?>">
 	<?php endif; ?>
 						<span class="permission">
-							<a href="api/deletepermission?id=<?php echo($perID); ?>" title="Revoke permission" class="delPer del"><i class="icon-remove"></i></a>
+							<a href="api/deletepermission?id=<?php echo($perID); ?>" title="Revoke permission" class="delPer del"><i class="fa fa-times"></i></a>
 							<?php echo $question ?>
 						</span>
 	
@@ -262,7 +262,7 @@ endwhile;
 					</div>
 				</div>
 
-				<a href="#"><i class="icon-arrow-up"></i> Top</a>
+				<a href="#"><i class="fa fa-arrow-up"></i> Top</a>
 
 			</div>
 
@@ -279,7 +279,7 @@ $(function() {
 		var selector = $(this).attr('id').substr(8);
 		$('div#pers-' + selector).slideToggle('fast');
 		var arrow = $('.arrow', this).html();
-		$('.arrow', this).html(arrow == '<i class="icon-collapse-alt"></i>' ? '<i class="icon-expand-alt"></i>' : '<i class="icon-collapse-alt"></i>');		
+		$('.arrow', this).html(arrow == '<i class="fa fa-caret-down"></i>' ? '<i class="fa fa-caret-up"></i>' : '<i class="fa fa-caret-down"></i>');		
 	});
 
 	// Select all checkbox for list of questions

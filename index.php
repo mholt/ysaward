@@ -45,7 +45,7 @@ if (Member::IsLoggedIn() || StakeLeader::IsLoggedIn())
 						<b style="color: #CC0000">Hey!</b>
 						Tap the
 						 <span style="display: inline-block; padding: 1px 12px; background: #EEE; border: 1px solid #CCC;">
-						 	<i class="icon-ellipsis-vertical"></i>
+						 	<i class="fa fa-ellipsis-v"></i>
 						 </span>
 						icon, then <i>Add to homescreen</i>!
 						<hr>

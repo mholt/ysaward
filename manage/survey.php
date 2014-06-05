@@ -130,12 +130,12 @@ $r = DB::Run($q);
 								<div class="mc qu-opt hide">
 									Members may only select one:
 									<br>
-									<span class="opt"><input type='text' name='ans[0]' id='ans0'><br><a href="javascript:" class="newopt"><i class="icon-plus-sign"></i> Add another</a></span>
+									<span class="opt"><input type='text' name='ans[0]' id='ans0'><br><a href="javascript:" class="newopt"><i class="fa fa-plus-square"></i> Add another</a></span>
 								</div>
 								<div class="ma qu-opt hide nowrap">
 									Member may select multiple:
 									<br>
-									<span class="opt"><input type='text' name='ans[0]' id='ans0'><br><a href="javascript:" class="newopt"><i class="icon-plus-sign"></i> Add another</a></span>
+									<span class="opt"><input type='text' name='ans[0]' id='ans0'><br><a href="javascript:" class="newopt"><i class="fa fa-plus-square"></i> Add another</a></span>
 								</div>
 								<!-- End toggled divs -->
 						</td>
@@ -203,16 +203,16 @@ $r = DB::Run($q);
 							<div class="mc qu-opt<?php echo $sq->QuestionType != QuestionType::MultipleChoice ? ' hide' : ''; ?>">
 								<small><i>Members may select only one:</i></small><br>
 			<?php foreach ($sq->AnswerOptions() as $ansOpt): ?>
-								<span class="opt"><input type="text" name="ans[<?php echo $ansOpt->ID(); ?>]" id="ans<?php echo $ansOpt->ID(); ?>" value="<?php echo htmlentities($ansOpt->AnswerValue()); ?>"> <a href="javascript:" class="delOpt del"><i class="icon-remove-sign"></i></a><br></span>
+								<span class="opt"><input type="text" name="ans[<?php echo $ansOpt->ID(); ?>]" id="ans<?php echo $ansOpt->ID(); ?>" value="<?php echo htmlentities($ansOpt->AnswerValue()); ?>"> <a href="javascript:" class="delOpt del"><i class="fa fa-times"></i></a><br></span>
 			<?php endforeach; ?>
-								<a href="javascript:" class="newopt"><i class="icon-plus-sign"></i> Add another</a>
+								<a href="javascript:" class="newopt"><i class="fa fa-plus-square"></i> Add another</a>
 							</div>
 							<div class="ma qu-opt<?php echo $sq->QuestionType != QuestionType::MultipleAnswer ? ' hide' : ''; ?>">
 							<small><i>Members may select multiple:</i></small><br>
 			<?php foreach ($sq->AnswerOptions() as $ansOpt): ?>
-								<span class="opt"><input type="text" name="ans[<?php echo $ansOpt->ID(); ?>]" id="ans<?php echo $ansOpt->ID(); ?>" value="<?php echo htmlentities($ansOpt->AnswerValue()); ?>"> <a href="javascript:" class="delOpt del"><i class="icon-remove-sign"></i></a><br></span>
+								<span class="opt"><input type="text" name="ans[<?php echo $ansOpt->ID(); ?>]" id="ans<?php echo $ansOpt->ID(); ?>" value="<?php echo htmlentities($ansOpt->AnswerValue()); ?>"> <a href="javascript:" class="delOpt del"><i class="fa fa-times"></i></a><br></span>
 			<?php endforeach; ?>
-								<a href="javascript:" class="newopt"><i class="icon-plus-sign"></i> Add another</a>
+								<a href="javascript:" class="newopt"><i class="fa fa-plus-square"></i> Add another</a>
 							</div>
 							<div class="yn qu-opt<?php echo $sq->QuestionType != QuestionType::YesNo ? ' hide' : ''; ?>">
 								<i>Yes/no</i>
@@ -270,7 +270,7 @@ $(function()
 		// Find an available array index
 		while ($('input#ans' + ansIdx, $(this).parent()).length > 0)
 			ansIdx ++;
-		var newone = '<span class="opt""><input type="text" name="ans['+ansIdx+'] id="ans'+ansIdx+'"> <a href="javascript:" class="delOpt del"><i class="icon-remove-sign"></i></a><br>';
+		var newone = '<span class="opt""><input type="text" name="ans['+ansIdx+'] id="ans'+ansIdx+'"> <a href="javascript:" class="delOpt del"><i class="fa fa-times"></i></a><br>';
 		$(newone).insertBefore(this);
 		$('input', newone).focus();
 		ansIdx ++;

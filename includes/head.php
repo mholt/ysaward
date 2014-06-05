@@ -2,7 +2,7 @@
 
 <!-- Style sheets and fonts -->
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Oswald|Open+Sans:300,400,600,800">
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css">
 <link rel="stylesheet" href="/resources/css/unsemantic.css">
 <link rel="stylesheet" href="/resources/css/sticky.css">
 <link rel="stylesheet" href="/resources/css/prettyCheckable.css">

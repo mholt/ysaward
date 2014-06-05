@@ -22,14 +22,14 @@
 	</div>
 	<div class="half-side text-right nowrap" style="padding-right: 0px;">
 <?php if (!IS_MOBILE && strpos($_SERVER['REQUEST_URI'], "/directory") !== false): ?>
-		<a href="/directory/download" class="icon-download-alt icon-large"></a>
+		<a href="/directory/download" class="fa fa-download fa-lg"></a>
 		&nbsp; &nbsp;
-		<a href="/directory/print" class="icon-print icon-large" target="_blank"></a>
+		<a href="/directory/print" class="fa fa-print fa-lg" target="_blank"></a>
 <?php endif; ?>
 
 		<a href="javascript:" id="menu-icon">
 			Menu
-			<i class="icon-reorder icon-large"></i>
+			<i class="fa fa-bars"></i>
 		</a>
 	</div>
 </header>

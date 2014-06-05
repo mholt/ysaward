@@ -126,7 +126,7 @@ mysql_data_seek($r2, 0);
 					<tr>
 						<td class="del-td">
 							<?php if (!$c->Preset()): ?>
-							<a href="api/deletecalling?id=<?php echo($c->ID()); ?>" class="delcalling del" data-id="<?php echo $c->ID(); ?>"><i class="icon-remove-sign"></i></a>
+							<a href="api/deletecalling?id=<?php echo($c->ID()); ?>" class="delcalling del" data-id="<?php echo $c->ID(); ?>"><i class="fa fa-times-circle"></i></a>
 							<?php endif; ?>
 						</td>
 						<td><?php echo $c->Name; ?></td>
@@ -135,7 +135,7 @@ mysql_data_seek($r2, 0);
 				</table>
 
 				<br>
-				<a href="#">Top <i class="icon-arrow-up"></i></a>
+				<a href="#">Top <i class="fa fa-arrow-up"></i></a>
 				<br><br>
 			</div>
 
@@ -162,7 +162,7 @@ mysql_data_seek($r2, 0);
 						?>
 							<div class="call-<?php echo $c->ID(); ?>"><?php echo $c->Name; ?>
 								&nbsp;
-								<a href="api/unassigncalling?cID=<?php echo $c->ID(); ?>&mID=<?php echo $m->ID(); ?>" class="unassign del"><i class="icon-remove"></i></a>
+								<a href="api/unassigncalling?cID=<?php echo $c->ID(); ?>&mID=<?php echo $m->ID(); ?>" class="unassign del"><i class="fa fa-times-circle"></i></a>
 								<br>
 							</div>
 							<?php
@@ -179,7 +179,7 @@ mysql_data_seek($r2, 0);
 				</table>
 
 				<br>
-				<a href="#"><i class="icon-arrow-up"></i> Top</a>
+				<a href="#"><i class="fa fa-arrow-up"></i> Top</a>
 
 			</div>
 
@@ -206,7 +206,7 @@ $(function()
 			{
 				// The response text contains the calling ID
 				$.sticky("Created calling successfully");
-				$('#add-calling-tr').after('<tr><td class="del-td"><a href="api/deletecalling?id='+xhr.responseText+'" class="delcalling del" data-id="'+xhr.responseText+'"><i class="icon-remove-sign"></i></a></td>' +
+				$('#add-calling-tr').after('<tr><td class="del-td"><a href="api/deletecalling?id='+xhr.responseText+'" class="delcalling del" data-id="'+xhr.responseText+'"><i class="fa fa-times-circle"></i></a></td>' +
 					'<td>'+$('input[name=name]').val()+'</td></tr>');
 				$('.calling-list select').prepend('<option value="'+xhr.responseText+'">'+$('input[name=name]').val()+'</option>');
 				$('input[name=name]').val('').focus();
@@ -253,7 +253,7 @@ $(function()
 						.parents('.add')
 						.first()
 						.before('<div class="call-'+callID+'">'+callName+' &nbsp; '
-							+ '<a href="api/unassigncalling?cID='+callID+'&mID='+memID+'" class="unassign del"><i class="icon-remove"></i></a>'
+							+ '<a href="api/unassigncalling?cID='+callID+'&mID='+memID+'" class="unassign del"><i class="fa fa-times-circle"></i></a>'
 							+ '<br></div>');
 				}
 				else

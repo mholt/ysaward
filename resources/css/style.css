@@ -71,13 +71,12 @@ a:active {
 	color: #FF6600;
 }
 
-header a.icon-large {
+header a.fa-lg {
 	color: inherit;
 	text-decoration: none;
-	font-size: 18px;
 }
 
-header a.icon-large:hover {
+header a.fa-lg:hover {
 	color: #000;
 }
 
@@ -600,8 +599,8 @@ a[href='#'] {
 	}
 
 	.header-text,
-	header .icon-download-alt,
-	header .icon-print {
+	header .fa-download,
+	header .fa-print {
 		display: none;
 	}
 

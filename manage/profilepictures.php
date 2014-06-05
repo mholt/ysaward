@@ -102,7 +102,7 @@ $r = DB::Run($q);
 						<td class="text-center"><?php echo $curPic; ?></td>
 						<td><?php echo $mem->FirstName.' '.$mem->MiddleName.' '.$mem->LastName; ?></td>
 						<td>
-							<a href="api/deletepicture.php?member=<?php echo $mem->ID(); ?>" class="deletePicture del"><i class="icon-remove-sign"></i> Delete</a>
+							<a href="api/deletepicture.php?member=<?php echo $mem->ID(); ?>" class="deletePicture del"><i class="fa fa-times"></i> Delete</a>
 						</td>
 						<td>
 							<form method="post" enctype="multipart/form-data" class="upl" action="api/savepicture">
@@ -118,7 +118,7 @@ $r = DB::Run($q);
 				<br><br>
 
 				<div class="text-center">
-					<a href="#"><i class="icon-arrow-up"></i> Top</a>
+					<a href="#"><i class="fa fa-arrow-up"></i> Top</a>
 				</div>
 			</div>
 

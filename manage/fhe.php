@@ -125,7 +125,7 @@ while ($row = mysql_fetch_array($r2))
 						<?php endforeach; ?>
 					</table>
 
-					<br><a href="#">Top <i class="icon-arrow-up"></i></a>
+					<br><a href="#">Top <i class="fa fa-arrow-up"></i></a>
 				</div>
 			</div>
 
@@ -165,7 +165,7 @@ while ($row = mysql_fetch_array($r2))
 						<input type="hidden" name="id" value="<?php echo $group->ID(); ?>">
 						<input type="text" size="20" name="groupname" value="<?php echo $group->GroupName; ?>" placeholder="Group name (example: 1)">
 						<small>
-							<a class="del" href="api/fhe?del&id=<?php echo $group->ID(); ?>"><i class="icon-remove-sign"></i> Delete</a>
+							<a class="del" href="api/fhe?del&id=<?php echo $group->ID(); ?>"><i class="fa fa-times"></i> Delete</a>
 						</small>
 						<br><br>
 						<select size="1" name="ldr1"><option value="">(Leader 1)</option>
@@ -210,7 +210,7 @@ while ($row = mysql_fetch_array($r2))
 
 					<?php if (count($groups) == 0): ?><p>No FHE groups! Make some?</p><?php endif; ?>
 
-					<a href="#"><i class="icon-arrow-up"></i> Top</a>
+					<a href="#"><i class="fa fa-arrow-up"></i> Top</a>
 				</div>
 			</div>
 

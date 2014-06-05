@@ -161,11 +161,11 @@ if (!isChrome)
 						</div>
 	
 					<?php if (!$mem->HidePhone && $mem->PhoneNumber): ?>
-						<i class="icon-phone"></i>&nbsp;&nbsp;<?php echo formatPhoneForDisplay($mem->PhoneNumber); ?><br>
+						<i class="fa fa-phone"></i>&nbsp;&nbsp;<?php echo formatPhoneForDisplay($mem->PhoneNumber); ?><br>
 					<?php endif; if (!$mem->HideEmail): ?>
-						<i class="icon-envelope-alt"></i>&nbsp;<?php echo $mem->Email; ?><br>
+						<i class="fa fa-envelope"></i>&nbsp;<?php echo $mem->Email; ?><br>
 					<?php endif; if (!$mem->HideBirthday): ?>
-						<i class="icon-gift"></i>&nbsp;&nbsp;<?php echo "{$mm} {$dd}"; ?>
+						<i class="fa fa-gift"></i>&nbsp;&nbsp;<?php echo "{$mm} {$dd}"; ?>
 					<?php endif; ?>
 					</div>
 				</div>

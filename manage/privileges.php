@@ -141,7 +141,7 @@ $maxLen = 65; // Maximum display length of a calling name
 					</table>
 				</div>
 
-				<a href="#">Top <i class="icon-arrow-up"></i></a>
+				<a href="#">Top <i class="fa fa-arrow-up"></i></a>
 			</div>
 
 
@@ -221,7 +221,7 @@ $maxLen = 65; // Maximum display length of a calling name
 					<?php endwhile; ?>
 					</table>
 				</div>
-				<a href="#"><i class="icon-arrow-up"></i> Top</a>
+				<a href="#"><i class="fa fa-arrow-up"></i> Top</a>
 			</div>
 
 		</div>
