@@ -141,7 +141,8 @@ class EmailJob
 		// from a legit source.
 		$docroot = DOCROOT;
 		$pwd = EMAIL_JOB_PASSWORD;
-		`php $docroot/api/sendemails.php $this->ID $pwd &> error_log &`;
+		$cmd = "php $docroot/api/sendemails.php $this->ID $pwd";
+		exec("/usr/bin/nohup $cmd &> error_log &");
 	}
 
 	public function Done()

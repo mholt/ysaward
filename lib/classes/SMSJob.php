@@ -135,7 +135,8 @@ class SMSJob
 		// See EmailJob.php for any explanation about this last part
 		$docroot = DOCROOT;
 		$smspwd = SMS_JOB_PASSWORD;
-		`php $docroot/api/sendsms.php $this->ID $smspwd &> error_log &`;
+		$cmd = "php $docroot/api/sendsms.php $this->ID $smspwd";
+		exec("/usr/bin/nohup $cmd &> error_log &");
 		return true;
 	}
 
