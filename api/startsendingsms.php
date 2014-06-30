@@ -22,9 +22,9 @@ $canSendFHE = $MEMBER->HasPrivilege(PRIV_TEXT_FHE);
 
 // The member doesn't need the *privilege* to send to FHE if they're a group leader
 $group = $MEMBER->FheGroup();
-if ($group->Leader1 == $MEMBER->ID()
+if ($group && ($group->Leader1 == $MEMBER->ID()
 		|| $group->Leader2 == $MEMBER->ID()
-		|| $group->Leader3 == $MEMBER->ID())
+		|| $group->Leader3 == $MEMBER->ID()))
 	$canSendFHE = true;
 
 
