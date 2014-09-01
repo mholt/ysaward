@@ -234,10 +234,13 @@ function filename($str)
 }
 
 // Returns the extension of a file name/path string (without the . character)
-function extension($str)
+function extension($str, $default)
 {
 	$info = pathinfo($str);
-	return $info['extension'];
+	if (array_key_exists('extension', $info))
+		return $info['extension'];
+	else
+		return $default;
 }
 
 

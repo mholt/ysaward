@@ -429,7 +429,7 @@ class Member
 				fail("That picture file ($filename) was probably too large; try a smaller one, or report this error to have it resolved.");
 
 			// Get extension (excluding the '.')
-			$ext = extension($filename);
+			$ext = extension($filename, "jpg");
 
 			// Extension and filetype valid?
 			if ((strtolower($ext) != "jpg" && strtolower($ext) != "jpeg") || $type != "image/jpeg")
@@ -470,7 +470,7 @@ class Member
 					return "/resources/images/sister.png";
 			}
 			$main = filename($this->PictureFile);
-			$ext = extension($this->PictureFile);
+			$ext = extension($this->PictureFile, "jpg");
 			return "/$path/".($thumb ? $main."_thumb.".$ext : $main.'_med.'.$ext);
 		}
 	}
@@ -500,7 +500,7 @@ class Member
 		if (!$this->PictureFile)
 			return false;
 		$main = filename($this->PictureFile);
-		$ext = extension($this->PictureFile);
+		$ext = extension($this->PictureFile, "jpg");
 		$thumb = $main."_thumb.".$ext;
 		$med = $main."_med.".$ext;
 		$result = @unlink(DOCROOT."/uploads/".$this->PictureFile) && @unlink(DOCROOT."/uploads/".$thumb) && @unlink(DOCROOT."/uploads/".$med);

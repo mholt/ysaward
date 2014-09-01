@@ -29,7 +29,7 @@ while ($row = mysql_fetch_array($mems))
 
 	$picFile = $mem->PictureFile;
 	$main = filename($mem->PictureFile);
-	$ext = extension($mem->PictureFile);
+	$ext = extension($mem->PictureFile, "jpg");
 	$newRand = rand(1000, 9999);
 
 	$newMain = $mem->FirstName."_".$mem->LastName."_".$mem->ID()."_".$newRand;
