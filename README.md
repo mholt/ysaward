@@ -80,7 +80,7 @@ Site requirements/notes
 
 #### Address verification
 
-- [SmartyStreets](http://smartystreets.com) account -- non-profits get a free subscription
+- [SmartyStreets](http://smartystreets.com) account
 - You just need an API key for your site's domain name (use the "HTML key")
 
 
