@@ -64,6 +64,7 @@ $isCustom = $currentResidence ? $currentResidence->Custom() : false;
 							Email and password
 						</legend>
 						<input type="email" name="email" placeholder="Email address" maxlength="255" value="<?php echo htmlentities($MEMBER->Email); ?>" required autocomplete="off">
+						<input type="password" name="oldpwd" placeholder="Current password" autocomplete="off">
 						<input type="password" name="pwd1" placeholder="New password" autocomplete="off">
 						<input type="password" name="pwd2" placeholder="New password again" autocomplete="off">
 					</fieldset>
