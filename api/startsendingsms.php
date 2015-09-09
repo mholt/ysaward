@@ -1,9 +1,8 @@
 <?php
 require_once("../lib/init.php");
-protectPage();
+protectPage(0, true);
 
 /*
-	TODO: This file does not support stake leader sending.
 	Before stake leaders should be able to send texts to an entire
 	stake, make sure to add at least 2 or 3 numbers to your
 	Nexmo account, so that the load can be round-robin'ed. Otherwise,
@@ -11,21 +10,28 @@ protectPage();
 */
 
 
-// NOTE: Currently, anyone with the privilege to send to their FHE
-// group can send more than the max per day (but not more than that all
-// at once) -- this is because it's really hard to figure out who's
-// in the FHE group and who's not... so I'm just going to let that slide
-// for now and hope it's not abused. The logic is ugly.
-$canSendAll = $MEMBER->HasPrivilege(PRIV_TEXT_ALL);
-$canSendFHE = $MEMBER->HasPrivilege(PRIV_TEXT_FHE);
+if ($MEMBER != null && $LEADER == null) {
+	// NOTE: Currently, anyone with the privilege to send to their FHE
+	// group can send more than the max per day (but not more than that all
+	// at once) -- this is because it's really hard to figure out who's
+	// in the FHE group and who's not... so I'm just going to let that slide
+	// for now and hope it's not abused. The logic is ugly.
+	$canSendAll = $MEMBER->HasPrivilege(PRIV_TEXT_ALL);
+	$canSendFHE = $MEMBER->HasPrivilege(PRIV_TEXT_FHE);
+	
+	
+	// The member doesn't need the *privilege* to send to FHE if they're a group leader
+	$group = $MEMBER->FheGroup();
+	if ($group && ($group->Leader1 == $MEMBER->ID()
+			|| $group->Leader2 == $MEMBER->ID()
+			|| $group->Leader3 == $MEMBER->ID()))
+		$canSendFHE = true;
 
+} else if ($MEMBER == null && $LEADER != null) {
+	$canSendAll = true;
+	$canSendFHE = false;
+}
 
-// The member doesn't need the *privilege* to send to FHE if they're a group leader
-$group = $MEMBER->FheGroup();
-if ($group && ($group->Leader1 == $MEMBER->ID()
-		|| $group->Leader2 == $MEMBER->ID()
-		|| $group->Leader3 == $MEMBER->ID()))
-	$canSendFHE = true;
 
 
 // Send emails to selected recipients. First, check input.
@@ -39,13 +45,14 @@ if (!isset($recipients) || !count($recipients) || !$msg)
 
 // Does this person already have a job in the queue? If so, 
 // Member already has job in the queue?
-if (SMSJob::UnfinishedJobExistsWithMemberID($MEMBER->ID()))
+if (($MEMBER != null && SMSJob::UnfinishedJobExistsWithMemberID($MEMBER->ID()))
+	|| ($LEADER != null && SMSJob::UnfinishedJobExistsWithLeaderID($LEADER->ID()))))
 	Response::Send(403, "You already have a text in the process of being sent. Please wait until it is finished, so just try again in a minute or two.");
 
 $recipCount = count($recipients);
 
 // Make sure they aren't sending more than they're allowed to
-$textsRemaining = SMS_MAX_PER_DAY - $MEMBER->TextMessagesSentInLastDay();
+$textsRemaining = SMS_MAX_PER_DAY - ($LEADER != null ? 0 : $MEMBER->TextMessagesSentInLastDay());
 if (($recipCount * ceil(strlen($msg) / SMS_CHARS_PER_TEXT) > $textsRemaining) && !$fhe)
 {
 	if (!$canSendAll && !$canSendFHE)
@@ -82,9 +89,14 @@ foreach ($recipients as $memberid)
 // Now create the job and send it off!
 $job = new SMSJob();
 
-$job->WardID = $WARD->ID();
+if ($MEMBER != null && $LEADER == null) {
+	$job->WardID = $WARD->ID();
+	$job->SenderID = $MEMBER->ID();
+} else if ($MEMBER == null && $LEADER != null) {
+	$job->StakeID = $STAKE->ID();
+	$job->SenderID = $LEADER->ID();
+}
 
-$job->SenderID = $MEMBER->ID();
 
 foreach ($recipientMembers as $mem)
 	$job->AddRecipient($mem->ID(), $mem->FirstName()." ".$mem->LastName, $mem->PhoneNumber);

@@ -6,9 +6,22 @@ if (!isset($_GET['id']))
 	header("Location: /directory");
 
 $mem = Member::Load($_GET['id']);
+if (!$mem)
+	header("Location: /directory");
 
 // No member with given ID number, or member is not in the same ward
-if (!$mem || $mem->WardID != $WARD->ID())
+$memInWard = $mem->WardID != $WARD->ID();
+$memInLeaderStake = false;
+
+if ($LEADER != null) {
+	$r = DB::Run("SELECT StakeID FROM Wards WHERE ID='{$mem->WardID}'");
+	$row = mysql_fetch_object($r);
+	if ($row->StakeID == $LEADER->StakeID) {
+		$memInLeaderStake = true;
+	}
+}
+
+if (!$memInWard && !$memInLeaderStake)
 	header("Location: /directory");
 
 $isCurrent = $MEMBER && $MEMBER->ID() == $mem->ID();

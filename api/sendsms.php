@@ -41,6 +41,9 @@ $euroToUsd = euroToUsdRate();
 // and leaving it open as different requests are issued constantly.
 $request = new HttpRequest(SMS_API_BASE, HttpRequest::METH_GET);
 
+// Max iterations is larger for a stake job than it is for a regular job.
+// This cap should be higher than any ward's member count, but not much higher.
+$maxIterations = $job->IsLeaderSender() ? 1000 : 300;
 
 // The HTTP connection is ready; let's loop through each recipient and send the texts!
 $iterations = 0;	// One of our infinite-loop sentry variables
@@ -51,7 +54,7 @@ $lasti = 0;			// Used in case of abort; lets us know how far we got
 for ($i = 0; $i < count($job->Recipients); $i++)
 {
 	$iterations++;						// Very important that this happens first!
-	if ($iterations > 300)				// This cap should be higher than any ward's member count, but not much higher.
+	if ($iterations > $maxIterations)
 	{
 		// Alert the webmaster of a possible infinite loop here, or possibly that
 		// errors occurred sending to MOST members, causing lots of retries
@@ -196,7 +199,12 @@ if ($abort)
 
 
 // Finish
-DB::Run("UPDATE Wards SET Balance = Balance - {$job->Cost} WHERE ID={$job->WardID} LIMIT 1");
+
+// Only deduct balance if a ward member sent it.
+if ($job->IsMemberSender()) {
+	DB::Run("UPDATE Wards SET Balance = Balance - {$job->Cost} WHERE ID={$job->WardID} LIMIT 1");
+}
+
 $job->NumbersUsed = json_encode($numbers);
 $job->Finished = now();
 $job->Save();
