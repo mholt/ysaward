@@ -47,7 +47,11 @@
 	<?php endwhile; ?>
 
 	<b>Membership</b>
-	<a href="/directory"><i class="fa fa-list-alt"></i>Directory</a>
+	<a href="/directory?stake"><i class="fa fa-list-alt"></i>Stake Directory</a>
+	
+	<b>Send</b>
+	<a href="/sms"><i class="fa fa-comments"></i>Texts</a>
+	<a href="/email"><i class="fa fa-envelope"></i>Emails</a>
 <?php endif; ?>
 	
 	<br>

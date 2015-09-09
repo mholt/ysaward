@@ -3,8 +3,6 @@ require_once("../lib/init.php");
 protectPage();
 
 
-// TODO: THIS FILE DOES NOT SUPPORT STAKE LEADER SENDING. (EmailJob.php does, in theory... but is untested.)
-// IT SHOULD SUPPORT STAKE LEADERS SENDING EMAILS.
 
 
 
@@ -21,7 +19,8 @@ if (!isset($recipients) || !count($recipients) || !$subject || !$msg)
 
 // Does this person already have a job in the queue? If so, 
 // Member already has job in the queue?
-if (EmailJob::UnfinishedJobExistsWithMemberID($MEMBER->ID()))
+if (($MEMBER != null && EmailJob::UnfinishedJobExistsWithMemberID($MEMBER->ID()))
+	|| ($LEADER != null && EmailJob::UnfinishedJobExistsWithLeaderID($LEADER->ID())))
 	Response::Send(403, "You already have an email in the process of being sent. Please wait until it is finished before sending another. Try again in a minute or two.");
 
 $recipCount = count($recipients);
@@ -31,7 +30,7 @@ $sentToSelf = false;
 $recipientMembers = array();
 foreach ($recipients as $memberid)
 {
-	if ($memberid == $MEMBER->ID())
+	if ($memberid == $MEMBER != null ? $MEMBER->ID() : ($LEADER != null ? $LEADER->ID() : null))
 	{
 		$sentToSelf = true;
 		$recipCount --;			// Sending to yourself doesn't count against you
@@ -40,7 +39,8 @@ foreach ($recipients as $memberid)
 }
 
 // Make sure they aren't sending more than they're allowed to
-if ($recipCount > EMAIL_MAX_RECIPIENTS && !$fhe)
+// Leaders can send as much as they want.
+if ($recipCount > EMAIL_MAX_RECIPIENTS && !$fhe && $LEADER == null)
 {
 	// Get member's privileges in these matters
 	$has1 = $MEMBER->HasPrivilege(PRIV_EMAIL_ALL);
@@ -96,7 +96,12 @@ $msg .= "You received this message because you have an account on ".SITE_DOMAIN.
 
 // Now create the job and configure it (add recipients, etc.)
 $job = new EmailJob();
-$job->MemberID = $MEMBER->ID();
+if ($MEMBER != null && $LEADER == null) {
+	$job->MemberID = $MEMBER->ID();
+} else if ($MEMBER == null && $LEADER != null) {
+	$job->StakeLeaderID = $LEADER->ID();
+}
+
 foreach ($recipientMembers as $mem)
 	$job->AddRecipient($mem->FirstName()." ".$mem->LastName, $mem->Email);
 $job->IsHTML = false;		// For now, just send plaintext emails.

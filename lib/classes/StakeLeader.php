@@ -340,5 +340,9 @@ class StakeLeader
 		$this->Salt = salt();
 		$this->Password = hashPwd($newPwd, $this->Salt);
 	}
+	
+	public function FirstName() {
+		return trim($this->Title . ' ' . $this->FirstName);
+	}
 }
 ?>

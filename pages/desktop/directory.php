@@ -1,8 +1,16 @@
 <?php
 protectPage(0, true);
 
-// Get a list of all ward members
-$q = "SELECT ID FROM Members WHERE WardID='{$WARD->ID()}' ORDER BY FirstName ASC, LastName ASC";
+$IS_STAKE_VIEW = $MEMBER == null && $LEADER != null && array_key_exists('stake', $_GET);
+
+if ($IS_STAKE_VIEW) {
+	// Get a list of all stake members
+	$q = "SELECT ID FROM Members WHERE WardID IN (SELECT ID FROM Wards WHERE StakeID = '{$LEADER->StakeID}') ORDER BY FirstName ASC, LastName ASC";
+} else {
+	// Get a list of all ward members
+	$q = "SELECT ID FROM Members WHERE WardID='{$WARD->ID()}' ORDER BY FirstName ASC, LastName ASC";
+}
+
 $r = DB::Run($q);
 $memberCount = mysql_num_rows($r);
 
@@ -21,7 +29,8 @@ $memberCount = mysql_num_rows($r);
 //$allBdays = $MEMBER ? $MEMBER->HasPrivilege(PRIV_EXPORT_BDATE) : true;
 
 // Get a list of the questions this person is allowed to see
-$permissions = $USER->Permissions(true);
+// Show no survey questions if we're in stake-mode
+$permissions = $IS_STAKE_VIEW ? [] : $USER->Permissions(true);
 
 // Array of SurveyQuestion objects which this user can see
 $questions = array(); // (populating in a moment...)
@@ -44,7 +53,7 @@ $cKey = userAgentContains("Macintosh") ? "command" : "Ctrl";
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Directory &mdash; <?php echo $WARD ? $WARD->Name." Ward" : SITE_NAME; ?></title>
+		<title><?= $IS_STAKE_VIEW ? 'Stake ' : '' ?>Directory &mdash; <?php echo $WARD ? $WARD->Name." Ward" : SITE_NAME; ?></title>
 		<?php include "includes/head.php"; ?>
 		<script src="/resources/js/directory_filter.js"></script>
 		<style>

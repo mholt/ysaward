@@ -1,29 +1,53 @@
 <?php
 require_once "lib/init.php";
-protectPage();
+protectPage(0, true);
 
-$m = Member::Current();
+if ($MEMBER != null && $LEADER == null) {
+	$m = Member::Current();
+	
+	// Get a list of all members of the ward
+	$mems = array();
+	
+	$q = "SELECT ID FROM Members WHERE WardID='$MEMBER->WardID' ORDER BY FirstName,LastName ASC";
+	$r = DB::Run($q);
+	
+	while ($row = mysql_fetch_array($r))
+		array_push($mems, Member::Load($row['ID']));
+	
+	// Get member's privileges in these matters
+	$has1 = $m->HasPrivilege(PRIV_EMAIL_ALL);	// Email all members
+	$has2 = $m->HasPrivilege(PRIV_EMAIL_BRO);	// Email all brethren
+	$has3 = $m->HasPrivilege(PRIV_EMAIL_SIS);	// Email all sisters
+	
+	
+	// Get a list of this member's FHE group for convenience
+	$fheGroupMembers = array();
+	$r = DB::Run("SELECT ID FROM Members WHERE FheGroup='{$MEMBER->FheGroup}' AND FheGroup != ''");
+	while ($row = mysql_fetch_array($r))
+		array_push($fheGroupMembers, $row['ID']);
+} else if ($MEMBER == null && $LEADER != null) {
+	$m = $LEADER;
+	
+	// Get a list of all members of the stake
+	$mems = array();
+	
+	$q = "SELECT ID FROM Members WHERE WardID IN (SELECT ID FROM Wards WHERE StakeID = '{$LEADER->StakeID}') ORDER BY FirstName ASC, LastName ASC";
+	$r = DB::Run($q);
+	
+	while ($row = mysql_fetch_array($r))
+		array_push($mems, Member::Load($row['ID']));
+	
+	// Get member's privileges in these matters
+	$has1 = true;	// Email all members
+	$has2 = true;	// Email all brethren
+	$has3 = true;	// Email all sisters
+	
+	
+	// Get a list of this member's FHE group for convenience
+	$fheGroupMembers = array();
+}
 
-// Get a list of all members of the ward
-$mems = array();
 
-$q = "SELECT ID FROM Members WHERE WardID='$MEMBER->WardID' ORDER BY FirstName,LastName ASC";
-$r = DB::Run($q);
-
-while ($row = mysql_fetch_array($r))
-	array_push($mems, Member::Load($row['ID']));
-
-// Get member's privileges in these matters
-$has1 = $m->HasPrivilege(PRIV_EMAIL_ALL);	// Email all members
-$has2 = $m->HasPrivilege(PRIV_EMAIL_BRO);	// Email all brethren
-$has3 = $m->HasPrivilege(PRIV_EMAIL_SIS);	// Email all sisters
-
-
-// Get a list of this member's FHE group for convenience
-$fheGroupMembers = array();
-$r = DB::Run("SELECT ID FROM Members WHERE FheGroup='{$MEMBER->FheGroup}' AND FheGroup != ''");
-while ($row = mysql_fetch_array($r))
-	array_push($fheGroupMembers, $row['ID']);
 ?>
 <!DOCTYPE html>
 <html>
@@ -102,8 +126,9 @@ while ($row = mysql_fetch_array($r))
 					<label class="bold"><input type="checkbox" id="sel-bro" class="sel standard"> All brothers</label>
 					<?php endif; if ($has1 || $has3): ?>
 					<label class="bold"><input type="checkbox" id="sel-sis" class="sel standard"> All sisters</label>
-					<?php endif; ?>
+					<?php endif; if ($MEMBER != null && $LEADER == null): ?>
 					<label class="bold"><input type="checkbox" id="sel-fhe" class="sel standard" name="fhe"> My FHE group</label>
+					<?php endif; ?>
 					<div class="memberlist">
 					<?php foreach ($mems as $mem): ?>
 						<label>

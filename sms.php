@@ -1,38 +1,55 @@
 <?php
 require_once "lib/init.php";
-protectPage();
+protectPage(0, true);
 
-// TODO: Currently this page only supports regular members sending texts, not stake leaders.
-// Ideally, stake leaders could choose which wards to send a text blast out to. The database should support this.
+if ($MEMBER != null && $LEADER == null) {
+	$canSendAll = $MEMBER->HasPrivilege(PRIV_TEXT_ALL);
+	$canSendFHE = $MEMBER->HasPrivilege(PRIV_TEXT_FHE);
+	
+	// The member doesn't need the *privilege* to send to FHE if they're a group leader
+	$group = $MEMBER->FheGroup();
+	if ($group &&
+			($group->Leader1 == $MEMBER->ID()
+			|| $group->Leader2 == $MEMBER->ID()
+			|| $group->Leader3 == $MEMBER->ID()))
+		$canSendFHE = true;
+	
+	
+	// Get a list of all members of the ward
+	$mems = array();
+	$q = "SELECT ID FROM Members WHERE WardID='$MEMBER->WardID' ORDER BY FirstName,LastName ASC";
+	$r = DB::Run($q);
+	while ($row = mysql_fetch_array($r))
+		array_push($mems, Member::Load($row['ID']));
+	
+	
+	
+	// Get a list of this member's FHE group
+	$fheGroupMembers = array();
+	$r = DB::Run("SELECT ID FROM Members WHERE FheGroup='{$MEMBER->FheGroup}' AND FheGroup != ''");
+	while ($row = mysql_fetch_array($r))
+		array_push($fheGroupMembers, $row['ID']);
+	
+	$textsRemaining = SMS_MAX_PER_DAY - $MEMBER->TextMessagesSentInLastDay();
+	
+} else if ($MEMBER == null && $LEADER != null) {
+	$canSendAll = true;
+	$canSendFHE = false;
+	
+	// Get a list of all members of the stake
+	$mems = array();
+	$q = "SELECT ID FROM Members WHERE WardID IN (SELECT ID FROM Wards WHERE StakeID = '{$LEADER->StakeID}') ORDER BY FirstName ASC, LastName ASC";
+	$r = DB::Run($q);
+	while ($row = mysql_fetch_array($r))
+		array_push($mems, Member::Load($row['ID']));
+	
+	$fheGroupMembers = array();
+	$textsRemaining = SMS_MAX_PER_DAY;
+}
 
-$canSendAll = $MEMBER->HasPrivilege(PRIV_TEXT_ALL);
-$canSendFHE = $MEMBER->HasPrivilege(PRIV_TEXT_FHE);
-
-// The member doesn't need the *privilege* to send to FHE if they're a group leader
-$group = $MEMBER->FheGroup();
-if ($group &&
-		($group->Leader1 == $MEMBER->ID()
-		|| $group->Leader2 == $MEMBER->ID()
-		|| $group->Leader3 == $MEMBER->ID()))
-	$canSendFHE = true;
-
-
-// Get a list of all members of the ward
-$mems = array();
-$q = "SELECT ID FROM Members WHERE WardID='$MEMBER->WardID' ORDER BY FirstName,LastName ASC";
-$r = DB::Run($q);
-while ($row = mysql_fetch_array($r))
-	array_push($mems, Member::Load($row['ID']));
 
 
 
-// Get a list of this member's FHE group
-$fheGroupMembers = array();
-$r = DB::Run("SELECT ID FROM Members WHERE FheGroup='{$MEMBER->FheGroup}' AND FheGroup != ''");
-while ($row = mysql_fetch_array($r))
-	array_push($fheGroupMembers, $row['ID']);
-
-$textsRemaining = SMS_MAX_PER_DAY - $MEMBER->TextMessagesSentInLastDay();
 
 // Get current Nexmo balance
 $request = new HttpRequest(SMS_META_BASE."/account/get-balance/".SMS_API_KEY."/".SMS_API_SECRET, HttpRequest::METH_GET);
